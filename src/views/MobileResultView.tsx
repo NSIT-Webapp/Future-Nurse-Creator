@@ -1,4 +1,5 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useRef } from 'react';
+import confetti from 'canvas-confetti';
 import {
   Download,
   Copy,
@@ -9,6 +10,7 @@ import {
   Camera,
   X,
   Sparkles,
+  Lightbulb,
   MoreHorizontal,
 } from 'lucide-react';
 import { ResultPayload } from '../types';
@@ -22,6 +24,18 @@ import {
   shareCardViaWebShare,
   isWebShareSupported,
 } from '../engine/shareManager';
+import { playSelectSfx } from '../engine/audioManager';
+
+const PATH_TIPS: Record<string, string> = {
+  PED: 'รอยยิ้มและความสดใสของเด็ก ๆ จะเป็นพลังขับเคลื่อนที่ยิ่งใหญ่ของคุณ',
+  MH: 'ความเห็นอกเห็นใจและการรับฟังอย่างเข้าใจของคุณ คือพื้นที่ปลอดภัยของทุกคน',
+  ER: 'ความสุขุมและสติที่มั่นคงของคุณ คือความหวังในทุกวินาทีวิกฤต',
+  OA: 'ความใส่ใจและอ่อนโยนของคุณ ช่วยให้ผู้สูงวัยใช้ชีวิตอย่างมีศักดิ์ศรีและมีความสุข',
+  MAT: 'ความละเอียดอ่อนและการดูแลด้วยหัวใจของคุณ คือจุดเริ่มต้นที่งดงามของชีวิตใหม่',
+  COMM: 'ความเข้าใจและเชื่อมโยงของคุณ คือสะพานสร้างความเข้มแข็งให้ทุกชุมชน',
+  INT: 'การเปิดกว้างและวิสัยทัศน์สากลของคุณ จะพาการพยาบาลไทยก้าวไกลไร้พรมแดน',
+  TECH: 'ความคิดสร้างสรรค์และนวัตกรรมของคุณ จะเปลี่ยนโฉมวงการสุขภาพสู่อนาคต',
+};
 
 interface MobileResultViewProps {
   result: ResultPayload;
@@ -31,11 +45,19 @@ interface MobileResultViewProps {
 export const MobileResultView: React.FC<MobileResultViewProps> = ({ result, onPlayAgain }) => {
   const [cardDataUrl, setCardDataUrl] = useState<string>('');
   const [copiedTags, setCopiedTags] = useState<boolean>(false);
+  const [saveStatus, setSaveStatus] = useState<'idle' | 'saving' | 'saved'>('idle');
   const [showIgModal, setShowIgModal] = useState<boolean>(false);
   const [toastMessage, setToastMessage] = useState<string | null>(null);
 
+  // 3D Tilt & Holographic glare state
+  const [rotate, setRotate] = useState({ x: 0, y: 0 });
+  const [glare, setGlare] = useState({ x: 50, y: 50, opacity: 0 });
+  const [isHovered, setIsHovered] = useState(false);
+  const cardRef = useRef<HTMLDivElement>(null);
+
   const hashtags = getHashtagsString();
   const currentUrl = typeof window !== 'undefined' ? window.location.href : '';
+  const customTip = PATH_TIPS[result.pathId] || 'คุณคือพลังแห่งการเปลี่ยนแปลง';
 
   useEffect(() => {
     let isMounted = true;
@@ -48,8 +70,24 @@ export const MobileResultView: React.FC<MobileResultViewProps> = ({ result, onPl
       }
     }
     generateCard();
+
+    // Gentle celebration confetti burst on mount
+    const confettiTimer = setTimeout(() => {
+      if (!isMounted) return;
+      try {
+        confetti({
+          particleCount: 28,
+          spread: 60,
+          origin: { y: 0.35 },
+          colors: ['#002B7F', '#0EA5E9', '#F5A623', '#FF5C8D'],
+          disableForReducedMotion: true,
+        });
+      } catch (_) {}
+    }, 300);
+
     return () => {
       isMounted = false;
+      clearTimeout(confettiTimer);
     };
   }, [result]);
 
@@ -58,14 +96,81 @@ export const MobileResultView: React.FC<MobileResultViewProps> = ({ result, onPl
     setTimeout(() => setToastMessage(null), 3000);
   };
 
+  // 3D Tilt handlers
+  const handleCardMouseMove = (e: React.MouseEvent<HTMLDivElement>) => {
+    const rect = e.currentTarget.getBoundingClientRect();
+    const x = e.clientX - rect.left;
+    const y = e.clientY - rect.top;
+    const centerX = rect.width / 2;
+    const centerY = rect.height / 2;
+
+    const rotX = Math.max(-8, Math.min(8, ((y - centerY) / centerY) * -8));
+    const rotY = Math.max(-8, Math.min(8, ((x - centerX) / centerX) * 8));
+
+    setRotate({ x: rotX, y: rotY });
+    setGlare({
+      x: (x / rect.width) * 100,
+      y: (y / rect.height) * 100,
+      opacity: 0.35,
+    });
+    setIsHovered(true);
+  };
+
+  const handleCardMouseLeave = () => {
+    setRotate({ x: 0, y: 0 });
+    setGlare(prev => ({ ...prev, opacity: 0 }));
+    setIsHovered(false);
+  };
+
+  const handleCardTouchMove = (e: React.TouchEvent<HTMLDivElement>) => {
+    if (!e.touches[0]) return;
+    const rect = e.currentTarget.getBoundingClientRect();
+    const touch = e.touches[0];
+    const x = touch.clientX - rect.left;
+    const y = touch.clientY - rect.top;
+    const centerX = rect.width / 2;
+    const centerY = rect.height / 2;
+
+    const rotX = Math.max(-9, Math.min(9, ((y - centerY) / centerY) * -9));
+    const rotY = Math.max(-9, Math.min(9, ((x - centerX) / centerX) * 9));
+
+    setRotate({ x: rotX, y: rotY });
+    setGlare({
+      x: (x / rect.width) * 100,
+      y: (y / rect.height) * 100,
+      opacity: 0.4,
+    });
+    setIsHovered(true);
+  };
+
+  const handleCardTouchEnd = () => {
+    setRotate({ x: 0, y: 0 });
+    setGlare(prev => ({ ...prev, opacity: 0 }));
+    setIsHovered(false);
+  };
+
   const handleDownload = () => {
-    if (!cardDataUrl) return;
-    downloadCard(cardDataUrl, result);
-    showToast('กำลังบันทึกรูปลงเครื่องของคุณ... 📸');
+    if (!cardDataUrl || saveStatus === 'saving') return;
+    setSaveStatus('saving');
+    playSelectSfx('F');
+    if ('vibrate' in navigator) navigator.vibrate?.([25]);
+
+    setTimeout(() => {
+      downloadCard(cardDataUrl, result);
+      setSaveStatus('saved');
+      if ('vibrate' in navigator) navigator.vibrate?.([20, 40, 20]);
+      showToast('บันทึกการ์ดลงเครื่องเรียบร้อยแล้ว! 📸');
+
+      setTimeout(() => {
+        setSaveStatus('idle');
+      }, 2500);
+    }, 350);
   };
 
   const handleCopyHashtags = async () => {
     try {
+      playSelectSfx('A');
+      if ('vibrate' in navigator) navigator.vibrate?.([15]);
       await navigator.clipboard.writeText(hashtags);
       setCopiedTags(true);
       showToast('คัดลอกแฮชแท็กเรียบร้อยแล้ว! 📋');
@@ -75,6 +180,7 @@ export const MobileResultView: React.FC<MobileResultViewProps> = ({ result, onPl
 
   const handleWebShare = async () => {
     if (!cardDataUrl) return;
+    playSelectSfx('C');
     if (isWebShareSupported()) {
       const ok = await shareCardViaWebShare(cardDataUrl, result);
       if (!ok) showToast('สามารถกดบันทึกรูปภาพเพื่อแชร์ได้เลยครับ');
@@ -84,15 +190,18 @@ export const MobileResultView: React.FC<MobileResultViewProps> = ({ result, onPl
   };
 
   const handleLineShare = () => {
+    playSelectSfx('D');
     const text = `นี่คือ Future Nurse Path ของฉัน: ${result.path.nameEn} ${result.path.emoji}\nคณะพยาบาลศาสตร์ มหาวิทยาลัยมหิดล`;
     window.open(getLineShareUrl(currentUrl, text), '_blank', 'noopener,noreferrer');
   };
 
   const handleFacebookShare = () => {
+    playSelectSfx('D');
     window.open(getFacebookShareUrl(currentUrl), '_blank', 'noopener,noreferrer');
   };
 
   const handleTwitterShare = () => {
+    playSelectSfx('D');
     const text = `นี่คือ Future Nurse Path ของฉัน: ${result.path.nameEn} ${result.path.emoji}`;
     window.open(getTwitterShareUrl(currentUrl, text), '_blank', 'noopener,noreferrer');
   };
@@ -119,14 +228,40 @@ export const MobileResultView: React.FC<MobileResultViewProps> = ({ result, onPl
         <p className="text-xs sm:text-sm text-slate-500 font-medium">{result.path.nameTh}</p>
       </div>
 
-      {/* Card Preview (9:16) */}
-      <div className="flex justify-center mb-4">
-        <div className="w-full max-w-[280px] rounded-3xl overflow-hidden shadow-2xl border-2 border-white/80 aspect-[9/16] bg-slate-100 flex items-center justify-center">
+      {/* Card Preview (9:16) with 3D Tilt & Glare */}
+      <div className="flex flex-col items-center mb-4">
+        <div
+          ref={cardRef}
+          onMouseMove={handleCardMouseMove}
+          onMouseLeave={handleCardMouseLeave}
+          onTouchMove={handleCardTouchMove}
+          onTouchEnd={handleCardTouchEnd}
+          style={{
+            transform: `perspective(700px) rotateX(${rotate.x}deg) rotateY(${rotate.y}deg) ${
+              isHovered ? 'scale3d(1.025, 1.025, 1.025)' : 'scale3d(1, 1, 1)'
+            }`,
+            transition: isHovered
+              ? 'transform 0.08s ease-out'
+              : 'transform 0.5s cubic-bezier(0.2, 0.8, 0.2, 1)',
+          }}
+          className="relative w-full max-w-[270px] rounded-3xl overflow-hidden shadow-2xl border-2 border-white/80 aspect-[9/16] bg-slate-100 flex items-center justify-center select-none cursor-pointer"
+          title="แตะเพื่อหมุนดูมิติการ์ด"
+        >
+          {/* Holographic light glare overlay */}
+          <div
+            className="pointer-events-none absolute inset-0 z-20 transition-opacity duration-300 rounded-3xl"
+            style={{
+              opacity: glare.opacity,
+              background: `radial-gradient(circle at ${glare.x}% ${glare.y}%, rgba(255, 255, 255, 0.7) 0%, rgba(255, 255, 255, 0.2) 35%, transparent 70%)`,
+              mixBlendMode: 'overlay',
+            }}
+          />
+
           {cardDataUrl ? (
             <img
               src={cardDataUrl}
               alt="Future Nurse Card"
-              className="w-full h-full object-cover animate-fade-in select-none"
+              className="w-full h-full object-cover animate-fade-in select-none pointer-events-none"
             />
           ) : (
             <div className="flex flex-col items-center gap-2 p-6 text-center">
@@ -135,18 +270,48 @@ export const MobileResultView: React.FC<MobileResultViewProps> = ({ result, onPl
             </div>
           )}
         </div>
+
+        {/* Tip Banner with Personalized Inspiring Quote */}
+        <div className="w-full max-w-[280px] mt-3 p-2.5 rounded-2xl bg-white/80 backdrop-blur-xs border border-sky-100 flex items-center gap-2.5 shadow-xs">
+          <div className="w-6 h-6 rounded-lg bg-amber-400/20 text-amber-500 flex items-center justify-center shrink-0">
+            <Lightbulb className="w-3.5 h-3.5 text-amber-500 fill-amber-400/30" />
+          </div>
+          <p className="text-[11px] text-slate-700 leading-snug">
+            <span className="font-bold text-blue-900">TIP:</span> {customTip}
+          </p>
+        </div>
       </div>
 
       {/* Actions */}
       <div className="space-y-3 mb-4">
-        {/* Save My Card Primary Button */}
+        {/* Save My Card Primary Button (Morphing State) */}
         <button
           onClick={handleDownload}
-          disabled={!cardDataUrl}
-          className="w-full py-4 px-6 rounded-2xl bg-gradient-to-r from-blue-600 via-blue-700 to-sky-600 hover:from-blue-500 hover:to-sky-500 active:scale-[0.98] text-white font-bold text-base flex items-center justify-center gap-2.5 shadow-xl shadow-blue-600/25 transition-all disabled:opacity-50"
+          disabled={!cardDataUrl || saveStatus === 'saving'}
+          className={`w-full py-4 px-6 rounded-2xl font-bold text-base flex items-center justify-center gap-2.5 shadow-xl transition-all duration-300 ${
+            saveStatus === 'saved'
+              ? 'bg-emerald-500 text-white shadow-emerald-500/30 scale-[1.01]'
+              : saveStatus === 'saving'
+              ? 'bg-blue-100 text-blue-800 shadow-none'
+              : 'bg-gradient-to-r from-blue-600 via-blue-700 to-sky-600 hover:from-blue-500 hover:to-sky-500 active:scale-[0.98] text-white shadow-blue-600/25'
+          } disabled:opacity-50`}
         >
-          <Download className="w-5 h-5 text-amber-300" />
-          <span>บันทึกรูปภาพลงเครื่อง (Save Card)</span>
+          {saveStatus === 'saved' ? (
+            <>
+              <Check className="w-5 h-5 text-white" />
+              <span>บันทึกการ์ดลงเครื่องเรียบร้อย! 🎉</span>
+            </>
+          ) : saveStatus === 'saving' ? (
+            <>
+              <div className="w-5 h-5 rounded-full border-2 border-blue-800 border-t-transparent animate-spin" />
+              <span>กำลังเตรียมบันทึกภาพ...</span>
+            </>
+          ) : (
+            <>
+              <Download className="w-5 h-5 text-amber-300" />
+              <span>บันทึกรูปภาพลงเครื่อง (Save Card)</span>
+            </>
+          )}
         </button>
 
         {/* Social Share Icons Row */}

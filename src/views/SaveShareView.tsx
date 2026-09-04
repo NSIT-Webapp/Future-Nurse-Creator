@@ -1,4 +1,5 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useRef } from 'react';
+import confetti from 'canvas-confetti';
 import {
   Download,
   Share2,
@@ -25,6 +26,18 @@ import {
   getFacebookShareUrl,
   getTwitterShareUrl,
 } from '../engine/shareManager';
+import { playSelectSfx } from '../engine/audioManager';
+
+const PATH_TIPS: Record<string, string> = {
+  PED: 'รอยยิ้มและความสดใสของเด็ก ๆ จะเป็นพลังขับเคลื่อนที่ยิ่งใหญ่ของคุณ',
+  MH: 'ความเห็นอกเห็นใจและการรับฟังอย่างเข้าใจของคุณ คือพื้นที่ปลอดภัยของทุกคน',
+  ER: 'ความสุขุมและสติที่มั่นคงของคุณ คือความหวังในทุกวินาทีวิกฤต',
+  OA: 'ความใส่ใจและอ่อนโยนของคุณ ช่วยให้ผู้สูงวัยใช้ชีวิตอย่างมีศักดิ์ศรีและมีความสุข',
+  MAT: 'ความละเอียดอ่อนและการดูแลด้วยหัวใจของคุณ คือจุดเริ่มต้นที่งดงามของชีวิตใหม่',
+  COMM: 'ความเข้าใจและเชื่อมโยงของคุณ คือสะพานสร้างความเข้มแข็งให้ทุกชุมชน',
+  INT: 'การเปิดกว้างและวิสัยทัศน์สากลของคุณ จะพาการพยาบาลไทยก้าวไกลไร้พรมแดน',
+  TECH: 'ความคิดสร้างสรรค์และนวัตกรรมของคุณ จะเปลี่ยนโฉมวงการสุขภาพสู่อนาคต',
+};
 
 interface SaveShareViewProps {
   result: ResultPayload;
@@ -44,11 +57,19 @@ export const SaveShareView: React.FC<SaveShareViewProps> = ({
   const [copiedLink, setCopiedLink] = useState<boolean>(false);
   const [copiedTags, setCopiedTags] = useState<boolean>(false);
   const [sharing, setSharing] = useState<boolean>(false);
+  const [saveStatus, setSaveStatus] = useState<'idle' | 'saving' | 'saved'>('idle');
   const [showIgModal, setShowIgModal] = useState<boolean>(false);
   const [toastMessage, setToastMessage] = useState<string | null>(null);
 
+  // 3D Tilt & Holographic glare state
+  const [rotate, setRotate] = useState({ x: 0, y: 0 });
+  const [glare, setGlare] = useState({ x: 50, y: 50, opacity: 0 });
+  const [isHovered, setIsHovered] = useState(false);
+  const cardRef = useRef<HTMLDivElement>(null);
+
   const mobileUrl = getMobileResultUrl(result);
   const hashtags = getHashtagsString();
+  const customTip = PATH_TIPS[result.pathId] || 'คุณคือพลังแห่งการเปลี่ยนแปลง';
 
   useEffect(() => {
     let mounted = true;
@@ -57,8 +78,24 @@ export const SaveShareView: React.FC<SaveShareViewProps> = ({
         if (mounted) setQrDataUrl(url);
       })
       .catch(console.error);
+
+    // Subtle gentle celebration sparkle burst on mount
+    const confettiTimer = setTimeout(() => {
+      if (!mounted) return;
+      try {
+        confetti({
+          particleCount: 26,
+          spread: 55,
+          origin: { y: 0.4 },
+          colors: ['#002B7F', '#0EA5E9', '#F5A623', '#FF5C8D'],
+          disableForReducedMotion: true,
+        });
+      } catch (_) {}
+    }, 280);
+
     return () => {
       mounted = false;
+      clearTimeout(confettiTimer);
     };
   }, [result]);
 
@@ -67,8 +104,63 @@ export const SaveShareView: React.FC<SaveShareViewProps> = ({
     setTimeout(() => setToastMessage(null), 3000);
   };
 
+  // 3D Tilt handlers
+  const handleCardMouseMove = (e: React.MouseEvent<HTMLDivElement>) => {
+    const rect = e.currentTarget.getBoundingClientRect();
+    const x = e.clientX - rect.left;
+    const y = e.clientY - rect.top;
+    const centerX = rect.width / 2;
+    const centerY = rect.height / 2;
+
+    const rotX = Math.max(-7, Math.min(7, ((y - centerY) / centerY) * -7));
+    const rotY = Math.max(-7, Math.min(7, ((x - centerX) / centerX) * 7));
+
+    setRotate({ x: rotX, y: rotY });
+    setGlare({
+      x: (x / rect.width) * 100,
+      y: (y / rect.height) * 100,
+      opacity: 0.35,
+    });
+    setIsHovered(true);
+  };
+
+  const handleCardMouseLeave = () => {
+    setRotate({ x: 0, y: 0 });
+    setGlare(prev => ({ ...prev, opacity: 0 }));
+    setIsHovered(false);
+  };
+
+  const handleCardTouchMove = (e: React.TouchEvent<HTMLDivElement>) => {
+    if (!e.touches[0]) return;
+    const rect = e.currentTarget.getBoundingClientRect();
+    const touch = e.touches[0];
+    const x = touch.clientX - rect.left;
+    const y = touch.clientY - rect.top;
+    const centerX = rect.width / 2;
+    const centerY = rect.height / 2;
+
+    const rotX = Math.max(-8, Math.min(8, ((y - centerY) / centerY) * -8));
+    const rotY = Math.max(-8, Math.min(8, ((x - centerX) / centerX) * 8));
+
+    setRotate({ x: rotX, y: rotY });
+    setGlare({
+      x: (x / rect.width) * 100,
+      y: (y / rect.height) * 100,
+      opacity: 0.4,
+    });
+    setIsHovered(true);
+  };
+
+  const handleCardTouchEnd = () => {
+    setRotate({ x: 0, y: 0 });
+    setGlare(prev => ({ ...prev, opacity: 0 }));
+    setIsHovered(false);
+  };
+
   const handleCopyLink = async () => {
     try {
+      playSelectSfx('B');
+      if ('vibrate' in navigator) navigator.vibrate?.([15]);
       await navigator.clipboard.writeText(mobileUrl);
       setCopiedLink(true);
       showToast('คัดลอกลิงก์การ์ดเรียบร้อยแล้ว ✨');
@@ -80,6 +172,8 @@ export const SaveShareView: React.FC<SaveShareViewProps> = ({
 
   const handleCopyHashtags = async () => {
     try {
+      playSelectSfx('A');
+      if ('vibrate' in navigator) navigator.vibrate?.([15]);
       await navigator.clipboard.writeText(hashtags);
       setCopiedTags(true);
       showToast('คัดลอกแฮชแท็กเรียบร้อยแล้ว! 📋');
@@ -88,14 +182,26 @@ export const SaveShareView: React.FC<SaveShareViewProps> = ({
   };
 
   const handleDownload = () => {
-    if (cardDataUrl) {
+    if (!cardDataUrl || saveStatus === 'saving') return;
+    setSaveStatus('saving');
+    playSelectSfx('F');
+    if ('vibrate' in navigator) navigator.vibrate?.([20]);
+
+    setTimeout(() => {
       downloadCard(cardDataUrl, result);
+      setSaveStatus('saved');
+      if ('vibrate' in navigator) navigator.vibrate?.([20, 30, 20]);
       showToast('ดาวน์โหลดรูปภาพลงเครื่องแล้ว (หรือสแกน QR เพื่อลงมือถือ)');
-    }
+
+      setTimeout(() => {
+        setSaveStatus('idle');
+      }, 2500);
+    }, 350);
   };
 
   const handleWebShare = async () => {
     if (!cardDataUrl) return;
+    playSelectSfx('C');
     setSharing(true);
     try {
       if (isWebShareSupported()) {
@@ -112,15 +218,18 @@ export const SaveShareView: React.FC<SaveShareViewProps> = ({
   };
 
   const handleLineShare = () => {
+    playSelectSfx('D');
     const text = `นี่คือ Future Nurse Path ของฉัน: ${result.path.nameEn} ${result.path.emoji}\nคณะพยาบาลศาสตร์ มหาวิทยาลัยมหิดล`;
     window.open(getLineShareUrl(mobileUrl, text), '_blank', 'noopener,noreferrer');
   };
 
   const handleFacebookShare = () => {
+    playSelectSfx('D');
     window.open(getFacebookShareUrl(mobileUrl), '_blank', 'noopener,noreferrer');
   };
 
   const handleTwitterShare = () => {
+    playSelectSfx('D');
     const text = `นี่คือ Future Nurse Path ของฉัน: ${result.path.nameEn} ${result.path.emoji}`;
     window.open(getTwitterShareUrl(mobileUrl, text), '_blank', 'noopener,noreferrer');
   };
@@ -164,8 +273,34 @@ export const SaveShareView: React.FC<SaveShareViewProps> = ({
             MY FUTURE NURSE CARD
           </div>
 
-          {/* Card preview 9:16 aspect */}
-          <div className="relative w-full max-w-[210px] sm:max-w-[230px] aspect-[9/16] rounded-2xl overflow-hidden shadow-xl border-2 border-white/80 bg-slate-100 flex items-center justify-center">
+          {/* Card preview 9:16 aspect with 3D Tilt & Holographic glare */}
+          <div
+            ref={cardRef}
+            onMouseMove={handleCardMouseMove}
+            onMouseLeave={handleCardMouseLeave}
+            onTouchMove={handleCardTouchMove}
+            onTouchEnd={handleCardTouchEnd}
+            style={{
+              transform: `perspective(700px) rotateX(${rotate.x}deg) rotateY(${rotate.y}deg) ${
+                isHovered ? 'scale3d(1.025, 1.025, 1.025)' : 'scale3d(1, 1, 1)'
+              }`,
+              transition: isHovered
+                ? 'transform 0.08s ease-out'
+                : 'transform 0.5s cubic-bezier(0.2, 0.8, 0.2, 1)',
+            }}
+            className="relative w-full max-w-[210px] sm:max-w-[230px] aspect-[9/16] rounded-2xl overflow-hidden shadow-xl border-2 border-white/80 bg-slate-100 flex items-center justify-center cursor-pointer select-none group"
+            title="แตะหรือเลื่อนเมาส์เพื่อดูมิติการ์ด"
+          >
+            {/* Holographic light glare overlay */}
+            <div
+              className="pointer-events-none absolute inset-0 z-20 transition-opacity duration-300 rounded-2xl"
+              style={{
+                opacity: glare.opacity,
+                background: `radial-gradient(circle at ${glare.x}% ${glare.y}%, rgba(255, 255, 255, 0.7) 0%, rgba(255, 255, 255, 0.2) 35%, transparent 70%)`,
+                mixBlendMode: 'overlay',
+              }}
+            />
+
             {cardDataUrl ? (
               <img
                 src={cardDataUrl}
@@ -187,14 +322,13 @@ export const SaveShareView: React.FC<SaveShareViewProps> = ({
             <span className="w-2 h-2 rounded-full bg-slate-300" />
           </div>
 
-          {/* Tip Banner */}
-          <div className="w-full max-w-[280px] p-2 sm:p-2.5 rounded-2xl bg-[#EFF6FF] border border-[#D0E5FC] flex items-center gap-2 shadow-sm">
+          {/* Tip Banner with Personalized Inspiring Quote */}
+          <div className="w-full max-w-[280px] p-2 sm:p-2.5 rounded-2xl bg-[#EFF6FF] border border-[#D0E5FC] flex items-center gap-2 shadow-sm transition-all hover:shadow-md">
             <div className="w-6 h-6 rounded-lg bg-amber-400/20 text-amber-500 flex items-center justify-center shrink-0">
               <Lightbulb className="w-3.5 h-3.5 text-amber-500 fill-amber-400/30" />
             </div>
             <p className="text-[10px] sm:text-[11px] text-slate-700 leading-snug">
-              <span className="font-bold text-blue-900">TIP:</span> บันทึกการ์ดนี้ไว้เตือนใจว่า{' '}
-              <span className="text-blue-700 font-medium">“คุณคือพลังแห่งการเปลี่ยนแปลง”</span>
+              <span className="font-bold text-blue-900">TIP:</span> {customTip}
             </p>
           </div>
         </div>
@@ -355,17 +489,43 @@ export const SaveShareView: React.FC<SaveShareViewProps> = ({
         data-slot="save-share-actions"
         className="grid grid-cols-3 gap-2 sm:gap-3 max-w-xl mx-auto w-full pt-2 pb-1 shrink-0"
       >
-        {/* 1. บันทึกภาพ */}
+        {/* 1. บันทึกภาพ (Morphing Button State) */}
         <button
           onClick={handleDownload}
-          disabled={!cardDataUrl}
-          className="flex flex-col sm:flex-row items-center justify-center gap-1 sm:gap-2 py-2.5 px-3 rounded-2xl bg-white hover:bg-slate-50 active:scale-[0.98] text-slate-800 font-bold text-xs sm:text-sm border border-slate-200 shadow-sm hover:shadow transition-all disabled:opacity-50"
+          disabled={!cardDataUrl || saveStatus === 'saving'}
+          className={`flex flex-col sm:flex-row items-center justify-center gap-1 sm:gap-2 py-2.5 px-3 rounded-2xl font-bold text-xs sm:text-sm border shadow-sm transition-all duration-300 ${
+            saveStatus === 'saved'
+              ? 'bg-emerald-500 text-white border-emerald-500 shadow-emerald-500/25 scale-[1.02]'
+              : saveStatus === 'saving'
+              ? 'bg-blue-50 text-blue-700 border-blue-200'
+              : 'bg-white hover:bg-slate-50 text-slate-800 border-slate-200 hover:shadow active:scale-[0.98]'
+          } disabled:opacity-50`}
         >
-          <Download className="w-4 h-4 text-blue-600" />
-          <div className="text-center sm:text-left">
-            <div>บันทึกภาพ</div>
-            <div className="text-[9px] text-slate-400 font-normal hidden sm:block">Save Image</div>
-          </div>
+          {saveStatus === 'saved' ? (
+            <>
+              <Check className="w-4 h-4 text-white" />
+              <div className="text-center sm:text-left">
+                <div>บันทึกสำเร็จ! 🎉</div>
+                <div className="text-[9px] text-white/80 font-normal hidden sm:block">Saved to Device</div>
+              </div>
+            </>
+          ) : saveStatus === 'saving' ? (
+            <>
+              <div className="w-4 h-4 rounded-full border-2 border-blue-600 border-t-transparent animate-spin" />
+              <div className="text-center sm:text-left">
+                <div>กำลังบันทึก...</div>
+                <div className="text-[9px] text-blue-500 font-normal hidden sm:block">Saving...</div>
+              </div>
+            </>
+          ) : (
+            <>
+              <Download className="w-4 h-4 text-blue-600" />
+              <div className="text-center sm:text-left">
+                <div>บันทึกภาพ</div>
+                <div className="text-[9px] text-slate-400 font-normal hidden sm:block">Save Image</div>
+              </div>
+            </>
+          )}
         </button>
 
         {/* 2. แชร์เลย */}

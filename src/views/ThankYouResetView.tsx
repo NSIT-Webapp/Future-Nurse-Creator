@@ -46,12 +46,24 @@ const STEPS = [
   { id: 8, label: 'FINISH' },
 ];
 
+const ENCOURAGING_QUOTES = [
+  'สู้ๆ นะว่าที่พยาบาลมหิดล! 🤍',
+  'ขอให้ TCAS รอบนี้เป็นของน้องนะ ✨',
+  'แล้วมาเจอกันที่รั้วมหิดลนะครับ/ค่ะ! 💙',
+  'เชื่อมั่นในพลังพิเศษของตัวเองนะ! 🌟',
+  'ยินดีต้อนรับสู่ครอบครัวพยาบาลศิริราชนะ 🏥',
+  'พยาบาลแห่งแผ่นดิน ยินดีต้อนรับเสมอ 🌿',
+  'อนาคตพยาบาลที่ยอดเยี่ยมกำลังรอน้องอยู่! 💫',
+  'หัวใจที่พร้อมดูแลผู้อื่น คือพลังที่ยิ่งใหญ่ที่สุด 💖',
+];
+
 /**
  * ThankYouResetView — Final Step 8 (FINISH)
  *
  * Designed for Kiosk Open House 2026:
  * - Focus on gratitude, celebration & inspiring future nursing students
  * - Celebratory confetti burst on entry
+ * - Interactive 3D Mascot: Tap to trigger bounce reaction, floating hearts & speech bubble quotes!
  * - Result summary & mascot illustration
  * - Official Faculty Admissions announcement (TCAS & Social Media)
  * - 60-second auto-reset countdown with progress bar & touch-to-extend
@@ -68,6 +80,13 @@ export const ThankYouResetView: React.FC<ThankYouResetViewProps> = ({
   const [copiedTags, setCopiedTags] = useState<boolean>(false);
   const [shared, setShared] = useState<boolean>(false);
   const timerRef = useRef<NodeJS.Timeout | null>(null);
+
+  // ── Interactive Mascot State ───────────────────────────────────────────────
+  const [quoteIndex, setQuoteIndex] = useState<number | null>(null);
+  const [showSpeechBubble, setShowSpeechBubble] = useState<boolean>(false);
+  const [isBouncing, setIsBouncing] = useState<boolean>(false);
+  const [tapHearts, setTapHearts] = useState<Array<{ id: number; x: number; y: number; scale: number }>>([]);
+  const bubbleTimeoutRef = useRef<NodeJS.Timeout | null>(null);
 
   // ── Confetti effect on mount ───────────────────────────────────────────────
   useEffect(() => {
