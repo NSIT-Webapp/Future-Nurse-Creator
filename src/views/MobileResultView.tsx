@@ -234,17 +234,17 @@ export const MobileResultView: React.FC<MobileResultViewProps> = ({ result, onPl
 
       {/* Header */}
       <div className="text-center pt-2 pb-3">
-        <div className="inline-flex items-center gap-1.5 px-3.5 py-1 rounded-full bg-[#E0EDFA] text-[#004BB7] text-xs font-bold border border-[#BBD8F5] mb-2 shadow-xs">
-          <Sparkles className="w-3.5 h-3.5 text-mahidol-gold" />
+        <div className="inline-flex items-center gap-1.5 px-4 py-1.5 rounded-full bg-[#E0EDFA] text-[#004BB7] text-xs sm:text-sm font-bold border border-[#BBD8F5] mb-2 shadow-xs">
+          <Sparkles className="w-4 h-4 text-mahidol-gold" />
           <span>คณะพยาบาลศาสตร์ มหาวิทยาลัยมหิดล</span>
         </div>
-        <p className="text-[11px] font-extrabold text-[#FF3366] mb-1 tracking-wide">
+        <p className="text-sm sm:text-base font-extrabold text-[#FF3366] mb-1 tracking-wide">
           บันทึก แชร์ และส่งต่อ Future Nurse Card ของคุณ
         </p>
-        <h1 className="text-2xl sm:text-3xl font-extrabold text-[#002B7F] mb-0.5 font-heading">
+        <h1 className="text-3xl sm:text-4xl font-extrabold text-[#002B7F] mb-1 font-heading">
           {result.path.emoji} {result.path.nameEn}
         </h1>
-        <p className="text-xs sm:text-sm text-slate-500 font-medium">{result.path.nameTh}</p>
+        <p className="text-base sm:text-lg text-slate-600 font-semibold">{result.path.nameTh}</p>
       </div>
 
       {/* Card Preview (9:16) with 3D Tilt & Glare */}
@@ -264,7 +264,7 @@ export const MobileResultView: React.FC<MobileResultViewProps> = ({ result, onPl
               ? 'transform 0.08s ease-out'
               : 'transform 0.5s cubic-bezier(0.2, 0.8, 0.2, 1)',
           }}
-          className="relative w-full max-w-[270px] rounded-3xl overflow-hidden shadow-2xl border-2 border-white/80 bg-slate-100 flex items-center justify-center select-none cursor-pointer"
+          className="relative w-full max-w-[280px] rounded-3xl overflow-hidden shadow-2xl border-2 border-white/80 bg-slate-100 flex items-center justify-center select-none cursor-pointer"
           title="แตะเพื่อหมุนดูมิติการ์ด"
         >
           {/* Holographic light glare overlay */}
@@ -286,17 +286,17 @@ export const MobileResultView: React.FC<MobileResultViewProps> = ({ result, onPl
           ) : (
             <div className="flex flex-col items-center gap-2 p-6 text-center">
               <div className="w-9 h-9 rounded-full border-3 border-blue-600 border-t-transparent animate-spin" />
-              <p className="text-xs text-slate-400">กำลังเตรียมการ์ดความละเอียดสูง...</p>
+              <p className="text-sm font-semibold text-slate-500">กำลังเตรียมการ์ดความละเอียดสูง...</p>
             </div>
           )}
         </div>
 
         {/* Tip Banner with Personalized Inspiring Quote */}
-        <div className="w-full max-w-[280px] mt-3 p-2.5 rounded-2xl bg-white/80 backdrop-blur-xs border border-sky-100 flex items-center gap-2.5 shadow-xs">
-          <div className="w-6 h-6 rounded-lg bg-amber-400/20 text-amber-500 flex items-center justify-center shrink-0">
-            <Lightbulb className="w-3.5 h-3.5 text-amber-500 fill-amber-400/30" />
+        <div className="w-full max-w-[300px] mt-3 p-3 rounded-2xl bg-white/90 backdrop-blur-xs border border-sky-100 flex items-center gap-2.5 shadow-xs">
+          <div className="w-7 h-7 rounded-lg bg-amber-400/20 text-amber-500 flex items-center justify-center shrink-0">
+            <Lightbulb className="w-4 h-4 text-amber-500 fill-amber-400/30" />
           </div>
-          <p className="text-[11px] text-slate-700 leading-snug">
+          <p className="text-sm sm:text-base text-slate-700 leading-snug font-medium">
             <span className="font-bold text-blue-900">TIP:</span> {customTip}
           </p>
         </div>
@@ -308,7 +308,7 @@ export const MobileResultView: React.FC<MobileResultViewProps> = ({ result, onPl
         <button
           onClick={handleDownload}
           disabled={!cardDataUrl || saveStatus === 'saving'}
-          className={`w-full py-4 px-6 rounded-2xl font-bold text-base flex items-center justify-center gap-2.5 shadow-xl transition-all duration-300 ${
+          className={`w-full py-4 px-6 min-h-[56px] rounded-2xl font-bold text-lg sm:text-xl flex items-center justify-center gap-2.5 shadow-xl transition-all duration-300 ${
             saveStatus === 'saved'
               ? 'bg-emerald-500 text-white shadow-emerald-500/30 scale-[1.01]'
               : saveStatus === 'saving'
@@ -318,25 +318,25 @@ export const MobileResultView: React.FC<MobileResultViewProps> = ({ result, onPl
         >
           {saveStatus === 'saved' ? (
             <>
-              <Check className="w-5 h-5 text-white" />
+              <Check className="w-6 h-6 text-white" />
               <span>บันทึกการ์ดลงเครื่องเรียบร้อย! 🎉</span>
             </>
           ) : saveStatus === 'saving' ? (
             <>
-              <div className="w-5 h-5 rounded-full border-2 border-blue-800 border-t-transparent animate-spin" />
+              <div className="w-6 h-6 rounded-full border-2 border-blue-800 border-t-transparent animate-spin" />
               <span>กำลังเตรียมบันทึกภาพ...</span>
             </>
           ) : (
             <>
-              <Download className="w-5 h-5 text-amber-300" />
+              <Download className="w-6 h-6 text-amber-300" />
               <span>บันทึกรูปภาพลงเครื่อง (Save Card)</span>
             </>
           )}
         </button>
 
         {/* Social Share Icons Row */}
-        <div className="bg-white p-3 rounded-2xl shadow-sm border border-slate-100">
-          <p className="text-[11px] font-bold text-slate-500 text-center mb-2">
+        <div className="bg-white p-3.5 rounded-2xl shadow-sm border border-slate-100">
+          <p className="text-sm font-bold text-slate-600 text-center mb-2.5">
             แชร์ไปยัง social media ของคุณ
           </p>
           <div className="flex items-center justify-around">
@@ -346,10 +346,10 @@ export const MobileResultView: React.FC<MobileResultViewProps> = ({ result, onPl
               className="flex flex-col items-center gap-1 group"
               title="LINE"
             >
-              <div className="w-10 h-10 rounded-full bg-[#06C755] text-white flex items-center justify-center shadow-md group-hover:scale-105 active:scale-95 transition-all font-bold text-xs">
+              <div className="w-11 h-11 rounded-full bg-[#06C755] text-white flex items-center justify-center shadow-md group-hover:scale-105 active:scale-95 transition-all font-bold text-xs">
                 LINE
               </div>
-              <span className="text-[10px] text-slate-500">LINE</span>
+              <span className="text-xs font-semibold text-slate-600">LINE</span>
             </button>
 
             {/* Facebook */}
@@ -358,10 +358,10 @@ export const MobileResultView: React.FC<MobileResultViewProps> = ({ result, onPl
               className="flex flex-col items-center gap-1 group"
               title="Facebook"
             >
-              <div className="w-10 h-10 rounded-full bg-[#1877F2] text-white flex items-center justify-center shadow-md group-hover:scale-105 active:scale-95 transition-all font-bold text-sm">
+              <div className="w-11 h-11 rounded-full bg-[#1877F2] text-white flex items-center justify-center shadow-md group-hover:scale-105 active:scale-95 transition-all font-bold text-base">
                 f
               </div>
-              <span className="text-[10px] text-slate-500">Facebook</span>
+              <span className="text-xs font-semibold text-slate-600">Facebook</span>
             </button>
 
             {/* Instagram */}
@@ -370,10 +370,10 @@ export const MobileResultView: React.FC<MobileResultViewProps> = ({ result, onPl
               className="flex flex-col items-center gap-1 group"
               title="Instagram"
             >
-              <div className="w-10 h-10 rounded-full bg-gradient-to-tr from-[#f09433] via-[#dc2743] to-[#bc1888] text-white flex items-center justify-center shadow-md group-hover:scale-105 active:scale-95 transition-all">
+              <div className="w-11 h-11 rounded-full bg-gradient-to-tr from-[#f09433] via-[#dc2743] to-[#bc1888] text-white flex items-center justify-center shadow-md group-hover:scale-105 active:scale-95 transition-all">
                 <Camera className="w-5 h-5" />
               </div>
-              <span className="text-[10px] text-slate-500">Instagram</span>
+              <span className="text-xs font-semibold text-slate-600">Instagram</span>
             </button>
 
             {/* X */}
@@ -382,10 +382,10 @@ export const MobileResultView: React.FC<MobileResultViewProps> = ({ result, onPl
               className="flex flex-col items-center gap-1 group"
               title="X (Twitter)"
             >
-              <div className="w-10 h-10 rounded-full bg-black text-white flex items-center justify-center shadow-md group-hover:scale-105 active:scale-95 transition-all font-extrabold text-sm">
+              <div className="w-11 h-11 rounded-full bg-black text-white flex items-center justify-center shadow-md group-hover:scale-105 active:scale-95 transition-all font-extrabold text-base">
                 𝕏
               </div>
-              <span className="text-[10px] text-slate-500">X</span>
+              <span className="text-xs font-semibold text-slate-600">X</span>
             </button>
 
             {/* More / Web Share */}
@@ -394,10 +394,10 @@ export const MobileResultView: React.FC<MobileResultViewProps> = ({ result, onPl
               className="flex flex-col items-center gap-1 group"
               title="แชร์ช่องทางอื่น ๆ"
             >
-              <div className="w-10 h-10 rounded-full bg-slate-100 hover:bg-slate-200 text-slate-600 flex items-center justify-center shadow-xs group-hover:scale-105 active:scale-95 transition-all border border-slate-200">
+              <div className="w-11 h-11 rounded-full bg-slate-100 hover:bg-slate-200 text-slate-600 flex items-center justify-center shadow-xs group-hover:scale-105 active:scale-95 transition-all border border-slate-200">
                 <MoreHorizontal className="w-5 h-5" />
               </div>
-              <span className="text-[10px] text-slate-500">อื่น ๆ</span>
+              <span className="text-xs font-semibold text-slate-600">อื่น ๆ</span>
             </button>
           </div>
         </div>
@@ -405,17 +405,17 @@ export const MobileResultView: React.FC<MobileResultViewProps> = ({ result, onPl
         {/* 1-Click Hashtag Copy Box */}
         <div
           onClick={handleCopyHashtags}
-          className="p-3 rounded-2xl bg-gradient-to-r from-[#EFF6FF] to-[#E9F3FF] border border-[#BFDBFE] flex items-center justify-between cursor-pointer hover:border-blue-400 active:scale-[0.99] transition-all group shadow-xs"
+          className="p-3.5 rounded-2xl bg-gradient-to-r from-[#EFF6FF] to-[#E9F3FF] border border-[#BFDBFE] flex items-center justify-between cursor-pointer hover:border-blue-400 active:scale-[0.99] transition-all group shadow-xs"
           title="แตะเพื่อคัดลอกแฮชแท็ก"
         >
           <div>
-            <p className="text-xs font-bold text-blue-900 flex items-center gap-1.5">
+            <p className="text-sm font-bold text-blue-900 flex items-center gap-1.5">
               <span># อย่าลืมติดแฮชแท็กนะ!</span>
               {copiedTags && (
-                <span className="text-[10px] text-emerald-600 font-bold">(คัดลอกแล้ว ✅)</span>
+                <span className="text-xs text-emerald-600 font-bold">(คัดลอกแล้ว ✅)</span>
               )}
             </p>
-            <p className="text-[11px] text-blue-700 font-medium mt-0.5 font-mono">
+            <p className="text-xs sm:text-sm text-blue-700 font-semibold mt-0.5 font-mono">
               #NSMahidol #พยาบาลมหิดล #เส้นทางที่ใช่ของฉัน #FutureNurse
             </p>
           </div>
@@ -424,9 +424,9 @@ export const MobileResultView: React.FC<MobileResultViewProps> = ({ result, onPl
               e.stopPropagation();
               handleCopyHashtags();
             }}
-            className="p-2 rounded-xl bg-white text-blue-600 shadow-sm border border-blue-100 shrink-0 group-hover:scale-105 transition-transform"
+            className="p-2.5 rounded-xl bg-white text-blue-600 shadow-sm border border-blue-100 shrink-0 group-hover:scale-105 transition-transform"
           >
-            {copiedTags ? <Check className="w-4 h-4 text-emerald-500" /> : <Copy className="w-4 h-4" />}
+            {copiedTags ? <Check className="w-5 h-5 text-emerald-500" /> : <Copy className="w-5 h-5" />}
           </button>
         </div>
       </div>
@@ -437,26 +437,26 @@ export const MobileResultView: React.FC<MobileResultViewProps> = ({ result, onPl
           href="https://ns.mahidol.ac.th/nurse_en/bns/bns2022_study.html"
           target="_blank"
           rel="noopener noreferrer"
-          className="flex items-center justify-between p-3.5 rounded-2xl bg-white hover:bg-slate-50 text-xs font-bold text-slate-700 border border-slate-200 shadow-xs active:scale-[0.99] transition-all"
+          className="flex items-center justify-between p-4 rounded-2xl bg-white hover:bg-slate-50 text-sm sm:text-base font-bold text-slate-800 border border-slate-200 shadow-xs active:scale-[0.99] transition-all"
         >
           <span className="flex items-center gap-2.5">
-            <GraduationCap className="w-4 h-4 text-blue-600" />
+            <GraduationCap className="w-5 h-5 text-blue-600" />
             <span>ประชาสัมพันธ์หลักสูตรพยาบาลศาสตรบัณฑิต</span>
           </span>
-          <ExternalLink className="w-3.5 h-3.5 text-slate-400" />
+          <ExternalLink className="w-4 h-4 text-slate-400" />
         </a>
 
         <a
           href="https://tcas.mahidol.ac.th"
           target="_blank"
           rel="noopener noreferrer"
-          className="flex items-center justify-between p-3.5 rounded-2xl bg-white hover:bg-slate-50 text-xs font-bold text-slate-700 border border-slate-200 shadow-xs active:scale-[0.99] transition-all"
+          className="flex items-center justify-between p-4 rounded-2xl bg-white hover:bg-slate-50 text-sm sm:text-base font-bold text-slate-800 border border-slate-200 shadow-xs active:scale-[0.99] transition-all"
         >
           <span className="flex items-center gap-2.5">
-            <Sparkles className="w-4 h-4 text-amber-500" />
+            <Sparkles className="w-5 h-5 text-amber-500" />
             <span>TCAS มหิดล</span>
           </span>
-          <ExternalLink className="w-3.5 h-3.5 text-slate-400" />
+          <ExternalLink className="w-4 h-4 text-slate-400" />
         </a>
       </div>
 
@@ -464,9 +464,9 @@ export const MobileResultView: React.FC<MobileResultViewProps> = ({ result, onPl
       <div className="text-center pb-2">
         <button
           onClick={onPlayAgain}
-          className="inline-flex items-center gap-1.5 text-xs text-slate-400 hover:text-slate-700 transition-colors py-1 px-3 rounded-full hover:bg-black/5"
+          className="inline-flex items-center gap-2 text-sm text-slate-500 hover:text-slate-800 font-semibold transition-colors py-1.5 px-4 rounded-full hover:bg-black/5"
         >
-          <RotateCcw className="w-3.5 h-3.5" />
+          <RotateCcw className="w-4 h-4" />
           <span>ลองค้นหาเส้นทางใหม่อีกครั้ง</span>
         </button>
       </div>
