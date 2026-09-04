@@ -4,10 +4,7 @@ import {
   Sparkles,
   RotateCcw,
   Heart,
-  Bot,
-  Users,
   ChevronRight,
-  Share2,
   Copy,
   Check,
   GraduationCap,
@@ -16,9 +13,7 @@ import {
   Camera,
 } from 'lucide-react';
 import { ResultPayload } from '../types';
-import { ASSETS } from '../assets/registry';
 import { SoundControl } from '../components/SoundControl';
-import { isWebShareSupported, shareCardViaWebShare, buildShareCaption } from '../engine/shareManager';
 
 interface ThankYouResetViewProps {
   result: ResultPayload | null;
@@ -29,7 +24,7 @@ interface ThankYouResetViewProps {
 
 const HASHTAGS = [
   '#NSMUOPENHOUSE2026',
-  '#NURSESOFTHELAND',
+  '#NURSESOFTHAILAND',
   '#NSMUTCAS70',
   '#MahidolNursing',
   '#คณะพยาบาลศาสตร์มหิดล',
@@ -38,7 +33,7 @@ const HASHTAGS = [
 const STEPS = [
   { id: 1, label: 'WELCOME' },
   { id: 2, label: 'FUTURE NURSE' },
-  { id: 3, label: 'QUESTIONS' },
+  { id: 3, label: '8 QUESTIONS' },
   { id: 4, label: 'ANALYZING' },
   { id: 5, label: 'MATCHING' },
   { id: 6, label: 'REVEAL' },
@@ -60,25 +55,19 @@ const ENCOURAGING_QUOTES = [
 /**
  * ThankYouResetView — Final Step 8 (FINISH)
  *
- * Designed for Kiosk Open House 2026:
- * - Focus on gratitude, celebration & inspiring future nursing students
- * - Celebratory confetti burst on entry
- * - Interactive 3D Mascot: Tap to trigger bounce reaction, floating hearts & speech bubble quotes!
- * - Result summary & mascot illustration
+ * Responsive, Kiosk & Mobile-ready celebration screen:
+ * - Duo Nurse Mascot Hero with interactive tap reaction & quotes
  * - Official Faculty Admissions announcement (TCAS & Social Media)
  * - 60-second auto-reset countdown with progress bar & touch-to-extend
- * - No Save Image button (already handled in Step 7)
- * - No QR Code (focused purely on thank you & outro)
+ * - 1-Click Hashtags copy
+ * - Share Now & Try Again CTAs
+ * - Confetti celebration on entry
  */
 export const ThankYouResetView: React.FC<ThankYouResetViewProps> = ({
-  result,
-  cardDataUrl,
   onReset,
-  onViewCardAgain,
 }) => {
   const [timeLeft, setTimeLeft] = useState<number>(60);
   const [copiedTags, setCopiedTags] = useState<boolean>(false);
-  const [shared, setShared] = useState<boolean>(false);
   const timerRef = useRef<ReturnType<typeof setInterval> | null>(null);
 
   // ── Interactive Mascot State ───────────────────────────────────────────────
@@ -94,8 +83,8 @@ export const ThankYouResetView: React.FC<ThankYouResetViewProps> = ({
       confetti({
         particleCount: 90,
         spread: 80,
-        origin: { y: 0.25 },
-        colors: ['#F5A623', '#00A3FF', '#38BDF8', '#FF69B4', '#10B981'],
+        origin: { y: 0.22 },
+        colors: ['#00A3FF', '#38BDF8', '#F5A623', '#FF69B4', '#10B981', '#FFFFFF'],
       });
 
       const timer = setTimeout(() => {
@@ -103,15 +92,15 @@ export const ThankYouResetView: React.FC<ThankYouResetViewProps> = ({
           particleCount: 50,
           angle: 60,
           spread: 60,
-          origin: { x: 0, y: 0.4 },
-          colors: ['#F5A623', '#00A3FF', '#FFFFFF'],
+          origin: { x: 0, y: 0.35 },
+          colors: ['#00A3FF', '#F5A623', '#FFFFFF'],
         });
         confetti({
           particleCount: 50,
           angle: 120,
           spread: 60,
-          origin: { x: 1, y: 0.4 },
-          colors: ['#F5A623', '#00A3FF', '#FFFFFF'],
+          origin: { x: 1, y: 0.35 },
+          colors: ['#00A3FF', '#F5A623', '#FFFFFF'],
         });
       }, 400);
 
@@ -148,14 +137,10 @@ export const ThankYouResetView: React.FC<ThankYouResetViewProps> = ({
     };
   }, []);
 
-  const handleMascotTap = (e: React.MouseEvent<HTMLButtonElement>) => {
+  // ── Mascot Tap Interaction ─────────────────────────────────────────────────
+  const handleMascotTap = (e: React.MouseEvent<HTMLDivElement> | React.TouchEvent<HTMLDivElement>) => {
     e.stopPropagation();
     handleUserActivity();
-
-    const rect = e.currentTarget.getBoundingClientRect();
-    const x = ((e.clientX - rect.left) / rect.width) * 100;
-    const y = ((e.clientY - rect.top) / rect.height) * 100;
-    const heartId = Date.now();
 
     setQuoteIndex(prev => {
       if (ENCOURAGING_QUOTES.length <= 1) return 0;
@@ -164,13 +149,15 @@ export const ThankYouResetView: React.FC<ThankYouResetViewProps> = ({
     });
     setShowSpeechBubble(true);
     setIsBouncing(true);
+
+    const heartId = Date.now();
     setTapHearts(prev => [
-      ...prev.slice(-5),
+      ...prev.slice(-4),
       {
         id: heartId,
-        x: Math.max(14, Math.min(86, x)),
-        y: Math.max(18, Math.min(80, y)),
-        scale: 0.85 + Math.random() * 0.45,
+        x: 35 + Math.random() * 30,
+        y: 30 + Math.random() * 25,
+        scale: 0.85 + Math.random() * 0.4,
       },
     ]);
 
@@ -182,7 +169,7 @@ export const ThankYouResetView: React.FC<ThankYouResetViewProps> = ({
     if (bubbleTimeoutRef.current) clearTimeout(bubbleTimeoutRef.current);
     bubbleTimeoutRef.current = setTimeout(() => {
       setShowSpeechBubble(false);
-    }, 3000);
+    }, 3500);
   };
 
   // ── Copy hashtags ──────────────────────────────────────────────────────────
@@ -196,89 +183,61 @@ export const ThankYouResetView: React.FC<ThankYouResetViewProps> = ({
     } catch (_) {}
   };
 
-  // ── Share handler ──────────────────────────────────────────────────────────
-  const handleShare = async (e: React.MouseEvent) => {
-    e.stopPropagation();
-    handleUserActivity();
-    if (result && cardDataUrl && isWebShareSupported()) {
-      await shareCardViaWebShare(cardDataUrl, result);
-    } else if (result) {
-      try {
-        await navigator.clipboard.writeText(buildShareCaption(result));
-        setShared(true);
-        setTimeout(() => setShared(false), 2000);
-      } catch (_) {}
-    }
-  };
-
-  // Character illustration
-  const characterSrc = result
-    ? ASSETS.characters[result.pathId]?.[result.characterType === 'female_student' ? 'female' : 'male'] ||
-      '/characters/PED_male.png'
-    : '/characters/PED_male.png';
-
-  const pathNameEn = result?.path.nameEn || 'Pediatric Nursing';
-  const pathNameTh = result?.path.nameTh || 'พยาบาลเด็ก';
-  const superpower = result?.superpower || 'Communication';
-  const aiSkill = result?.aiSkill || 'Patient Education Creator';
-  const impact =
-    result?.profileImpact || 'คุณทำให้การดูแลเด็กอบอุ่น เข้าใจง่าย และรู้สึกปลอดภัย';
-
   const progressPercent = Math.max(0, Math.min(100, (timeLeft / 60) * 100));
 
   return (
     <div
       onClick={handleUserActivity}
       onTouchStart={handleUserActivity}
-      className="flex-1 flex flex-col h-full w-full bg-gradient-to-b from-[#EFF6FF] via-[#E2EEFC] to-[#D4E6FA] text-slate-800 overflow-y-auto overflow-x-hidden relative select-none"
+      className="flex-1 flex flex-col h-full w-full bg-gradient-to-b from-[#EFF6FF] via-[#E2EEFC] to-[#D0E5FF] text-slate-800 overflow-y-auto overflow-x-hidden relative select-none"
       data-slot="thank-you-finish-root"
     >
       {/* ── Top Bar with Mahidol Logo & SoundControl ────────────────────────── */}
-      <header className="flex items-center justify-between px-4 sm:px-6 pt-3 pb-2 relative z-20 shrink-0">
-        <div className="flex items-center gap-2.5">
-          <div className="bg-white/90 rounded-xl p-1.5 shadow-sm border border-sky-100 flex items-center shrink-0">
+      <header className="flex items-center justify-between px-3 sm:px-6 pt-2.5 pb-1.5 relative z-20 shrink-0">
+        <div className="flex items-center gap-2">
+          <div className="bg-white/90 rounded-xl p-1 shadow-sm border border-sky-100 flex items-center shrink-0">
             <img
               src="/assets/home/faculty-logo.png"
               alt="คณะพยาบาลศาสตร์ มหาวิทยาลัยมหิดล"
-              className="h-7 sm:h-8 w-auto object-contain"
+              className="h-6 sm:h-7 md:h-8 w-auto object-contain"
             />
           </div>
-          <div className="hidden xs:block">
-            <div className="text-xs sm:text-sm font-bold text-mahidol-blue font-heading leading-tight">
+          <div className="hidden xs:block text-left">
+            <div className="text-[11px] sm:text-xs font-bold text-mahidol-blue font-heading leading-tight">
               มหาวิทยาลัยมหิดล
             </div>
-            <div className="text-[10px] sm:text-xs text-slate-600 font-medium">
+            <div className="text-[9px] sm:text-[10px] text-slate-600 font-medium">
               คณะพยาบาลศาสตร์
             </div>
           </div>
         </div>
 
         <SoundControl
-          className="!bg-white/90 !text-slate-700 !border-sky-200 hover:!bg-white shadow-sm"
+          className="!bg-white/90 !text-slate-700 !border-sky-200 hover:!bg-white shadow-sm scale-90 sm:scale-100"
           size="sm"
         />
       </header>
 
       {/* ── Stepper (8 Steps) ────────────────────────────────────────────────── */}
-      <div className="px-3 sm:px-6 py-2 shrink-0">
+      <div className="px-2 sm:px-6 py-1.5 shrink-0">
         <div className="flex items-center justify-between max-w-xl mx-auto relative">
           {/* Connecting Line */}
-          <div className="absolute top-3 left-3 right-3 h-0.5 bg-sky-200 -z-0" />
+          <div className="absolute top-2.5 sm:top-3 left-2 right-2 h-0.5 bg-sky-200 -z-0" />
           {STEPS.map(s => {
             const isFinish = s.id === 8;
             return (
               <div key={s.id} className="flex flex-col items-center relative z-10">
                 <div
-                  className={`w-6 h-6 rounded-full flex items-center justify-center text-[10px] font-bold shadow-sm transition-all ${
+                  className={`w-5 h-5 sm:w-6 sm:h-6 rounded-full flex items-center justify-center text-[9px] sm:text-[10px] font-bold shadow-sm transition-all ${
                     isFinish
-                      ? 'bg-rose-500 text-white ring-4 ring-rose-200 scale-110'
+                      ? 'bg-rose-500 text-white ring-3 ring-rose-200 scale-110'
                       : 'bg-white text-sky-600 border border-sky-300'
                   }`}
                 >
                   {s.id}
                 </div>
                 <span
-                  className={`text-[8px] sm:text-[9px] mt-1 font-medium tracking-tight whitespace-nowrap hidden sm:block ${
+                  className={`text-[7px] sm:text-[9px] mt-0.5 font-medium tracking-tight whitespace-nowrap hidden sm:block ${
                     isFinish ? 'text-rose-600 font-bold' : 'text-slate-500'
                   }`}
                 >
@@ -290,182 +249,120 @@ export const ThankYouResetView: React.FC<ThankYouResetViewProps> = ({
         </div>
       </div>
 
-      {/* ── Main Content Area ───────────────────────────────────────────────── */}
-      <div className="flex-1 flex flex-col justify-between px-4 sm:px-6 py-2 max-w-4xl mx-auto w-full space-y-3 sm:space-y-4">
-        {/* Title & Inspirational Subtitle */}
-        <div className="text-center pt-1">
-          <div className="inline-flex items-center gap-1.5 px-3.5 py-1 rounded-full bg-gradient-to-r from-sky-500 to-blue-600 text-white text-xs font-bold shadow-sm mb-2">
-            <Sparkles className="w-3.5 h-3.5 text-amber-300" />
+      {/* ── Main Content Container ──────────────────────────────────────────── */}
+      <div className="flex-1 flex flex-col justify-between px-3 sm:px-6 py-1.5 max-w-2xl md:max-w-3xl mx-auto w-full space-y-2.5 sm:space-y-3">
+        {/* ── Title Banner ──────────────────────────────────────────────────── */}
+        <div className="text-center pt-0.5 shrink-0">
+          <div className="inline-flex items-center gap-1 px-3 py-0.5 rounded-full bg-gradient-to-r from-sky-500 to-blue-600 text-white text-[10px] sm:text-xs font-bold shadow-sm mb-1">
+            <Sparkles className="w-3 h-3 text-amber-300" />
             <span>FINISH</span>
-            <Sparkles className="w-3.5 h-3.5 text-amber-300" />
+            <Sparkles className="w-3 h-3 text-amber-300" />
           </div>
 
-          <h1 className="text-2xl sm:text-3xl lg:text-4xl font-extrabold text-mahidol-blue font-heading tracking-tight flex items-center justify-center gap-2">
+          <h1 className="text-xl sm:text-2xl md:text-3xl font-extrabold text-mahidol-blue font-heading tracking-tight flex items-center justify-center gap-1.5">
             <span>ขอบคุณที่ค้นพบเส้นทางพยาบาลของคุณ!</span>
-            <Heart className="w-6 h-6 text-rose-500 fill-rose-500 inline-block animate-pulse" />
+            <Heart className="w-5 h-5 text-rose-500 fill-rose-500 inline-block animate-pulse shrink-0" />
           </h1>
-          <p className="text-xs sm:text-sm text-slate-600 font-medium mt-1">
-            ขอให้คุณก้าวไปเป็นพยาบาลที่สร้างการเปลี่ยนแปลงให้สังคม 🤍
+          <p className="text-[11px] sm:text-xs md:text-sm text-slate-600 font-medium mt-0.5">
+            ขอให้คุณก้าวไปเป็นพยาบาลที่สร้างการเปลี่ยนแปลงให้สังคม 💙
           </p>
         </div>
 
-        {/* ── Center Stage: 3-column Result summary + 3D Mascot + Hashtags ──── */}
-        <div className="grid grid-cols-1 md:grid-cols-12 gap-3 sm:gap-4 items-center">
-          {/* LEFT: Result Summary Card (5 cols) */}
-          <div className="md:col-span-4 bg-white/90 backdrop-blur-md rounded-2xl p-4 shadow-md border border-sky-100 flex flex-col space-y-3">
-            <div className="text-xs font-bold text-slate-500 uppercase tracking-wider">
-              สรุปผลลัพธ์ของคุณ
-            </div>
+        {/* ── Hero Visual: Duo Nurses + Interactive Tap + Hashtags ──────────── */}
+        <div className="relative w-full rounded-2xl sm:rounded-3xl overflow-hidden shadow-lg border-2 border-white/80 bg-white/40 backdrop-blur-sm flex items-center justify-center min-h-[160px] xs:min-h-[200px] sm:min-h-[240px] md:min-h-[270px]">
+          {/* Hero Image Container */}
+          <div
+            onClick={handleMascotTap}
+            onTouchStart={handleMascotTap}
+            className={`w-full h-full relative cursor-pointer select-none transition-transform active:scale-[0.99] flex items-center justify-center ${
+              isBouncing ? 'animate-mascot-bounce' : ''
+            }`}
+            title="แตะที่ตัวพี่พยาบาลเพื่อรับกำลังใจ"
+          >
+            <img
+              src="/assets/finish/duo-nurses.jpg"
+              alt="Faculty of Nursing Mahidol Duo Mascot"
+              className="w-full h-auto max-h-[280px] sm:max-h-[320px] object-cover object-center"
+              draggable={false}
+            />
 
-            {/* Path Title */}
-            <div className="flex items-center gap-3 pb-2 border-b border-sky-100">
-              <div className="w-11 h-11 rounded-2xl bg-gradient-to-br from-rose-400 to-pink-500 flex items-center justify-center text-white shadow-sm shrink-0">
-                <Heart className="w-6 h-6 fill-white/80" />
+            {/* Speech Bubble Above Nurses */}
+            {showSpeechBubble && quoteIndex !== null && (
+              <div className="absolute top-2 sm:top-4 left-1/2 -translate-x-1/2 z-30 px-3.5 py-1.5 sm:px-4 sm:py-2 rounded-2xl bg-white/95 text-slate-800 text-xs sm:text-sm font-bold shadow-xl border-2 border-sky-200 animate-scale-up text-center max-w-[85%] sm:max-w-[280px]">
+                <span>{ENCOURAGING_QUOTES[quoteIndex]}</span>
+                {/* Bubble Tail */}
+                <div className="absolute -bottom-2 left-1/2 -translate-x-1/2 w-0 h-0 border-x-[6px] border-x-transparent border-t-[8px] border-t-white/95 filter drop-shadow-sm" />
               </div>
-              <div className="min-w-0">
-                <div className="text-[11px] text-slate-500">เส้นทางที่ใช่สำหรับคุณ</div>
-                <div className="text-base sm:text-lg font-extrabold text-mahidol-blue leading-tight truncate">
-                  {pathNameEn}
-                </div>
-                <div className="text-xs text-sky-700 font-semibold">{pathNameTh}</div>
-              </div>
-            </div>
-
-            {/* Superpower */}
-            <div className="flex items-start gap-2.5">
-              <div className="w-7 h-7 rounded-lg bg-pink-100 text-pink-600 flex items-center justify-center shrink-0 mt-0.5">
-                <Heart className="w-4 h-4 fill-pink-600/30" />
-              </div>
-              <div className="text-xs">
-                <div className="text-[10px] text-slate-500 font-medium">Your Superpower</div>
-                <div className="font-bold text-slate-800">{superpower}</div>
-              </div>
-            </div>
-
-            {/* AI Skill */}
-            <div className="flex items-start gap-2.5">
-              <div className="w-7 h-7 rounded-lg bg-sky-100 text-sky-600 flex items-center justify-center shrink-0 mt-0.5">
-                <Bot className="w-4 h-4" />
-              </div>
-              <div className="text-xs">
-                <div className="text-[10px] text-slate-500 font-medium">Your AI Skill</div>
-                <div className="font-bold text-slate-800">{aiSkill}</div>
-              </div>
-            </div>
-
-            {/* Impact */}
-            <div className="flex items-start gap-2.5">
-              <div className="w-7 h-7 rounded-lg bg-emerald-100 text-emerald-600 flex items-center justify-center shrink-0 mt-0.5">
-                <Users className="w-4 h-4" />
-              </div>
-              <div className="text-xs">
-                <div className="text-[10px] text-slate-500 font-medium">Your Impact</div>
-                <div className="text-slate-600 leading-snug line-clamp-2">{impact}</div>
-              </div>
-            </div>
-
-            {/* View Card Again CTA */}
-            {onViewCardAgain && (
-              <button
-                onClick={(e) => {
-                  e.stopPropagation();
-                  onViewCardAgain();
-                }}
-                className="w-full py-2 px-3 rounded-xl bg-sky-50 hover:bg-sky-100 active:scale-95 text-sky-700 border border-sky-200 text-xs font-bold flex items-center justify-between transition-all"
-              >
-                <span>ดูการ์ดของฉันอีกครั้ง</span>
-                <ChevronRight className="w-4 h-4" />
-              </button>
             )}
-          </div>
 
-          {/* CENTER: Mascot Character (4 cols) */}
-          <div className="md:col-span-4 flex flex-col items-center justify-center relative py-2">
-            {/* Background Halo */}
-            <div className="absolute inset-0 bg-gradient-to-tr from-sky-300/40 via-blue-200/30 to-amber-200/40 rounded-full blur-2xl -z-10" />
-
-            <button
-              type="button"
-              onClick={handleMascotTap}
-              className="relative w-44 sm:w-56 md:w-60 max-w-full aspect-square flex items-center justify-center rounded-full focus:outline-none focus-visible:ring-4 focus-visible:ring-sky-300/80 active:scale-95 transition-transform"
-              aria-label="แตะเพื่อส่งกำลังใจ"
-            >
-              {showSpeechBubble && quoteIndex !== null && (
-                <div className="absolute -top-3 left-1/2 -translate-x-1/2 z-20 w-48 sm:w-56 rounded-2xl bg-white/95 border border-rose-100 px-3 py-2 text-center text-xs sm:text-sm font-bold text-mahidol-blue shadow-lg animate-scale-up">
-                  {ENCOURAGING_QUOTES[quoteIndex]}
-                  <div className="absolute left-1/2 top-full h-3 w-3 -translate-x-1/2 -translate-y-1/2 rotate-45 bg-white border-b border-r border-rose-100" />
-                </div>
-              )}
-
-              {tapHearts.map(heart => (
-                <Heart
-                  key={heart.id}
-                  className="absolute z-30 h-5 w-5 fill-rose-400 text-rose-500 animate-float-heart pointer-events-none"
-                  style={{
-                    left: `${heart.x}%`,
-                    top: `${heart.y}%`,
-                    transform: `scale(${heart.scale})`,
-                  }}
-                />
-              ))}
-
-              <img
-                src={characterSrc}
-                alt="Future Nurse Character"
-                className={`w-full h-full object-contain filter drop-shadow-xl ${
-                  isBouncing ? 'animate-mascot-bounce' : 'animate-float-subtle'
-                }`}
-              />
-            </button>
-
-            <div className="mt-1 text-[10px] sm:text-xs font-semibold text-sky-700 bg-white/70 border border-sky-100 rounded-full px-3 py-1 shadow-sm">
-              แตะตัวละครเพื่อรับกำลังใจ
-            </div>
-          </div>
-
-          {/* RIGHT: Hashtags Box (4 cols) */}
-          <div className="md:col-span-4 bg-white/90 backdrop-blur-md rounded-2xl p-4 shadow-md border border-sky-100 flex flex-col justify-between space-y-3">
-            <div>
-              <div className="flex items-center gap-1.5 text-xs font-bold text-sky-800 mb-2">
-                <Camera className="w-4 h-4 text-rose-500" />
-                <span>อย่าลืมติดแฮชแท็กนะ! ✦</span>
+            {/* Tap Hint Badge when not open */}
+            {!showSpeechBubble && (
+              <div className="absolute top-2 left-2 sm:left-3 z-20 inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full bg-white/85 backdrop-blur-md border border-sky-200/90 text-[10px] font-semibold text-sky-700 shadow-sm animate-pulse">
+                <span>แตะที่ตัวพี่พยาบาลสิ!</span>
+                <Sparkles className="w-3 h-3 text-amber-500" />
               </div>
-              <div className="flex flex-col gap-1 text-xs text-sky-600 font-semibold font-mono">
-                {HASHTAGS.map((tag) => (
-                  <span key={tag} className="hover:text-blue-700 transition-colors">
+            )}
+
+            {/* Floating Hearts upon Tap */}
+            {tapHearts.map(h => (
+              <div
+                key={h.id}
+                className="absolute pointer-events-none z-30 animate-float-heart"
+                style={{
+                  left: `${h.x}%`,
+                  top: `${h.y}%`,
+                  transform: `scale(${h.scale})`,
+                }}
+              >
+                <Heart className="w-6 h-6 text-rose-500 fill-rose-500 drop-shadow-md" />
+              </div>
+            ))}
+
+            {/* Floating Hashtag Card (Bottom-Right overlay) */}
+            <div
+              onClick={(e) => e.stopPropagation()}
+              className="absolute bottom-2 right-2 sm:bottom-3 sm:right-3 z-20 bg-white/90 backdrop-blur-md rounded-xl p-2 sm:p-2.5 shadow-md border border-sky-100 max-w-[140px] xs:max-w-[170px] sm:max-w-[210px] text-left"
+            >
+              <div className="flex items-center justify-between gap-1 mb-1">
+                <div className="flex items-center gap-1 text-[9px] sm:text-[11px] font-bold text-sky-800 leading-none">
+                  <Camera className="w-3 h-3 text-rose-500 shrink-0" />
+                  <span className="truncate">อย่าลืมติดแฮชแท็กนะ! ✧</span>
+                </div>
+              </div>
+              <div className="flex flex-col gap-0.5 text-[8px] sm:text-[10px] text-sky-600 font-semibold font-mono leading-tight">
+                {HASHTAGS.slice(0, 4).map((tag) => (
+                  <span key={tag} className="truncate hover:text-blue-700">
                     {tag}
                   </span>
                 ))}
               </div>
+              <button
+                onClick={handleCopyHashtags}
+                className="w-full mt-1.5 py-1 px-1.5 rounded-lg bg-sky-50 hover:bg-sky-100 active:scale-95 text-sky-700 border border-sky-200 text-[9px] sm:text-[10px] font-bold flex items-center justify-center gap-1 transition-all"
+              >
+                {copiedTags ? (
+                  <>
+                    <Check className="w-3 h-3 text-emerald-600" />
+                    <span className="text-emerald-700">คัดลอกแล้ว!</span>
+                  </>
+                ) : (
+                  <>
+                    <Copy className="w-3 h-3" />
+                    <span>คัดลอกแท็ก</span>
+                  </>
+                )}
+              </button>
             </div>
-
-            {/* Copy Hashtags Button */}
-            <button
-              onClick={handleCopyHashtags}
-              className="w-full py-2 px-3 rounded-xl bg-sky-50 hover:bg-sky-100 active:scale-95 text-sky-700 border border-sky-200 text-xs font-bold flex items-center justify-center gap-1.5 transition-all"
-            >
-              {copiedTags ? (
-                <>
-                  <Check className="w-3.5 h-3.5 text-emerald-600" />
-                  <span className="text-emerald-700">คัดลอกแฮชแท็กแล้ว!</span>
-                </>
-              ) : (
-                <>
-                  <Copy className="w-3.5 h-3.5" />
-                  <span>คัดลอกแฮชแท็ก</span>
-                </>
-              )}
-            </button>
           </div>
         </div>
 
         {/* ── Admissions & Social Media Announcement Box ─────────────────────── */}
-        <div className="bg-gradient-to-r from-blue-900/90 via-mahidol-blue to-blue-900/90 text-white rounded-2xl p-3.5 sm:p-4 shadow-lg border border-blue-400/30 flex flex-col sm:flex-row items-center justify-between gap-3">
-          <div className="flex items-center gap-3">
-            <div className="w-10 h-10 rounded-xl bg-white/10 border border-white/20 flex items-center justify-center shrink-0">
-              <GraduationCap className="w-5 h-5 text-mahidol-gold" />
+        <div className="bg-gradient-to-r from-blue-900/95 via-mahidol-blue to-blue-900/95 text-white rounded-2xl p-3 sm:p-3.5 shadow-md border border-blue-400/30 flex flex-col sm:flex-row items-center justify-between gap-2.5 shrink-0">
+          <div className="flex items-center gap-2.5 text-left w-full sm:w-auto">
+            <div className="w-8 h-8 sm:w-9 sm:h-9 rounded-xl bg-white/10 border border-white/20 flex items-center justify-center shrink-0">
+              <GraduationCap className="w-4 h-4 sm:w-5 sm:h-5 text-mahidol-gold" />
             </div>
-            <div className="text-xs sm:text-sm leading-relaxed text-blue-50">
+            <div className="text-[11px] sm:text-xs leading-snug text-blue-50">
               สามารถติดตามข่าวการรับสมัครนักศึกษาของคณะพยาบาลศาสตร์ได้ที่{' '}
               <a
                 href="https://ns.mahidol.ac.th"
@@ -475,7 +372,7 @@ export const ThankYouResetView: React.FC<ThankYouResetViewProps> = ({
                 className="underline font-bold text-amber-300 hover:text-amber-200 inline-flex items-center gap-0.5 ml-0.5"
               >
                 <span>https://ns.mahidol.ac.th</span>
-                <ExternalLink className="w-3 h-3 inline" />
+                <ExternalLink className="w-2.5 h-2.5 inline" />
               </a>{' '}
               และ Social Media Faculty of Nursing, Mahidol University ทุกช่องทาง
             </div>
@@ -486,84 +383,56 @@ export const ThankYouResetView: React.FC<ThankYouResetViewProps> = ({
             target="_blank"
             rel="noopener noreferrer"
             onClick={(e) => e.stopPropagation()}
-            className="shrink-0 px-4 py-2 rounded-xl bg-mahidol-gold hover:bg-amber-400 text-slate-950 font-bold text-xs flex items-center gap-1.5 shadow-md transition-all active:scale-95"
+            className="w-full sm:w-auto shrink-0 px-3.5 py-1.5 rounded-xl bg-mahidol-gold hover:bg-amber-400 text-slate-950 font-bold text-[11px] sm:text-xs flex items-center justify-center gap-1 shadow-md transition-all active:scale-95"
           >
             <span>ข้อมูลหลักสูตร & TCAS</span>
-            <ExternalLink className="w-3.5 h-3.5" />
+            <ExternalLink className="w-3 h-3" />
           </a>
         </div>
 
-        {/* ── Action Section ("อยากทำอะไรต่อดี?") ────────────────────────────── */}
-        {/* Strictly NO Save Image button, NO QR code as requested */}
-        <div>
-          <div className="text-xs font-bold text-slate-600 text-center mb-2">
-            อยากทำอะไรต่อดี?
-          </div>
-
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 max-w-xl mx-auto w-full">
-            {/* Action 1: Share Now */}
-            <button
-              onClick={handleShare}
-              className="bg-white/90 hover:bg-white active:scale-[0.98] border border-sky-200 rounded-2xl p-3.5 flex items-center justify-between shadow-sm transition-all group"
-            >
-              <div className="flex items-center gap-3 text-left">
-                <div className="w-10 h-10 rounded-xl bg-blue-50 text-blue-600 flex items-center justify-center shrink-0 group-hover:scale-105 transition-transform">
-                  <Share2 className="w-5 h-5" />
+        {/* ── Action Section ("เริ่มใหม่อีกครั้ง") ────────────────────────────── */}
+        <div className="shrink-0 max-w-md mx-auto w-full">
+          {/* Try Again / Reset for Next Player */}
+          <button
+            onClick={(e) => {
+              e.stopPropagation();
+              onReset();
+            }}
+            className="w-full bg-gradient-to-r from-emerald-500 via-teal-500 to-emerald-600 hover:from-emerald-600 hover:to-teal-700 active:scale-[0.98] text-white rounded-2xl p-2.5 sm:p-3.5 flex items-center justify-between shadow-md transition-all group"
+          >
+            <div className="flex items-center gap-2.5 sm:gap-3 text-left">
+              <div className="w-8 h-8 sm:w-9 sm:h-9 rounded-xl bg-white/20 flex items-center justify-center shrink-0 group-hover:rotate-45 transition-transform">
+                <RotateCcw className="w-4 h-4 sm:w-5 sm:h-5 text-white" />
+              </div>
+              <div>
+                <div className="text-xs sm:text-sm font-bold text-white font-heading">
+                  เริ่มใหม่อีกครั้ง
                 </div>
-                <div>
-                  <div className="text-sm font-bold text-slate-800">
-                    {shared ? 'คัดลอกข้อความแล้ว!' : 'แชร์ให้เพื่อน'}
-                  </div>
-                  <div className="text-[11px] text-slate-500">
-                    {shared ? 'แชร์ผลลัพธ์ลงโซเชียลได้ทันที' : 'Share Now'}
-                  </div>
+                <div className="text-[10px] sm:text-[11px] text-emerald-100">
+                  ทำแบบประเมินใหม่ / สำรวจเส้นทางอื่น
                 </div>
               </div>
-              <div className="w-8 h-8 rounded-full bg-sky-50 flex items-center justify-center text-sky-600 group-hover:bg-sky-100 transition-colors">
-                <ChevronRight className="w-4 h-4" />
-              </div>
-            </button>
-
-            {/* Action 2: Try Again / Reset for Next Player */}
-            <button
-              onClick={(e) => {
-                e.stopPropagation();
-                onReset();
-              }}
-              className="bg-gradient-to-r from-emerald-500 to-teal-600 hover:from-emerald-600 hover:to-teal-700 active:scale-[0.98] text-white rounded-2xl p-3.5 flex items-center justify-between shadow-md transition-all group"
-            >
-              <div className="flex items-center gap-3 text-left">
-                <div className="w-10 h-10 rounded-xl bg-white/20 flex items-center justify-center shrink-0 group-hover:rotate-45 transition-transform">
-                  <RotateCcw className="w-5 h-5 text-white" />
-                </div>
-                <div>
-                  <div className="text-sm font-bold text-white">เริ่มใหม่อีกครั้ง</div>
-                  <div className="text-[11px] text-emerald-100">
-                    ทำแบบประเมินใหม่ / สำหรับผู้เล่นคนถัดไป
-                  </div>
-                </div>
-              </div>
-              <div className="w-8 h-8 rounded-full bg-white/20 flex items-center justify-center text-white">
-                <ChevronRight className="w-4 h-4" />
-              </div>
-            </button>
-          </div>
+            </div>
+            <div className="w-7 h-7 sm:w-8 sm:h-8 rounded-full bg-white/20 flex items-center justify-center text-white group-hover:translate-x-1 transition-transform">
+              <ChevronRight className="w-3.5 h-3.5 sm:w-4 sm:h-4" />
+            </div>
+          </button>
         </div>
 
         {/* ── 60-second Auto-reset Countdown Bar ──────────────────────────────── */}
-        <div className="bg-white/80 backdrop-blur-md rounded-2xl p-3 shadow-sm border border-sky-100 flex items-center justify-between gap-3 max-w-xl mx-auto w-full">
-          <div className="flex items-center gap-2 shrink-0">
-            <Clock className="w-4 h-4 text-sky-600" />
-            <span className="text-xs text-slate-600 font-medium hidden sm:inline">
-              ระบบจะเริ่มใหม่อัตโนมัติ หากไม่มีการใช้งานภายใน 60 วินาที
+        <div className="bg-white/80 backdrop-blur-md rounded-2xl p-2 sm:p-2.5 shadow-sm border border-sky-100 flex items-center justify-between gap-2.5 max-w-xl mx-auto w-full shrink-0">
+          <div className="flex items-center gap-1.5 shrink-0">
+            <Clock className="w-3.5 h-3.5 text-sky-600" />
+            <span className="text-[11px] sm:text-xs text-slate-600 font-medium hidden xs:inline">
+              ระบบจะเริ่มใหม่โดยอัตโนมัติ หากไม่มีการใช้งานภายใน 60 วินาที
             </span>
-            <span className="text-xs text-slate-600 font-medium sm:hidden">
-              เริ่มใหม่อัตโนมัติใน
+            <span className="text-[11px] text-slate-600 font-medium xs:hidden">
+              เริ่มใหม่ใน
             </span>
           </div>
 
           {/* Progress bar */}
-          <div className="flex-1 h-2 bg-sky-100 rounded-full overflow-hidden">
+          <div className="flex-1 h-1.5 sm:h-2 bg-sky-100 rounded-full overflow-hidden">
             <div
               className="h-full bg-gradient-to-r from-sky-400 to-blue-600 transition-all duration-1000 ease-linear rounded-full"
               style={{ width: `${progressPercent}%` }}
@@ -571,15 +440,15 @@ export const ThankYouResetView: React.FC<ThankYouResetViewProps> = ({
           </div>
 
           {/* Seconds badge */}
-          <div className="shrink-0 px-2.5 py-1 rounded-full bg-sky-100 border border-sky-200 text-sky-800 text-xs font-bold font-mono">
+          <div className="shrink-0 px-2 py-0.5 rounded-full bg-sky-100 border border-sky-200 text-sky-800 text-[10px] sm:text-xs font-bold font-mono">
             {timeLeft} วินาที
           </div>
         </div>
       </div>
 
       {/* ── Footer ──────────────────────────────────────────────────────────── */}
-      <footer className="py-2 px-4 text-center text-[10px] text-slate-500 border-t border-sky-200/60 bg-white/40 backdrop-blur-sm shrink-0 flex items-center justify-between">
-        <span>Thank you for being part of our future of nursing. 🤍</span>
+      <footer className="py-1.5 px-3 sm:px-4 text-center text-[9px] sm:text-[10px] text-slate-500 border-t border-sky-200/60 bg-white/40 backdrop-blur-sm shrink-0 flex items-center justify-between">
+        <span>Thank you for being part of our future of nursing. 💙</span>
         <span className="font-semibold text-mahidol-blue">
           FACULTY OF NURSING, MAHIDOL UNIVERSITY
         </span>

@@ -63,6 +63,12 @@ export const ASSETS = {
     bgmTrack:          '/audio/bgm.mp3',
   },
 
+  // ── Finish screen assets ────────────────────────────────────────────────────
+  finish: {
+    hero: '/assets/finish/finish-hero.jpg',
+    duoNurses: '/assets/finish/duo-nurses.jpg',
+  },
+
   // ── Choose Future Look screen ────────────────────────────────────────────────
   characterSelect: {
     background:      '/assets/home/background.jpg',

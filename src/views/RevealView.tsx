@@ -39,6 +39,7 @@ export const RevealView: React.FC<RevealViewProps> = ({ result, onNext, onBack }
   const pathId = result.pathId;
   const pathInfo = (pathsData.paths as Record<string, any>)[pathId] || result.path;
 
+  // Male / Female character asset lookup
   const characterImgUrl = isFemale
     ? (ASSETS.characters as any)[pathId]?.female || `/characters/${pathId}_female.png`
     : (ASSETS.characters as any)[pathId]?.male || `/characters/${pathId}_male.png`;
@@ -112,8 +113,28 @@ export const RevealView: React.FC<RevealViewProps> = ({ result, onNext, onBack }
         @keyframes float-stagger-2 { 0%,100%{transform:translateY(0px) rotate(0deg);} 50%{transform:translateY(-10px) rotate(-3deg);} }
         @keyframes float-stagger-3 { 0%,100%{transform:translateY(0px) rotate(0deg);} 50%{transform:translateY(-6px) rotate(3deg);} }
 
-        /* ── Aura glow ── */
-        @keyframes aura-pulse { 0%,100%{opacity:.6;transform:translateX(-50%) scale(1);} 50%{opacity:.9;transform:translateX(-50%) scale(1.06);} }
+        /* ── Aura Core Animations ── */
+        @keyframes aura-pulse {
+          0%, 100% { opacity: 0.72; transform: translate(-50%, -50%) scale(1); }
+          50%      { opacity: 0.96; transform: translate(-50%, -50%) scale(1.06); }
+        }
+        @keyframes aura-ripple-expand {
+          0%   { transform: translate(-50%, -50%) scale(0.92); opacity: 0.85; }
+          70%  { transform: translate(-50%, -50%) scale(1.18); opacity: 0.25; }
+          100% { transform: translate(-50%, -50%) scale(1.24); opacity: 0; }
+        }
+        @keyframes aura-spin-rays {
+          0%   { transform: translate(-50%, -50%) rotate(0deg); }
+          100% { transform: translate(-50%, -50%) rotate(360deg); }
+        }
+        @keyframes aura-orbit-spin {
+          0%   { transform: rotate(0deg); }
+          100% { transform: rotate(360deg); }
+        }
+        @keyframes star-twinkle {
+          0%, 100% { transform: scale(1) rotate(0deg); opacity: 0.9; }
+          50%      { transform: scale(1.35) rotate(45deg); opacity: 1; filter: drop-shadow(0 0 8px rgba(255,255,255,1)); }
+        }
 
         /* ── CTA Button Pulse & Shimmer ── */
         @keyframes cta-glow {
@@ -319,21 +340,74 @@ export const RevealView: React.FC<RevealViewProps> = ({ result, onNext, onBack }
           </div>
         </div>
 
-        {/* ── Center Stage: Aura Glow, Character & 3D Stickers ── */}
-        <div className="flex-1 relative flex items-end justify-center min-h-[160px] sm:min-h-[220px] md:min-h-[280px] overflow-visible my-auto">
-          {/* Radial Aura Glow */}
+        {/* ── Center Stage: Large Magical Aura Glow Portal, Character & 3D Stickers ── */}
+        <div className="flex-1 relative flex items-end justify-center min-h-[180px] sm:min-h-[240px] md:min-h-[300px] overflow-visible my-auto">
+          
+          {/* ════════════════════════════════════════════════════════════════════
+              MAGICAL AURA PORTAL SYSTEM (Enlarged + Rich Interactive Lighting)
+             ════════════════════════════════════════════════════════════════════ */}
+
+          {/* 1. Rotating Celestial Sunray Beams */}
           <div
-            className="absolute left-1/2 bottom-0 w-[min(72vw,360px)] h-[min(72vw,360px)] rounded-full pointer-events-none"
+            className="absolute left-1/2 top-[52%] w-[min(98vw,480px)] h-[min(98vw,480px)] rounded-full pointer-events-none opacity-40"
             style={{
-              transform: 'translateX(-50%)',
-              background: `radial-gradient(circle, ${themeColor}50 0%, ${themeColor}20 50%, transparent 72%)`,
-              animation: 'aura-pulse 5s ease-in-out infinite',
+              background: `conic-gradient(from 0deg, transparent 0deg, ${themeColor}60 30deg, transparent 60deg, #FF658450 90deg, transparent 120deg, ${themeColor}60 180deg, transparent 210deg, #FFD70050 270deg, transparent 300deg, ${themeColor}60 360deg)`,
+              animation: 'aura-spin-rays 22s linear infinite',
             }}
           />
-          {/* Inner Ring */}
-          <div className="absolute bottom-0 left-1/2 -translate-x-1/2 w-[min(58vw,290px)] h-[min(58vw,290px)] rounded-full border-2 border-white/70 shadow-[0_0_26px_rgba(255,255,255,0.85)] pointer-events-none" />
 
-          {/* Floating Stickers */}
+          {/* 2. Expanding Divine Ripple Wave */}
+          <div
+            className="absolute left-1/2 top-[52%] w-[min(84vw,410px)] h-[min(84vw,410px)] rounded-full pointer-events-none border-2 border-white/60"
+            style={{
+              boxShadow: `0 0 30px ${themeColor}80, inset 0 0 20px rgba(255,255,255,0.8)`,
+              animation: 'aura-ripple-expand 3.8s ease-out infinite',
+            }}
+          />
+
+          {/* 3. Outermost Radial Ambient Aura Glow */}
+          <div
+            className="absolute left-1/2 top-[52%] w-[min(94vw,460px)] h-[min(94vw,460px)] rounded-full pointer-events-none"
+            style={{
+              background: `radial-gradient(circle, ${themeColor}65 0%, #FF658428 44%, ${themeColor}15 62%, transparent 75%)`,
+              animation: 'aura-pulse 4.5s ease-in-out infinite',
+            }}
+          />
+
+          {/* 4. Concentric Glowing Celestial White Ring */}
+          <div
+            className="absolute left-1/2 top-[52%] -translate-x-1/2 -translate-y-1/2 w-[min(82vw,390px)] h-[min(82vw,390px)] rounded-full border-2 border-white/90 shadow-[0_0_36px_rgba(255,255,255,0.95),0_0_15px_rgba(255,255,255,0.8)] pointer-events-none"
+          />
+
+          {/* 5. Inner Delicate Prismatic Ring */}
+          <div
+            className="absolute left-1/2 top-[52%] -translate-x-1/2 -translate-y-1/2 w-[min(68vw,320px)] h-[min(68vw,320px)] rounded-full border border-white/50 shadow-[inset_0_0_24px_rgba(255,255,255,0.7)] pointer-events-none"
+          />
+
+          {/* 6. Orbiting Stardust Stars around the Celestial Ring */}
+          <div
+            className="absolute left-1/2 top-[52%] -translate-x-1/2 -translate-y-1/2 w-[min(82vw,390px)] h-[min(82vw,390px)] rounded-full pointer-events-none"
+            style={{ animation: 'aura-orbit-spin 16s linear infinite' }}
+          >
+            {/* Top Star */}
+            <div className="absolute top-0 left-1/2 -translate-x-1/2 -translate-y-1/2 w-4 h-4 text-amber-200 flex items-center justify-center" style={{ animation: 'star-twinkle 2.2s ease-in-out infinite' }}>
+              ✦
+            </div>
+            {/* Right Star */}
+            <div className="absolute top-1/2 right-0 translate-x-1/2 -translate-y-1/2 w-3.5 h-3.5 text-white flex items-center justify-center" style={{ animation: 'star-twinkle 2.5s ease-in-out 0.6s infinite' }}>
+              ✦
+            </div>
+            {/* Bottom Star */}
+            <div className="absolute bottom-0 left-1/2 -translate-x-1/2 translate-y-1/2 w-4 h-4 text-rose-200 flex items-center justify-center" style={{ animation: 'star-twinkle 2.8s ease-in-out 1.2s infinite' }}>
+              ✦
+            </div>
+            {/* Left Star */}
+            <div className="absolute top-1/2 left-0 -translate-x-1/2 -translate-y-1/2 w-3.5 h-3.5 text-cyan-200 flex items-center justify-center" style={{ animation: 'star-twinkle 2.4s ease-in-out 1.8s infinite' }}>
+              ✦
+            </div>
+          </div>
+
+          {/* Floating 3D Stickers */}
           <div className="absolute inset-0 pointer-events-none z-20">
             {stickers.map((sticker, sIdx) => {
               const animStyle = sIdx % 3 === 0 ? 'float-stagger-1' : sIdx % 3 === 1 ? 'float-stagger-2' : 'float-stagger-3';
@@ -352,7 +426,7 @@ export const RevealView: React.FC<RevealViewProps> = ({ result, onNext, onBack }
                     src={sticker.src}
                     alt={sticker.name}
                     style={{
-                      width: `clamp(42px, calc(${sticker.size} * 0.85px), ${sticker.size}px)`,
+                      width: `clamp(44px, calc(${sticker.size} * 0.88px), ${sticker.size}px)`,
                       height: 'auto',
                       transform: sticker.rotate ? `rotate(${sticker.rotate})` : undefined,
                     }}
@@ -365,7 +439,7 @@ export const RevealView: React.FC<RevealViewProps> = ({ result, onNext, onBack }
             })}
           </div>
 
-          {/* Character Cutout */}
+          {/* Character Cutout (Both Male & Female Support) */}
           <div className="relative z-10 flex items-end justify-center w-full h-full max-h-[clamp(180px,36vh,420px)]">
             <img
               src={characterImgUrl}
@@ -425,7 +499,6 @@ export const RevealView: React.FC<RevealViewProps> = ({ result, onNext, onBack }
 
       {/* ── 4. Bottom Navigation Action Bar ──────────────────────────────────── */}
       <div className="relative z-30 shrink-0 px-3 sm:px-6 pb-[max(0.75rem,env(safe-area-inset-bottom))] pt-2 max-w-[680px] mx-auto w-full flex items-center justify-between gap-2.5 sm:gap-4">
-        {/* Back Button */}
         {onBack ? (
           <button
             onClick={onBack}
@@ -438,7 +511,6 @@ export const RevealView: React.FC<RevealViewProps> = ({ result, onNext, onBack }
           <div />
         )}
 
-        {/* View My Card CTA Button */}
         <button
           onClick={onNext}
           className="flex-[2] max-w-[260px] sm:max-w-[310px] h-11 sm:h-12.5 rounded-full bg-gradient-to-r from-[#FF3366] via-[#FF537A] to-[#FF3366] text-white font-black text-xs sm:text-sm md:text-base shadow-lg shadow-rose-500/35 flex items-center justify-center gap-1.5 sm:gap-2 active:scale-95 transition-all cursor-pointer btn-next-cta relative overflow-hidden group"
