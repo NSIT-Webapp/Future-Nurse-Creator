@@ -221,26 +221,26 @@ export const AnalysisView: React.FC<AnalysisViewProps> = ({
           {/* Laser Scanner Beam traversing vertically for sci-fi tension */}
           <div className="absolute inset-x-4 h-1 bg-gradient-to-r from-transparent via-cyan-400 to-transparent shadow-[0_0_16px_#38bdf8] animate-scan-beam pointer-events-none z-20" />
 
-          {/* ── Card Header: Title & Info ── */}
-          <div className="text-center shrink-0 pt-0.5 sm:pt-1">
+          {/* ── Card Header: Title & Info (Compact Vertical Budget) ── */}
+          <div className="text-center shrink-0 pt-0.5">
             {/* Analyzing Pill Badge */}
-            <div className="inline-flex items-center gap-1.5 px-3.5 py-0.5 rounded-full bg-gradient-to-r from-[#FF5E80] to-[#FF3366] text-white text-[9.5px] sm:text-[10.5px] font-black uppercase tracking-widest mb-0.5 sm:mb-1 shadow-sm">
-              <Sparkles className="w-3 h-3 animate-pulse" />
+            <div className="inline-flex items-center gap-1.5 px-3 py-0.5 rounded-full bg-gradient-to-r from-[#FF5E80] to-[#FF3366] text-white text-[9px] sm:text-[10px] font-black uppercase tracking-widest mb-0.5 shadow-sm">
+              <Sparkles className="w-2.5 h-2.5 animate-pulse" />
               <span>ANALYZING</span>
-              <Sparkles className="w-3 h-3 animate-pulse" />
+              <Sparkles className="w-2.5 h-2.5 animate-pulse" />
             </div>
 
             {/* Main Headline */}
-            <h2 className="text-2xl sm:text-3xl md:text-4xl font-black text-slate-800 tracking-tight font-heading leading-tight drop-shadow-[0_1px_2px_rgba(255,255,255,0.95)]">
+            <h2 className="text-xl sm:text-2xl md:text-3xl font-black text-slate-800 tracking-tight font-heading leading-tight drop-shadow-[0_1px_2px_rgba(255,255,255,0.95)]">
               <span className="text-[#FF2D55]">AI </span>
               กำลังวิเคราะห์
             </h2>
-            <h3 className="text-sm sm:text-base md:text-lg font-black text-[#0A2540] tracking-tight leading-snug drop-shadow-[0_1px_2px_rgba(255,255,255,0.95)]">
+            <h3 className="text-xs sm:text-sm md:text-base font-black text-[#0A2540] tracking-tight leading-snug drop-shadow-[0_1px_2px_rgba(255,255,255,0.95)]">
               เส้นทางพยาบาลที่ใช่สำหรับคุณ...
             </h3>
 
             {/* Sub-caption */}
-            <p className="text-[11px] sm:text-xs font-bold text-[#FF3366] mt-0.5 flex items-center justify-center gap-1 drop-shadow-[0_1px_1px_rgba(255,255,255,0.95)]">
+            <p className="text-[10.5px] sm:text-xs font-bold text-[#FF3366] mt-0.5 flex items-center justify-center gap-1 drop-shadow-[0_1px_1px_rgba(255,255,255,0.95)]">
               <span>💕 จากคำตอบทั้ง {totalQuestions} ข้อของคุณ 💕</span>
             </p>
           </div>
@@ -249,7 +249,7 @@ export const AnalysisView: React.FC<AnalysisViewProps> = ({
           <div className="flex-1 relative flex items-center justify-between min-h-0 overflow-hidden my-0.5 px-1 sm:px-3">
 
             {/* Left Badges Column (Floating Transparent Badges with Large Icons) */}
-            <div className="w-[30%] sm:w-[28%] flex flex-col justify-around h-full z-20 py-1 space-y-1 sm:space-y-2">
+            <div className="w-[28%] sm:w-[26%] flex flex-col justify-between h-full z-20 py-1">
               {leftBadges.map((badge, idx) => {
                 const isScanning = activeBadgeIdx === idx;
                 const theme = BADGE_THEMES[badge.pathId] || { textColor: 'text-[#002B7F]' };
@@ -270,8 +270,8 @@ export const AnalysisView: React.FC<AnalysisViewProps> = ({
                       </div>
                     )}
 
-                    {/* Large Floating Badge Icon */}
-                    <div className={`w-15 h-15 sm:w-19 sm:h-19 md:w-23 md:h-23 flex items-center justify-center ${isScanning ? 'animate-bounce-gentle' : ''}`}>
+                    {/* Large Floating Badge Icon (Nurses naturally face Right towards center student) */}
+                    <div className={`w-13 h-13 sm:w-16 sm:h-16 md:w-18 md:h-18 flex items-center justify-center ${isScanning ? 'animate-bounce-gentle' : ''}`}>
                       <img
                         src={badge.imgUrl}
                         alt={badge.titleEn}
@@ -281,7 +281,7 @@ export const AnalysisView: React.FC<AnalysisViewProps> = ({
                       />
                     </div>
                     <span
-                      className={`text-[8.5px] sm:text-[10px] md:text-[11px] font-black tracking-tight uppercase text-center mt-0.5 leading-tight px-0.5 drop-shadow-[0_1px_2px_rgba(255,255,255,0.95)] ${theme.textColor}`}
+                      className={`text-[8px] sm:text-[9.5px] md:text-[10px] font-black tracking-tight uppercase text-center mt-0.5 leading-tight px-0.5 drop-shadow-[0_1px_2px_rgba(255,255,255,0.95)] ${theme.textColor}`}
                     >
                       {badge.titleEn}
                     </span>
@@ -291,16 +291,16 @@ export const AnalysisView: React.FC<AnalysisViewProps> = ({
             </div>
 
             {/* Center Student Standing on the Holographic Stage (Waist-Up Half Body) */}
-            <div className="flex-1 h-full relative flex flex-col items-center justify-end z-10 px-1 min-h-0 pb-1">
+            <div className="flex-1 h-full relative flex flex-col items-center justify-end z-10 px-1 min-h-0 pb-0.5">
               {/* Pulsing Concentric Holographic Aura */}
-              <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-60 h-60 sm:w-76 sm:h-76 md:w-90 md:h-90 rounded-full bg-radial from-cyan-300/35 via-pink-300/15 to-transparent animate-pulse pointer-events-none" />
+              <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-56 h-56 sm:w-72 sm:h-72 md:w-84 md:h-84 rounded-full bg-radial from-cyan-300/35 via-pink-300/15 to-transparent animate-pulse pointer-events-none" />
 
               {/* Student Character Full Image — Waist-Up, centered, large, charismatic and bold! */}
-              <div className="relative flex-1 w-full flex items-end justify-center min-h-0 max-h-[350px] sm:max-h-[430px] md:max-h-[480px]">
+              <div className="relative flex-1 w-full flex items-end justify-center min-h-0 max-h-[300px] sm:max-h-[360px] md:max-h-[400px]">
                 <img
                   src={centerCharacterUrl}
                   alt={isFemale ? 'Female Student' : 'Male Student'}
-                  className="h-full w-auto max-w-full object-contain drop-shadow-[0_18px_40px_rgba(0,43,127,0.42)] animate-float-subtle select-none z-10 scale-105 sm:scale-115"
+                  className="h-full w-auto max-w-full object-contain drop-shadow-[0_16px_36px_rgba(0,43,127,0.4)] animate-float-subtle select-none z-10 scale-105 sm:scale-115"
                   loading="eager"
                   decoding="sync"
                 />
@@ -315,7 +315,7 @@ export const AnalysisView: React.FC<AnalysisViewProps> = ({
                       : 'hover:scale-105 drop-shadow-xs'
                   }`}
                 >
-                  <div className="w-9 h-9 sm:w-11 sm:h-11 overflow-hidden flex items-center justify-center shrink-0">
+                  <div className="w-8 h-8 sm:w-10 sm:h-10 overflow-hidden flex items-center justify-center shrink-0">
                     <img
                       src={centerBottomBadge.imgUrl}
                       alt={centerBottomBadge.titleEn}
@@ -324,15 +324,15 @@ export const AnalysisView: React.FC<AnalysisViewProps> = ({
                       decoding="sync"
                     />
                   </div>
-                  <span className="text-[8.5px] sm:text-[9.5px] md:text-[10.5px] font-black text-[#0284C7] tracking-tight uppercase leading-tight whitespace-nowrap drop-shadow-[0_1px_2px_rgba(255,255,255,0.95)]">
+                  <span className="text-[8px] sm:text-[9px] md:text-[10px] font-black text-[#0284C7] tracking-tight uppercase leading-tight whitespace-nowrap drop-shadow-[0_1px_2px_rgba(255,255,255,0.95)]">
                     NURSING + TECHNOLOGY
                   </span>
                 </div>
               )}
             </div>
 
-            {/* Right Badges Column (Floating Transparent Badges with Large Icons) */}
-            <div className="w-[30%] sm:w-[28%] flex flex-col justify-around h-full z-20 py-1 space-y-1 sm:space-y-2">
+            {/* Right Badges Column (Mirrored scale-x-[-1] so nurses gaze Inwards toward student!) */}
+            <div className="w-[28%] sm:w-[26%] flex flex-col justify-between h-full z-20 py-1">
               {rightBadges.map((badge, rIdx) => {
                 const globalIdx = leftBadges.length + rIdx;
                 const isScanning = activeBadgeIdx === globalIdx;
@@ -354,18 +354,18 @@ export const AnalysisView: React.FC<AnalysisViewProps> = ({
                       </div>
                     )}
 
-                    {/* Large Floating Badge Icon */}
-                    <div className={`w-15 h-15 sm:w-19 sm:h-19 md:w-23 md:h-23 flex items-center justify-center ${isScanning ? 'animate-bounce-gentle' : ''}`}>
+                    {/* Large Floating Badge Icon — Mirrored horizontally to gaze LEFT towards center student! */}
+                    <div className={`w-13 h-13 sm:w-16 sm:h-16 md:w-18 md:h-18 flex items-center justify-center ${isScanning ? 'animate-bounce-gentle' : ''}`}>
                       <img
                         src={badge.imgUrl}
                         alt={badge.titleEn}
-                        className="w-full h-full object-contain"
+                        className="w-full h-full object-contain scale-x-[-1]"
                         loading="eager"
                         decoding="sync"
                       />
                     </div>
                     <span
-                      className={`text-[8.5px] sm:text-[10px] md:text-[11px] font-black tracking-tight uppercase text-center mt-0.5 leading-tight px-0.5 drop-shadow-[0_1px_2px_rgba(255,255,255,0.95)] ${theme.textColor}`}
+                      className={`text-[8px] sm:text-[9.5px] md:text-[10px] font-black tracking-tight uppercase text-center mt-0.5 leading-tight px-0.5 drop-shadow-[0_1px_2px_rgba(255,255,255,0.95)] ${theme.textColor}`}
                     >
                       {badge.titleEn}
                     </span>
