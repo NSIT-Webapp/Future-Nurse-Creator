@@ -312,13 +312,6 @@ export const RevealView: React.FC<RevealViewProps> = ({ result, onNext, onBack }
             พบเส้นทางพยาบาลที่ใช่สำหรับคุณแล้ว!
           </h3>
 
-          {/* 5 Questions Subtitle */}
-          <p className="text-sm sm:text-base font-bold text-rose-500 mt-1 flex items-center justify-center gap-1.5 drop-shadow-[0_1px_2px_rgba(255,255,255,0.9)]">
-            <span>💕</span>
-            <span>จากคำตอบทั้ง 5 ข้อของคุณ</span>
-            <span>💕</span>
-          </p>
-
           {/* Path Title EN (Fluid responsive typography) */}
           <h2
             className="text-[clamp(1.75rem,5.5vw,2.85rem)] font-black uppercase leading-tight font-heading mt-1 sm:mt-1.5 title-shimmer px-1"
@@ -452,30 +445,30 @@ export const RevealView: React.FC<RevealViewProps> = ({ result, onNext, onBack }
           {/* 2-Column Grid: Superpower & AI Skill (Larger Boxes) */}
           <div className="grid grid-cols-2 gap-2 sm:gap-3">
             {/* Superpower Card */}
-            <div className="bg-white/95 border-2 border-rose-100/90 rounded-2xl sm:rounded-3xl p-2.5 sm:p-3.5 flex items-center gap-2.5 sm:gap-3 shadow-md min-h-[64px] sm:min-h-[76px] md:min-h-[82px] box-slide-up-1">
-              <div className="w-10 h-10 sm:w-13 sm:h-13 rounded-xl sm:rounded-2xl bg-rose-50 flex items-center justify-center shrink-0 overflow-hidden p-1.5 border border-rose-100 shadow-2xs">
+            <div className="bg-white/95 border-2 border-rose-100/90 rounded-2xl sm:rounded-3xl p-3 sm:p-4 flex items-center gap-3 sm:gap-3.5 shadow-md min-h-[72px] sm:min-h-[82px] md:min-h-[88px] box-slide-up-1">
+              <div className="w-11 h-11 sm:w-14 sm:h-14 rounded-xl sm:rounded-2xl bg-rose-50 flex items-center justify-center shrink-0 overflow-hidden p-1.5 border border-rose-100 shadow-2xs">
                 <img src="/assets/reveal/stickers/COMM/heart-pink.png" alt="Superpower" className="w-full h-full object-contain" />
               </div>
               <div className="min-w-0 flex-1">
-                <span className="text-[9.5px] sm:text-xs font-black uppercase tracking-wider text-rose-500 block leading-tight">
+                <span className="text-xs sm:text-sm font-black uppercase tracking-wider text-rose-500 block leading-tight">
                   Your Superpower
                 </span>
-                <span className="text-xs sm:text-sm md:text-[15px] font-black text-rose-700 block leading-tight mt-0.5 line-clamp-2">
+                <span className="text-base sm:text-lg md:text-xl font-black text-rose-700 block leading-tight mt-0.5 line-clamp-2">
                   {superpower}
                 </span>
               </div>
             </div>
 
             {/* AI Skill Card */}
-            <div className="bg-white/95 border-2 border-sky-100/90 rounded-2xl sm:rounded-3xl p-2.5 sm:p-3.5 flex items-center gap-2.5 sm:gap-3 shadow-md min-h-[64px] sm:min-h-[76px] md:min-h-[82px] box-slide-up-2">
-              <div className="w-10 h-10 sm:w-13 sm:h-13 rounded-xl sm:rounded-2xl bg-sky-50 flex items-center justify-center shrink-0 overflow-hidden p-1.5 border border-sky-100 shadow-2xs">
+            <div className="bg-white/95 border-2 border-sky-100/90 rounded-2xl sm:rounded-3xl p-3 sm:p-4 flex items-center gap-3 sm:gap-3.5 shadow-md min-h-[72px] sm:min-h-[82px] md:min-h-[88px] box-slide-up-2">
+              <div className="w-11 h-11 sm:w-14 sm:h-14 rounded-xl sm:rounded-2xl bg-sky-50 flex items-center justify-center shrink-0 overflow-hidden p-1.5 border border-sky-100 shadow-2xs">
                 <img src={aiSkillIconSrc} alt="AI Skill" className="w-full h-full object-contain" />
               </div>
               <div className="min-w-0 flex-1">
-                <span className="text-[9.5px] sm:text-xs font-black uppercase tracking-wider text-sky-600 block leading-tight">
+                <span className="text-xs sm:text-sm font-black uppercase tracking-wider text-sky-600 block leading-tight">
                   Your AI Skill
                 </span>
-                <span className="text-xs sm:text-sm md:text-[15px] font-black text-sky-800 block leading-tight mt-0.5 line-clamp-2">
+                <span className="text-base sm:text-lg md:text-xl font-black text-sky-800 block leading-tight mt-0.5 line-clamp-2">
                   {aiSkill}
                 </span>
               </div>
@@ -483,24 +476,24 @@ export const RevealView: React.FC<RevealViewProps> = ({ result, onNext, onBack }
           </div>
 
           {/* Impact Message Box (Larger Horizontal Pill) */}
-          <div className="bg-white/95 border-2 border-white/90 rounded-2xl sm:rounded-3xl px-3.5 sm:px-6 py-2.5 sm:py-3.5 shadow-md flex items-center justify-between gap-2.5 sm:gap-4">
-            <img src={impactHeartSrc} alt="Impact" className="w-6.5 h-6.5 sm:w-8.5 sm:h-8.5 object-contain shrink-0 drop-shadow-2xs" />
-            <p className="text-xs sm:text-sm md:text-[15px] font-extrabold text-slate-800 leading-snug text-center flex-1">
+          <div className="bg-white/95 border-2 border-white/90 rounded-2xl sm:rounded-3xl px-4 sm:px-6 py-3 sm:py-4 shadow-md flex items-center justify-between gap-3 sm:gap-4">
+            <img src={impactHeartSrc} alt="Impact" className="w-7 h-7 sm:w-9 sm:h-9 object-contain shrink-0 drop-shadow-2xs" />
+            <p className="text-base sm:text-lg md:text-xl font-extrabold text-slate-800 leading-snug text-center flex-1">
               {impact}
             </p>
-            <Sparkles className="w-4 h-4 sm:w-5.5 sm:h-5.5 text-amber-400 shrink-0 animate-pulse" />
+            <Sparkles className="w-5 h-5 sm:w-6 sm:h-6 text-amber-400 shrink-0 animate-pulse" />
           </div>
         </div>
       </div>
 
       {/* ── 4. Bottom Navigation Action Bar ──────────────────────────────────── */}
-      <div className="relative z-30 shrink-0 px-3 sm:px-6 pb-[max(0.75rem,env(safe-area-inset-bottom))] pt-2 max-w-[680px] mx-auto w-full flex items-center justify-between gap-2.5 sm:gap-4">
+      <div className="relative z-30 shrink-0 px-3 sm:px-6 pb-[max(0.75rem,env(safe-area-inset-bottom))] pt-2 max-w-[680px] mx-auto w-full flex items-center justify-between gap-3 sm:gap-4">
         {onBack ? (
           <button
             onClick={onBack}
-            className="flex-1 max-w-[140px] sm:max-w-[180px] h-11.5 sm:h-13 rounded-full bg-white/95 hover:bg-white text-[#002B7F] font-black text-xs sm:text-sm md:text-base border-2 border-white/90 shadow-[0_4px_16px_rgba(0,43,127,0.12)] flex items-center justify-center gap-1.5 sm:gap-2 active:scale-95 transition-all cursor-pointer backdrop-blur-md"
+            className="flex-1 max-w-[160px] sm:max-w-[200px] min-h-[54px] h-13 sm:h-14 rounded-full bg-white/95 hover:bg-white text-[#002B7F] font-bold text-lg sm:text-xl border-2 border-white/90 shadow-[0_4px_16px_rgba(0,43,127,0.12)] flex items-center justify-center gap-2 active:scale-95 transition-all cursor-pointer backdrop-blur-md"
           >
-            <ChevronLeft className="w-4 h-4 sm:w-5 sm:h-5 text-[#002B7F] stroke-[2.5]" />
+            <ChevronLeft className="w-5 h-5 sm:w-6 sm:h-6 text-[#002B7F] stroke-[2.5]" />
             <span>ย้อนกลับ</span>
           </button>
         ) : (
@@ -509,7 +502,7 @@ export const RevealView: React.FC<RevealViewProps> = ({ result, onNext, onBack }
 
         <button
           onClick={onNext}
-          className="flex-[2] max-w-[260px] sm:max-w-[310px] h-11.5 sm:h-13 rounded-full bg-gradient-to-r from-[#FF3366] via-[#FF537A] to-[#FF3366] text-white font-black text-xs sm:text-sm md:text-base shadow-lg shadow-rose-500/35 flex items-center justify-center gap-1.5 sm:gap-2 active:scale-95 transition-all cursor-pointer btn-next-cta relative overflow-hidden group"
+          className="flex-[2] max-w-[280px] sm:max-w-[340px] min-h-[54px] h-13 sm:h-14 rounded-full bg-gradient-to-r from-[#FF3366] via-[#FF537A] to-[#FF3366] text-white font-black text-xl sm:text-2xl shadow-lg shadow-rose-500/35 flex items-center justify-center gap-2 active:scale-95 transition-all cursor-pointer btn-next-cta relative overflow-hidden group"
         >
           {/* Glossy top sheen */}
           <div className="absolute inset-x-0 top-0 h-[45%] bg-gradient-to-b from-white/35 to-transparent rounded-t-full pointer-events-none" />
@@ -517,7 +510,7 @@ export const RevealView: React.FC<RevealViewProps> = ({ result, onNext, onBack }
           <span className="relative z-10 tracking-wide drop-shadow-[0_1px_2px_rgba(0,0,0,0.2)]">
             ดูการ์ดของฉัน
           </span>
-          <ChevronRight className="relative z-10 w-4 h-4 sm:w-5 sm:h-5 text-white stroke-[3] group-hover:translate-x-0.5 transition-transform" />
+          <ChevronRight className="relative z-10 w-6 h-6 text-white stroke-[3] group-hover:translate-x-0.5 transition-transform" />
         </button>
       </div>
     </div>

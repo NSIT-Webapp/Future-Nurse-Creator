@@ -242,83 +242,83 @@ export const WelcomeView: React.FC<WelcomeViewProps> = ({ onStart }) => {
         className="relative z-20 w-full px-3.5 sm:px-6 pt-1 pb-[max(0.75rem,env(safe-area-inset-bottom))] flex flex-col justify-center bg-gradient-to-t from-white/95 via-white/85 to-transparent backdrop-blur-[2px] shrink-0"
       >
         {/* Banner Label */}
-        <div className="text-center mb-1">
-          <span className="text-xs sm:text-sm font-black text-[#002B7F] tracking-wide font-heading drop-shadow-[0_1px_1px_rgba(255,255,255,0.8)]">
+        <div className="text-center mb-1.5">
+          <span className="text-sm sm:text-base font-black text-[#002B7F] tracking-wide font-heading drop-shadow-[0_1px_1px_rgba(255,255,255,0.8)]">
             ⪢ 3 ขั้นตอน สู่ Future Nurse ของคุณ ⪡
           </span>
         </div>
 
         {/* Mascot + 3 Cards Row */}
-        <div className="flex items-end gap-2 sm:gap-2.5 max-w-lg mx-auto w-full px-1">
+        <div className="flex items-end gap-2.5 sm:gap-3 max-w-xl mx-auto w-full px-1">
           {/* Mascot (Clean Transparent with subtle natural bobbing) */}
           <div
             data-layer="home-mascot"
-            className="w-[72px] sm:w-[84px] md:w-[92px] shrink-0 flex items-end justify-center animate-mascot-bob"
+            className="w-[76px] sm:w-[88px] md:w-[96px] shrink-0 flex items-end justify-center animate-mascot-bob"
           >
             <img
               src={ASSETS.home.mascot}
               alt="Mascot"
-              className="w-full max-w-[92px] h-auto object-contain drop-shadow-md"
+              className="w-full max-w-[96px] h-auto object-contain drop-shadow-md"
               draggable={false}
             />
           </div>
 
           {/* 3 Native High-DPI Vector Cards with Connecting Arrows */}
-          <div className="flex items-center gap-1 sm:gap-1.5 flex-1 min-w-0">
+          <div className="flex items-center gap-1.5 sm:gap-2 flex-1 min-w-0">
             {/* Card 1 */}
-            <div className="relative flex-1 rounded-xl sm:rounded-2xl bg-white/95 border border-slate-200/90 shadow-sm p-1.5 sm:p-2 flex flex-col items-center justify-between text-center backdrop-blur-sm min-h-[68px] sm:min-h-[74px]">
-              <div className="absolute -top-1.5 -left-1.5 w-4 h-4 sm:w-5 sm:h-5 rounded-full bg-[#FF4E72] text-white text-[9px] sm:text-[10px] font-bold flex items-center justify-center shadow">
+            <div className="relative flex-1 rounded-xl sm:rounded-2xl bg-white/95 border border-slate-200/90 shadow-sm p-2 sm:p-2.5 flex flex-col items-center justify-between text-center backdrop-blur-sm min-h-[76px] sm:min-h-[82px]">
+              <div className="absolute -top-1.5 -left-1.5 w-5 h-5 sm:w-6 sm:h-6 rounded-full bg-[#FF4E72] text-white text-xs font-bold flex items-center justify-center shadow">
                 1
               </div>
-              <div className="w-5 h-5 sm:w-6 sm:h-6 rounded-lg bg-pink-50 flex items-center justify-center text-xs sm:text-sm mb-0.5">
+              <div className="w-6 h-6 sm:w-7 sm:h-7 rounded-lg bg-pink-50 flex items-center justify-center text-sm sm:text-base mb-0.5">
                 📋
               </div>
-              <p className="text-[10px] sm:text-[11px] font-bold text-slate-800 font-heading leading-tight">
+              <p className="text-xs sm:text-sm font-bold text-slate-800 font-heading leading-tight">
                 ตอบคำถามสั้น ๆ
               </p>
-              <p className="text-[8px] sm:text-[9px] text-slate-500 mt-0.5 leading-tight">
+              <p className="text-[10px] sm:text-xs text-slate-500 font-medium mt-0.5 leading-tight">
                 เลือกคำตอบที่เป็นตัวคุณที่สุด
               </p>
             </div>
 
             {/* Connecting Arrow 1 -> 2 */}
-            <div className="shrink-0 text-pink-400/80 font-bold text-xs select-none">
+            <div className="shrink-0 text-pink-400/80 font-bold text-sm select-none">
               ⇢
             </div>
 
             {/* Card 2 */}
-            <div className="relative flex-1 rounded-xl sm:rounded-2xl bg-white/95 border border-slate-200/90 shadow-sm p-1.5 sm:p-2 flex flex-col items-center justify-between text-center backdrop-blur-sm min-h-[68px] sm:min-h-[74px]">
-              <div className="absolute -top-1.5 -left-1.5 w-4 h-4 sm:w-5 sm:h-5 rounded-full bg-[#F59E0B] text-white text-[9px] sm:text-[10px] font-bold flex items-center justify-center shadow">
+            <div className="relative flex-1 rounded-xl sm:rounded-2xl bg-white/95 border border-slate-200/90 shadow-sm p-2 sm:p-2.5 flex flex-col items-center justify-between text-center backdrop-blur-sm min-h-[76px] sm:min-h-[82px]">
+              <div className="absolute -top-1.5 -left-1.5 w-5 h-5 sm:w-6 sm:h-6 rounded-full bg-[#F59E0B] text-white text-xs font-bold flex items-center justify-center shadow">
                 2
               </div>
-              <div className="w-5 h-5 sm:w-6 sm:h-6 rounded-lg bg-amber-50 flex items-center justify-center text-xs sm:text-sm mb-0.5">
+              <div className="w-6 h-6 sm:w-7 sm:h-7 rounded-lg bg-amber-50 flex items-center justify-center text-sm sm:text-base mb-0.5">
                 🤖
               </div>
-              <p className="text-[10px] sm:text-[11px] font-bold text-slate-800 font-heading leading-tight">
+              <p className="text-xs sm:text-sm font-bold text-slate-800 font-heading leading-tight">
                 AI ค้นหา Future Nurse
               </p>
-              <p className="text-[8px] sm:text-[9px] text-slate-500 mt-0.5 leading-tight">
+              <p className="text-[10px] sm:text-xs text-slate-500 font-medium mt-0.5 leading-tight">
                 วิเคราะห์จุดเด่นและสายพยาบาล
               </p>
             </div>
 
             {/* Connecting Arrow 2 -> 3 */}
-            <div className="shrink-0 text-emerald-400/80 font-bold text-xs select-none">
+            <div className="shrink-0 text-emerald-400/80 font-bold text-sm select-none">
               ⇢
             </div>
 
             {/* Card 3 */}
-            <div className="relative flex-1 rounded-xl sm:rounded-2xl bg-white/95 border border-slate-200/90 shadow-sm p-1.5 sm:p-2 flex flex-col items-center justify-between text-center backdrop-blur-sm min-h-[68px] sm:min-h-[74px]">
-              <div className="absolute -top-1.5 -left-1.5 w-4 h-4 sm:w-5 sm:h-5 rounded-full bg-[#10B981] text-white text-[9px] sm:text-[10px] font-bold flex items-center justify-center shadow">
+            <div className="relative flex-1 rounded-xl sm:rounded-2xl bg-white/95 border border-slate-200/90 shadow-sm p-2 sm:p-2.5 flex flex-col items-center justify-between text-center backdrop-blur-sm min-h-[76px] sm:min-h-[82px]">
+              <div className="absolute -top-1.5 -left-1.5 w-5 h-5 sm:w-6 sm:h-6 rounded-full bg-[#10B981] text-white text-xs font-bold flex items-center justify-center shadow">
                 3
               </div>
-              <div className="w-5 h-5 sm:w-6 sm:h-6 rounded-lg bg-emerald-50 flex items-center justify-center text-xs sm:text-sm mb-0.5">
+              <div className="w-6 h-6 sm:w-7 sm:h-7 rounded-lg bg-emerald-50 flex items-center justify-center text-sm sm:text-base mb-0.5">
                 🪪
               </div>
-              <p className="text-[10px] sm:text-[11px] font-bold text-slate-800 font-heading leading-tight">
+              <p className="text-xs sm:text-sm font-bold text-slate-800 font-heading leading-tight">
                 รับ Future Nurse Card
               </p>
-              <p className="text-[8px] sm:text-[9px] text-slate-500 mt-0.5 leading-tight">
+              <p className="text-[10px] sm:text-xs text-slate-500 font-medium mt-0.5 leading-tight">
                 ดูผลลัพธ์ บันทึก และแชร์การ์ด
               </p>
             </div>

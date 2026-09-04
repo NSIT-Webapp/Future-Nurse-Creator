@@ -280,7 +280,7 @@ export const AnalysisView: React.FC<AnalysisViewProps> = ({
 
                   {/* Pink ANALYZING Pill under step 5 */}
                   {isCurrent && (
-                    <div className="absolute -bottom-5 left-1/2 -translate-x-1/2 px-3 py-0.5 rounded-full bg-[#FF3366] text-white font-black text-[8.5px] sm:text-[9px] tracking-wider uppercase shadow-sm whitespace-nowrap animate-pulse">
+                    <div className="absolute -bottom-5 left-1/2 -translate-x-1/2 px-3 py-0.5 rounded-full bg-[#FF3366] text-white font-black text-xs tracking-wider uppercase shadow-sm whitespace-nowrap animate-pulse">
                       ANALYZING
                     </div>
                   )}
@@ -320,10 +320,10 @@ export const AnalysisView: React.FC<AnalysisViewProps> = ({
           <div className="shrink-0 pt-1 sm:pt-2">
             <div className="flex flex-col sm:flex-row sm:items-end sm:justify-between gap-2 sm:gap-3">
               <div className="text-left min-w-0 flex-1">
-                <div className="inline-flex items-center gap-1.5 px-4 py-1 rounded-full bg-gradient-to-r from-[#FF5E80] to-[#FF3366] text-white text-[10px] sm:text-xs font-black uppercase tracking-widest mb-1 shadow-sm">
-                  <Sparkles className="w-2.5 h-2.5 animate-pulse" />
+                <div className="inline-flex items-center gap-1.5 px-4 py-1 rounded-full bg-gradient-to-r from-[#FF5E80] to-[#FF3366] text-white text-xs sm:text-sm font-black uppercase tracking-widest mb-1 shadow-sm">
+                  <Sparkles className="w-3 h-3 animate-pulse" />
                   <span>ANALYZING</span>
-                  <Sparkles className="w-2.5 h-2.5 animate-pulse" />
+                  <Sparkles className="w-3 h-3 animate-pulse" />
                 </div>
 
                 <h2 className="text-3xl sm:text-[2.35rem] md:text-5xl font-black text-slate-800 tracking-tight font-heading leading-tight sm:whitespace-nowrap drop-shadow-[0_1px_2px_rgba(255,255,255,0.95)]">
@@ -335,7 +335,7 @@ export const AnalysisView: React.FC<AnalysisViewProps> = ({
                 </h3>
               </div>
 
-              <div className="rounded-full bg-white/88 backdrop-blur-md border border-white/90 px-4 py-2 shadow-sm flex items-center gap-2.5 self-start sm:self-end">
+              <div className="rounded-full bg-white/88 backdrop-blur-md border border-white/90 px-4.5 py-2.5 shadow-sm flex items-center gap-3 self-start sm:self-end">
                 <div className="flex -space-x-1.5">
                   {[0, 1, 2].map((dot) => (
                     <span
@@ -348,7 +348,7 @@ export const AnalysisView: React.FC<AnalysisViewProps> = ({
                 <span className="text-2xl sm:text-3xl font-black text-[#FF3366] font-heading leading-none tabular-nums">
                   {progress}%
                 </span>
-                <span className="text-[9px] sm:text-[10px] font-black text-[#002B7F] uppercase tracking-wide whitespace-nowrap leading-tight">
+                <span className="text-xs sm:text-sm font-black text-[#002B7F] uppercase tracking-wide whitespace-nowrap leading-tight">
                   analyzed
                 </span>
               </div>
@@ -392,9 +392,9 @@ export const AnalysisView: React.FC<AnalysisViewProps> = ({
         {onBack ? (
           <button
             onClick={onBack}
-            className="px-5 py-2 sm:py-2.5 rounded-full bg-white/95 hover:bg-white text-[#002B7F] font-bold text-xs sm:text-sm border border-white shadow-md flex items-center gap-1.5 active:scale-95 transition-all"
+            className="min-h-[50px] px-6 py-2.5 sm:py-3 rounded-full bg-white/95 hover:bg-white text-[#002B7F] font-bold text-base sm:text-lg border-2 border-white shadow-md flex items-center gap-2 active:scale-95 transition-all"
           >
-            <ChevronLeft className="w-4 h-4 text-[#002B7F]" />
+            <ChevronLeft className="w-5 h-5 text-[#002B7F] stroke-[2.5]" />
             <span>ย้อนกลับ</span>
           </button>
         ) : (
@@ -402,8 +402,8 @@ export const AnalysisView: React.FC<AnalysisViewProps> = ({
         )}
 
         {/* Active Analyzing Status Pill */}
-        <div className="px-5 sm:px-6 py-2 sm:py-2.5 rounded-full bg-gradient-to-r from-[#FF5E80] to-[#FF3366] text-white font-extrabold text-xs sm:text-sm shadow-md shadow-rose-400/30 flex items-center gap-2 animate-cta-pulse">
-          <Sparkles className="w-4 h-4 animate-spin text-white" />
+        <div className="min-h-[50px] px-6 sm:px-7 py-2.5 sm:py-3 rounded-full bg-gradient-to-r from-[#FF5E80] to-[#FF3366] text-white font-extrabold text-base sm:text-lg shadow-md shadow-rose-400/30 flex items-center gap-2.5 animate-cta-pulse">
+          <Sparkles className="w-5 h-5 animate-spin text-white" />
           <span>กำลังวิเคราะห์...</span>
         </div>
       </div>

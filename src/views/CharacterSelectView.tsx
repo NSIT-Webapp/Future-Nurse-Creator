@@ -128,10 +128,10 @@ export const CharacterSelectView: React.FC<CharacterSelectViewProps> = ({
 
               {/* Card Title Header */}
               <div className="relative z-10 shrink-0 text-center pt-1">
-                <h3 className="text-base sm:text-lg md:text-xl font-black text-[#1D63D8] font-heading tracking-wide">
+                <h3 className="text-lg sm:text-xl md:text-2xl font-black text-[#1D63D8] font-heading tracking-wide">
                   Future Nurse
                 </h3>
-                <p className="text-[10px] sm:text-xs font-bold text-blue-600/80 tracking-wider">
+                <p className="text-sm sm:text-base font-bold text-blue-700 tracking-wider">
                   – Male Look –
                 </p>
               </div>
@@ -188,10 +188,10 @@ export const CharacterSelectView: React.FC<CharacterSelectViewProps> = ({
 
               {/* Card Title Header */}
               <div className="relative z-10 shrink-0 text-center pt-1">
-                <h3 className="text-base sm:text-lg md:text-xl font-black text-[#FF3366] font-heading tracking-wide">
+                <h3 className="text-lg sm:text-xl md:text-2xl font-black text-[#FF3366] font-heading tracking-wide">
                   Future Nurse
                 </h3>
-                <p className="text-[10px] sm:text-xs font-bold text-rose-500/80 tracking-wider">
+                <p className="text-sm sm:text-base font-bold text-rose-600 tracking-wider">
                   – Female Look –
                 </p>
               </div>
@@ -224,15 +224,15 @@ export const CharacterSelectView: React.FC<CharacterSelectViewProps> = ({
           </div>
 
           {/* ── Action Buttons Row ─────────────────────────────────────────── */}
-          <div className="shrink-0 flex items-center justify-center gap-3 sm:gap-6 mt-3 sm:mt-4 w-full max-w-md">
+          <div className="shrink-0 flex items-center justify-center gap-3 sm:gap-6 mt-3 sm:mt-4 w-full max-w-lg">
             {/* Back Button */}
             {onBack && (
               <button
                 type="button"
                 onClick={handleBack}
-                className="flex-1 max-w-[180px] py-2.5 sm:py-3.5 px-4 rounded-full bg-white hover:bg-slate-50 border-2 border-[#002B7F] text-[#002B7F] font-semibold text-[17px] sm:text-[19px] flex items-center justify-center gap-1.5 shadow-sm active:scale-95 transition-all"
+                className="flex-1 max-w-[200px] min-h-[54px] py-3.5 px-6 rounded-full bg-white hover:bg-slate-50 border-2 border-[#002B7F] text-[#002B7F] font-bold text-lg sm:text-xl flex items-center justify-center gap-2 shadow-sm active:scale-95 transition-all"
               >
-                <ChevronLeft className="w-5 h-5 stroke-[2.5]" />
+                <ChevronLeft className="w-5 h-5 text-[#002B7F] stroke-[2.5]" />
                 <span>ย้อนกลับ</span>
               </button>
             )}
@@ -241,7 +241,7 @@ export const CharacterSelectView: React.FC<CharacterSelectViewProps> = ({
             <button
               type="button"
               onClick={handleNext}
-              className="flex-1 max-w-[180px] py-2.5 sm:py-3.5 px-4 rounded-full bg-gradient-to-r from-[#FF2B6D] to-[#FF5277] hover:from-[#e92060] hover:to-[#f0456b] text-white font-bold text-[19px] sm:text-[22px] flex items-center justify-center gap-1.5 shadow-[0_4px_16px_rgba(255,43,109,0.35)] active:scale-95 transition-all"
+              className="flex-1 max-w-[200px] min-h-[54px] py-3.5 px-6 rounded-full bg-gradient-to-r from-[#FF2B6D] to-[#FF5277] hover:from-[#e92060] hover:to-[#f0456b] text-white font-black text-xl sm:text-2xl flex items-center justify-center gap-2 shadow-[0_4px_16px_rgba(255,43,109,0.35)] active:scale-95 transition-all"
             >
               <span>ต่อไป →</span>
             </button>
