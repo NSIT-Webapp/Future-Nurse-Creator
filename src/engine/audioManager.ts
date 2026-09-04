@@ -164,8 +164,8 @@ function getSfxContext(): AudioContext | null {
 }
 
 /**
- * Plays a bubbly, rounded pop/chime when selecting a quiz option (A-F).
- * Pitch scales melodically across A, B, C, D, E, F.
+ * Plays a bright, sparkling crystal chime ("ปิ๊งๆๆ" / fairy sparkle) when selecting a quiz option (A-F).
+ * Synthesizes a rapid 3-step shimmering arpeggio with crystalline bell harmonics.
  */
 export function playSelectSfx(optionKey?: string): void {
   if (isMuted) return;
@@ -173,39 +173,66 @@ export function playSelectSfx(optionKey?: string): void {
     const ctx = getSfxContext();
     if (!ctx) return;
 
-    const pitchMap: Record<string, number> = {
-      A: 523.25, // C5
-      B: 587.33, // D5
-      C: 659.25, // E5
-      D: 698.46, // F5
-      E: 783.99, // G5
-      F: 880.00, // A5
+    // Bright pentatonic root frequencies (C6 - E7 range) for luminous, sparkling crystal tones
+    const rootPitches: Record<string, number> = {
+      A: 1318.51, // E6
+      B: 1479.98, // F#6
+      C: 1661.22, // G#6
+      D: 1975.53, // B6
+      E: 2217.46, // C#7
+      F: 2637.02, // E7
     };
-    const baseFreq = (optionKey && pitchMap[optionKey]) || 587.33;
+    const baseFreq = (optionKey && rootPitches[optionKey]) || 1479.98;
 
-    const osc = ctx.createOscillator();
-    const gain = ctx.createGain();
-
-    osc.type = 'sine';
     const now = ctx.currentTime;
 
-    // Gentle upward bubble pop: quick frequency sweep
-    osc.frequency.setValueAtTime(baseFreq * 1.18, now);
-    osc.frequency.exponentialRampToValueAtTime(baseFreq * 0.95, now + 0.08);
+    // 3 rapid micro-sparkles: "ปิ๊ง - ปิ๊ง - ปิ๊ง!" (approx. 38ms spacing)
+    // Intervals: Root (1.0) -> Major 3rd (1.26) -> 5th/Octave (1.50)
+    const sparkles = [
+      { delay: 0.000, freqMultiplier: 1.00, volume: 0.15, duration: 0.18 },
+      { delay: 0.038, freqMultiplier: 1.26, volume: 0.18, duration: 0.22 },
+      { delay: 0.076, freqMultiplier: 1.50, volume: 0.20, duration: 0.28 },
+    ];
 
-    gain.gain.setValueAtTime(0.28, now);
-    gain.gain.exponentialRampToValueAtTime(0.001, now + 0.12);
+    sparkles.forEach(({ delay, freqMultiplier, volume, duration }) => {
+      const startTime = now + delay;
+      const freq = baseFreq * freqMultiplier;
 
-    osc.connect(gain);
-    gain.connect(ctx.destination);
+      // 1) Pure fundamental sine wave (crystalline bell body)
+      const osc = ctx.createOscillator();
+      const gain = ctx.createGain();
+      osc.type = 'sine';
+      osc.frequency.setValueAtTime(freq, startTime);
 
-    osc.start(now);
-    osc.stop(now + 0.12);
+      gain.gain.setValueAtTime(0.0001, startTime);
+      gain.gain.linearRampToValueAtTime(volume, startTime + 0.003); // instant clickless attack
+      gain.gain.exponentialRampToValueAtTime(0.0001, startTime + duration); // shimmering bell decay
+
+      osc.connect(gain);
+      gain.connect(ctx.destination);
+      osc.start(startTime);
+      osc.stop(startTime + duration);
+
+      // 2) Crystal sparkle overtone (triangle harmonic at 2x octave for luminous glitter)
+      const shimmerOsc = ctx.createOscillator();
+      const shimmerGain = ctx.createGain();
+      shimmerOsc.type = 'triangle';
+      shimmerOsc.frequency.setValueAtTime(freq * 2.0, startTime);
+
+      shimmerGain.gain.setValueAtTime(0.0001, startTime);
+      shimmerGain.gain.linearRampToValueAtTime(volume * 0.35, startTime + 0.002);
+      shimmerGain.gain.exponentialRampToValueAtTime(0.0001, startTime + duration * 0.6);
+
+      shimmerOsc.connect(shimmerGain);
+      shimmerGain.connect(ctx.destination);
+      shimmerOsc.start(startTime);
+      shimmerOsc.stop(startTime + duration * 0.6);
+    });
   } catch (_e) {}
 }
 
 /**
- * Plays an upbeat, positive 2-tone chime when clicking "Next" (ถัดไป).
+ * Plays an upbeat, luminous 2-tone crystal chime when clicking "Next" (ถัดไป).
  */
 export function playNextSfx(): void {
   if (isMuted) return;
@@ -215,34 +242,45 @@ export function playNextSfx(): void {
 
     const now = ctx.currentTime;
 
-    // Note 1: E5 (659.25 Hz)
-    const osc1 = ctx.createOscillator();
-    const gain1 = ctx.createGain();
-    osc1.type = 'sine';
-    osc1.frequency.setValueAtTime(659.25, now);
-    gain1.gain.setValueAtTime(0.22, now);
-    gain1.gain.exponentialRampToValueAtTime(0.001, now + 0.08);
-    osc1.connect(gain1);
-    gain1.connect(ctx.destination);
-    osc1.start(now);
-    osc1.stop(now + 0.08);
+    // Rising cheerful high bells: G6 (1567.98 Hz) -> C7 (2093.00 Hz)
+    const notes = [
+      { time: now, freq: 1567.98, vol: 0.16, dur: 0.18 },
+      { time: now + 0.075, freq: 2093.00, vol: 0.22, dur: 0.32 },
+    ];
 
-    // Note 2: A5 (880.00 Hz) - rising happy chord
-    const osc2 = ctx.createOscillator();
-    const gain2 = ctx.createGain();
-    osc2.type = 'sine';
-    osc2.frequency.setValueAtTime(880.0, now + 0.06);
-    gain2.gain.setValueAtTime(0.26, now + 0.06);
-    gain2.gain.exponentialRampToValueAtTime(0.001, now + 0.18);
-    osc2.connect(gain2);
-    gain2.connect(ctx.destination);
-    osc2.start(now + 0.06);
-    osc2.stop(now + 0.18);
+    notes.forEach(({ time, freq, vol, dur }) => {
+      const osc = ctx.createOscillator();
+      const gain = ctx.createGain();
+      osc.type = 'sine';
+      osc.frequency.setValueAtTime(freq, time);
+
+      gain.gain.setValueAtTime(0.0001, time);
+      gain.gain.linearRampToValueAtTime(vol, time + 0.004);
+      gain.gain.exponentialRampToValueAtTime(0.0001, time + dur);
+
+      osc.connect(gain);
+      gain.connect(ctx.destination);
+      osc.start(time);
+      osc.stop(time + dur);
+
+      // Light sparkle overtone
+      const shim = ctx.createOscillator();
+      const shimGain = ctx.createGain();
+      shim.type = 'triangle';
+      shim.frequency.setValueAtTime(freq * 2, time);
+      shimGain.gain.setValueAtTime(0.0001, time);
+      shimGain.gain.linearRampToValueAtTime(vol * 0.3, time + 0.003);
+      shimGain.gain.exponentialRampToValueAtTime(0.0001, time + dur * 0.5);
+      shim.connect(shimGain);
+      shimGain.connect(ctx.destination);
+      shim.start(time);
+      shim.stop(time + dur * 0.5);
+    });
   } catch (_e) {}
 }
 
 /**
- * Plays a soft, polite tap tone when clicking "Back" (ย้อนกลับ).
+ * Plays a gentle, pleasant pastel chime when clicking "Back" (ย้อนกลับ).
  */
 export function playBackSfx(): void {
   if (isMuted) return;
@@ -255,17 +293,19 @@ export function playBackSfx(): void {
     const gain = ctx.createGain();
 
     osc.type = 'sine';
-    osc.frequency.setValueAtTime(460, now);
-    osc.frequency.exponentialRampToValueAtTime(340, now + 0.07);
+    // Gentle downward soft bell: 1046.50 Hz (C6) -> 783.99 Hz (G5)
+    osc.frequency.setValueAtTime(1046.50, now);
+    osc.frequency.exponentialRampToValueAtTime(783.99, now + 0.12);
 
-    gain.gain.setValueAtTime(0.2, now);
-    gain.gain.exponentialRampToValueAtTime(0.001, now + 0.09);
+    gain.gain.setValueAtTime(0.0001, now);
+    gain.gain.linearRampToValueAtTime(0.14, now + 0.004);
+    gain.gain.exponentialRampToValueAtTime(0.0001, now + 0.14);
 
     osc.connect(gain);
     gain.connect(ctx.destination);
 
     osc.start(now);
-    osc.stop(now + 0.09);
+    osc.stop(now + 0.14);
   } catch (_e) {}
 }
 

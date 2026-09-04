@@ -2,7 +2,7 @@ import React from 'react';
 import { ChevronRight } from 'lucide-react';
 import { ASSETS } from '../assets/registry';
 import { SoundControl } from '../components/SoundControl';
-import { playAudio } from '../engine/audioManager';
+import { playAudio, playNextSfx } from '../engine/audioManager';
 
 interface WelcomeViewProps {
   onStart: () => void;
@@ -27,6 +27,7 @@ export const WelcomeView: React.FC<WelcomeViewProps> = ({ onStart }) => {
   }, []);
 
   const handleStartClick = () => {
+    playNextSfx();
     playAudio();
     onStart();
   };

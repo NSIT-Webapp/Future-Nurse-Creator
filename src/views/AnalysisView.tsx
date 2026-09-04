@@ -114,7 +114,7 @@ export const AnalysisView: React.FC<AnalysisViewProps> = ({
     return '🎉 ค้นพบพลังพยาบาลที่ใช่สำหรับคุณแล้ว!';
   };
 
-  // Reusable badge item renderer
+  // ── Render Single Role Badge Card (All 8 cards are 100% identical in size and styling) ──────
   const renderBadge = (badge: ProcessingBadgeItem, isFlipped: boolean = false) => {
     const isScanning = currentScanningPathId === badge.pathId;
     const theme = BADGE_THEMES[badge.pathId] || { textColor: 'text-[#002B7F]' };
@@ -122,22 +122,22 @@ export const AnalysisView: React.FC<AnalysisViewProps> = ({
     return (
       <div
         key={badge.pathId}
-        className={`flex flex-col items-center justify-center transition-all duration-300 select-none relative ${
+        className={`flex flex-col items-center justify-start w-[80px] sm:w-[92px] md:w-[104px] transition-all duration-300 select-none relative ${
           isScanning
-            ? 'scale-115 z-30 drop-shadow-[0_0_22px_rgba(255,51,102,0.95)]'
-            : 'hover:scale-105 drop-shadow-xs'
+            ? 'scale-110 z-30 drop-shadow-[0_0_22px_rgba(255,51,102,0.95)]'
+            : 'hover:scale-105 drop-shadow-xs z-10'
         }`}
       >
         {/* Live Scanning Tag */}
         {isScanning && (
-          <div className="absolute -top-2.5 left-1/2 -translate-x-1/2 bg-[#FF3366] text-white text-[7px] sm:text-[8px] font-black px-1.5 py-0.2 rounded-full uppercase shadow-md flex items-center gap-0.5 whitespace-nowrap animate-pulse">
+          <div className="absolute -top-2.5 left-1/2 -translate-x-1/2 bg-[#FF3366] text-white text-[7px] sm:text-[8px] font-black px-1.5 py-0.5 rounded-full uppercase shadow-md flex items-center gap-0.5 whitespace-nowrap animate-pulse z-40">
             <Zap className="w-2.5 h-2.5 fill-current" />
             <span>SCANNING</span>
           </div>
         )}
 
-        {/* Floating Badge Icon (Flipped horizontally on right side to gaze inward) */}
-        <div className={`w-13 h-13 sm:w-15 sm:h-15 md:w-17 md:h-17 flex items-center justify-center ${isScanning ? 'animate-bounce-gentle' : ''}`}>
+        {/* Role Badge Icon Box (Strict identical size for all cards) */}
+        <div className={`w-[60px] h-[60px] sm:w-[72px] sm:h-[72px] md:w-[80px] md:h-[80px] flex items-center justify-center shrink-0 ${isScanning ? 'animate-bounce-gentle' : ''}`}>
           <img
             src={badge.imgUrl}
             alt={badge.titleEn}
@@ -147,12 +147,14 @@ export const AnalysisView: React.FC<AnalysisViewProps> = ({
           />
         </div>
 
-        {/* Badge Title */}
-        <span
-          className={`text-[7.5px] sm:text-[8.5px] md:text-[9.5px] font-black tracking-tight uppercase text-center mt-0.5 leading-tight px-0.5 max-w-[85px] sm:max-w-[110px] drop-shadow-[0_1px_2px_rgba(255,255,255,0.95)] ${theme.textColor}`}
-        >
-          {badge.titleEn}
-        </span>
+        {/* Badge Title (Fixed height ensures uniform card box size across all 8 badges) */}
+        <div className="h-[22px] sm:h-[26px] md:h-[28px] flex items-center justify-center w-full mt-0.5">
+          <span
+            className={`text-[7.5px] sm:text-[8.5px] md:text-[9.5px] font-black tracking-tight uppercase text-center leading-tight px-0.5 drop-shadow-[0_1px_2px_rgba(255,255,255,0.95)] line-clamp-2 ${theme.textColor}`}
+          >
+            {badge.titleEn}
+          </span>
+        </div>
       </div>
     );
   };
@@ -284,80 +286,54 @@ export const AnalysisView: React.FC<AnalysisViewProps> = ({
             </p>
           </div>
 
-          {/* ── Center Stage: Authentic Mockup Circular Orbit Layout ── */}
-          <div className="flex-1 relative flex flex-col justify-between min-h-0 overflow-hidden my-0.5 px-1 sm:px-2">
+          {/* ── Center Stage: 3-Column Radial Orbit (Matching Reference Mockup 1:1) ── */}
+          <div className="flex-1 relative flex items-center justify-between min-h-0 overflow-hidden my-0.5 px-0.5 sm:px-2">
 
             {/* Pulsing Concentric Holographic Radar Aura in Center */}
             <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-64 h-64 sm:w-80 sm:h-80 md:w-96 md:h-96 rounded-full bg-radial from-cyan-300/30 via-pink-300/10 to-transparent animate-pulse pointer-events-none" />
 
-            {/* ── TOP TIER: PED (left) | MAT (center if female) | MH (right) ── */}
-            <div className="relative z-20 flex items-start justify-between w-full px-1 sm:px-2 pt-0.5">
-              {/* Top Left: Pediatric Nurse */}
-              <div className="w-[28%] sm:w-[26%] flex justify-center">
-                {renderBadge(badgePED, false)}
-              </div>
-
-              {/* Top Center: Maternal & Newborn (Female only) */}
-              <div className="flex-1 flex justify-center">
-                {badgeMAT ? renderBadge(badgeMAT, false) : <div className="h-4" />}
-              </div>
-
-              {/* Top Right: Mental Health Nurse (Gaze Inward) */}
-              <div className="w-[28%] sm:w-[26%] flex justify-center">
-                {renderBadge(badgeMH, true)}
-              </div>
+            {/* ── COLUMN 1: LEFT FLANK (PED, ER, COMM) ── */}
+            <div className="w-1/3 flex flex-col items-center justify-between h-full py-0.5 z-20">
+              {renderBadge(badgePED, false)}
+              {renderBadge(badgeER, false)}
+              {renderBadge(badgeCOMM, false)}
             </div>
 
-            {/* ── MIDDLE TIER: Flank Badges + Center Student ── */}
-            <div className="relative z-10 flex-1 flex items-center justify-between min-h-0 px-1 sm:px-2">
-              {/* Left Flank: Emergency (upper) + Community (lower) */}
-              <div className="w-[28%] sm:w-[26%] flex flex-col justify-around h-full py-0.5 z-20 space-y-1.5 sm:space-y-2.5">
-                {renderBadge(badgeER, false)}
-                {renderBadge(badgeCOMM, false)}
+            {/* ── COLUMN 2: CENTER (MAT at Top, Student in Middle, TECH at Bottom) ── */}
+            <div className="w-1/3 flex flex-col items-center justify-between h-full py-0.5 z-20">
+              {/* Top Center: MAT (Female only) or spacer for Male */}
+              <div className="flex items-start justify-center">
+                {badgeMAT ? (
+                  renderBadge(badgeMAT, false)
+                ) : (
+                  <div className="w-[80px] sm:w-[92px] md:w-[104px] h-[84px] sm:h-[98px]" />
+                )}
               </div>
 
-              {/* Center Column: Student Character (Waist-up, centered between tiers) */}
-              <div className="flex-1 h-full relative flex items-center justify-center min-h-0 px-1">
-                <div className="relative w-full h-full flex items-center justify-center max-h-[280px] sm:max-h-[340px] md:max-h-[380px]">
+              {/* Center Character (Waist-Up Student) */}
+              <div className="flex-1 w-full flex items-center justify-center min-h-0 relative -my-1 z-10">
+                <div className="h-full max-h-[190px] sm:max-h-[235px] md:max-h-[275px] flex items-center justify-center">
                   <img
                     src={centerCharacterUrl}
                     alt={isFemale ? 'Female Student' : 'Male Student'}
-                    className="h-full w-auto max-w-full object-contain drop-shadow-[0_16px_36px_rgba(0,43,127,0.38)] animate-float-subtle select-none scale-105 sm:scale-115"
+                    className="h-full w-auto max-w-full object-contain drop-shadow-[0_12px_28px_rgba(0,43,127,0.35)] animate-float-subtle select-none scale-105 sm:scale-110"
                     loading="eager"
                     decoding="sync"
                   />
                 </div>
               </div>
 
-              {/* Right Flank: Older Adult (upper) + International (lower) (Gaze Inward) */}
-              <div className="w-[28%] sm:w-[26%] flex flex-col justify-around h-full py-0.5 z-20 space-y-1.5 sm:space-y-2.5">
-                {renderBadge(badgeOA, true)}
-                {renderBadge(badgeINT, true)}
+              {/* Bottom Center: TECH (Strictly identical size to all other 7 cards!) */}
+              <div className="flex items-end justify-center">
+                {renderBadge(badgeTECH, false)}
               </div>
             </div>
 
-            {/* ── BOTTOM TIER: Nursing + Technology in Center Hologram Frame ── */}
-            <div className="relative z-20 flex justify-center w-full pb-1">
-              <div
-                className={`rounded-xl px-2.5 py-1 flex items-center gap-1.5 transition-all duration-300 ${
-                  currentScanningPathId === 'TECH'
-                    ? 'scale-110 drop-shadow-[0_0_20px_rgba(56,189,248,0.95)]'
-                    : 'hover:scale-105 drop-shadow-xs'
-                }`}
-              >
-                <div className="w-8 h-8 sm:w-10 sm:h-10 overflow-hidden flex items-center justify-center shrink-0">
-                  <img
-                    src={badgeTECH.imgUrl}
-                    alt={badgeTECH.titleEn}
-                    className="w-full h-full object-contain"
-                    loading="eager"
-                    decoding="sync"
-                  />
-                </div>
-                <span className="text-[8px] sm:text-[9px] md:text-[10px] font-black text-[#0284C7] tracking-tight uppercase leading-tight whitespace-nowrap drop-shadow-[0_1px_2px_rgba(255,255,255,0.95)]">
-                  NURSING + TECHNOLOGY
-                </span>
-              </div>
+            {/* ── COLUMN 3: RIGHT FLANK (MH, OA, INT - Gaze Inward) ── */}
+            <div className="w-1/3 flex flex-col items-center justify-between h-full py-0.5 z-20">
+              {renderBadge(badgeMH, true)}
+              {renderBadge(badgeOA, true)}
+              {renderBadge(badgeINT, true)}
             </div>
 
           </div>
