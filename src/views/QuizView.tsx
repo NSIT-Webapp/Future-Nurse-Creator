@@ -79,6 +79,8 @@ const OPTION_THEMES: Record<
   },
 };
 
+const ALL_QUESTION_STEPS = [1, 2, 3, 4, 5] as const;
+
 export const QuizView: React.FC<QuizViewProps> = ({
   question,
   currentStep,
@@ -89,6 +91,14 @@ export const QuizView: React.FC<QuizViewProps> = ({
   onBack,
 }) => {
   const canProceed = Boolean(selectedOption);
+
+  // Preload all 5 character images immediately upon QuizView mounting
+  React.useEffect(() => {
+    ALL_QUESTION_STEPS.forEach((step) => {
+      const img = new Image();
+      img.src = getQuestionCharacterUrl(step);
+    });
+  }, []);
 
   return (
     <div
@@ -132,13 +142,26 @@ export const QuizView: React.FC<QuizViewProps> = ({
           <div className="relative z-10 w-full rounded-[28px] sm:rounded-[32px] bg-white/80 backdrop-blur-lg shadow-[0_14px_40px_rgba(0,43,127,0.12)] border border-white/60 p-4 sm:p-6 md:p-7 flex flex-col justify-between min-h-[490px]">
 
             {/* Nurse Mascot: In front of white card (z-20), peeking behind Row A (z-30) */}
-            <div className="absolute -top-20 sm:-top-24 md:-top-28 right-2 sm:right-4 md:right-6 w-38 sm:w-46 md:w-52 pointer-events-none z-20 drop-shadow-[0_12px_28px_rgba(0,43,127,0.22)] select-none">
-              <img
-                src={getQuestionCharacterUrl((Math.min(Math.max(currentStep, 1), 5)) as 1 | 2 | 3 | 4 | 5)}
-                alt={`Nurse Character Step ${currentStep}`}
-                className="w-full h-auto object-contain animate-float-subtle"
-                draggable={false}
-              />
+            {/* Stacked pre-rendered images guarantee 0ms instant transition without delay or pop-in */}
+            <div className="absolute -top-20 sm:-top-24 md:-top-28 right-2 sm:right-4 md:right-6 w-38 sm:w-46 md:w-52 aspect-[3/4] pointer-events-none z-20 drop-shadow-[0_12px_28px_rgba(0,43,127,0.22)] select-none">
+              <div className="relative w-full h-full animate-float-subtle">
+                {ALL_QUESTION_STEPS.map((step) => {
+                  const isCurrent = step === currentStep;
+                  return (
+                    <img
+                      key={step}
+                      src={getQuestionCharacterUrl(step)}
+                      alt={`Nurse Character Step ${step}`}
+                      loading="eager"
+                      decoding="sync"
+                      className={`absolute inset-0 w-full h-full object-contain transition-opacity duration-150 ease-out will-change-[opacity] ${
+                        isCurrent ? 'opacity-100 z-10' : 'opacity-0 z-0 pointer-events-none'
+                      }`}
+                      draggable={false}
+                    />
+                  );
+                })}
+              </div>
             </div>
 
             {/* ── Header Inside Card: Step Badge & Big Prompt (pr reserved for mascot) ── */}

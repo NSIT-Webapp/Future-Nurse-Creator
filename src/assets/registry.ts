@@ -99,8 +99,31 @@ export const ASSETS = {
 
   // ── Processing / Analysis screen (2 visual versions based on selected look) ──
   processing: {
-    female: PLACEHOLDER('processing/processing-female'),
-    male:   PLACEHOLDER('processing/processing-male'),
+    background: '/assets/processing/background.png',
+    female:     '/assets/processing/character-female.png',
+    male:       '/assets/processing/character-male.png',
+    robot:      '/assets/processing/ai-robot.png',
+    badges: {
+      female: {
+        PED:  '/assets/processing/badges/female/PED.png',
+        MH:   '/assets/processing/badges/female/MH.png',
+        ER:   '/assets/processing/badges/female/ER.png',
+        OA:   '/assets/processing/badges/female/OA.png',
+        MAT:  '/assets/processing/badges/female/MAT.png',
+        COMM: '/assets/processing/badges/female/COMM.png',
+        INT:  '/assets/processing/badges/female/INT.png',
+        TECH: '/assets/processing/badges/female/TECH.png',
+      },
+      male: {
+        PED:  PLACEHOLDER('processing/badges/male/PED'),
+        MH:   PLACEHOLDER('processing/badges/male/MH'),
+        ER:   '/assets/processing/badges/male/ER.png',
+        OA:   '/assets/processing/badges/male/OA.png',
+        COMM: '/assets/processing/badges/male/COMM.png',
+        INT:  PLACEHOLDER('processing/badges/male/INT'),
+        TECH: PLACEHOLDER('processing/badges/male/TECH'),
+      },
+    },
   },
 
   // ── Reveal screen artwork (8 Nursing Paths × 2 Looks = 16 outcomes) ─────────

@@ -19,6 +19,7 @@ import { useIdleTimer } from './engine/idleManager';
 import { incrementSession } from './engine/sessionManager';
 import { useDebugMode } from './hooks/useDebugMode';
 import { resetAudioState } from './engine/audioManager';
+import { ASSETS } from './assets/registry';
 
 // ── Screen type ───────────────────────────────────────────────────────────────
 // Full kiosk flow: welcome → quiz → character → analysis → reveal → card_preview → save_share → thank_you_reset
@@ -60,6 +61,20 @@ export function App() {
     handleHash();
     window.addEventListener('hashchange', handleHash);
     return () => window.removeEventListener('hashchange', handleHash);
+  }, []);
+
+  // ── Global Preloader: Preload all 5 quiz presenter characters immediately ───
+  useEffect(() => {
+    [
+      ASSETS.questions.q1,
+      ASSETS.questions.q2,
+      ASSETS.questions.q3,
+      ASSETS.questions.q4,
+      ASSETS.questions.q5,
+    ].forEach((src) => {
+      const img = new Image();
+      img.src = src;
+    });
   }, []);
 
   // ── Reset — clears all session state ──────────────────────────────────────

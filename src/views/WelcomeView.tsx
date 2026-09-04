@@ -45,7 +45,7 @@ export const WelcomeView: React.FC<WelcomeViewProps> = ({ onStart }) => {
       />
 
       {/* ── 2. Top Header Bar (Faculty Logo + Sound Control) ─────────────── */}
-      <div className="relative z-30 flex items-center justify-between px-4 sm:px-6 pt-3 sm:pt-4 shrink-0">
+      <div className="relative z-30 flex items-center justify-between px-4 sm:px-6 pt-2.5 sm:pt-3 shrink-0">
         {/* Official Faculty of Nursing Mahidol University Logo */}
         <div className="flex items-center shrink-0 select-none">
           <img
@@ -61,7 +61,7 @@ export const WelcomeView: React.FC<WelcomeViewProps> = ({ onStart }) => {
       </div>
 
       {/* ── 3. Title Wordmark Layer + Floating Decorative Icons ───────────── */}
-      <div data-layer="home-title" className="relative z-30 flex flex-col items-center pt-0.5 pb-1 shrink-0">
+      <div data-layer="home-title" className="relative z-30 flex flex-col items-center -mt-2 sm:-mt-3 md:-mt-4 pb-1 shrink-0">
         {/* Floating Decorative Elements (Stethoscope, Bulb, Heart, Sparkles, Medical Cross) */}
         <div className="absolute inset-0 pointer-events-none overflow-visible select-none">
           {/* 1. Gold Sparkle (Top Left, above Stethoscope) */}
