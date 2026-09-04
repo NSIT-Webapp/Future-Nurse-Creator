@@ -103,24 +103,16 @@ export const QuizView: React.FC<QuizViewProps> = ({
         draggable={false}
       />
 
-      {/* ── 2. Top Header Bar (Mahidol Seal + Sound Control) ─────────────── */}
+      {/* ── 2. Top Header Bar (Faculty Logo + Sound Control) ─────────────── */}
       <div className="relative z-30 flex items-center justify-between px-4 sm:px-6 pt-3 sm:pt-4 shrink-0">
-        {/* University Emblem & Name — Crisp Vector Typography */}
-        <div className="flex items-center gap-2.5 sm:gap-3 shrink-0 select-none">
+        {/* Official Faculty of Nursing Mahidol University Logo */}
+        <div className="flex items-center shrink-0 select-none">
           <img
-            src={ASSETS.home.mahidolSeal}
-            alt="ตราสัญลักษณ์มหาวิทยาลัยมหิดล คณะพยาบาลศาสตร์"
-            className="w-10 h-10 sm:w-12 sm:h-12 object-contain shrink-0"
+            src={ASSETS.home.facultyLogo}
+            alt="มหาวิทยาลัยมหิดล คณะพยาบาลศาสตร์"
+            className="h-9 sm:h-11 md:h-12 w-auto object-contain pointer-events-none"
             draggable={false}
           />
-          <div className="leading-tight">
-            <h2 className="text-xs sm:text-sm md:text-base font-black text-[#002B7F] font-heading tracking-tight">
-              มหาวิทยาลัยมหิดล
-            </h2>
-            <p className="text-[10px] sm:text-xs md:text-sm font-bold text-[#002B7F] font-heading tracking-tight">
-              คณะพยาบาลศาสตร์
-            </p>
-          </div>
         </div>
 
         {/* Sound Control Toggle */}
