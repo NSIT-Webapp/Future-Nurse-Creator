@@ -101,8 +101,8 @@ export const ASSETS = {
   processing: {
     background:  '/assets/processing/background.png',
     innerCardBg: '/assets/processing/inner-card-bg.png',
-    female:      '/assets/processing/character-female.png',
-    male:        '/assets/processing/character-male.png',
+    female:      '/assets/processing/character-female-half.png',
+    male:        '/assets/processing/character-male-half.png',
     robot:       '/assets/processing/ai-robot.png',
     badges: {
       female: {
