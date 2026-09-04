@@ -115,8 +115,8 @@ export const RevealView: React.FC<RevealViewProps> = ({ result, onNext, onBack }
 
         /* ── Aura Core Animations ── */
         @keyframes aura-pulse {
-          0%, 100% { opacity: 0.72; transform: translate(-50%, -50%) scale(1); }
-          50%      { opacity: 0.96; transform: translate(-50%, -50%) scale(1.06); }
+          0%, 100% { opacity: 0.75; transform: translate(-50%, -50%) scale(1); }
+          50%      { opacity: 0.98; transform: translate(-50%, -50%) scale(1.06); }
         }
         @keyframes aura-ripple-expand {
           0%   { transform: translate(-50%, -50%) scale(0.92); opacity: 0.85; }
@@ -145,29 +145,15 @@ export const RevealView: React.FC<RevealViewProps> = ({ result, onNext, onBack }
           animation: cta-glow 2.5s ease-in-out infinite;
         }
 
-        /* ── Holographic shimmer on title ── */
-        @keyframes shimmer-sweep {
-          0%   { background-position: -200% center; }
-          100% { background-position: 200% center; }
-        }
-        .title-shimmer {
-          background: linear-gradient(
-            105deg,
-            var(--title-color) 0%,
-            var(--title-color) 30%,
-            rgba(255,255,255,0.95) 45%,
-            rgba(255,220,100,0.9) 50%,
-            rgba(255,255,255,0.95) 55%,
-            var(--title-color) 70%,
-            var(--title-color) 100%
-          );
-          background-size: 200% auto;
-          -webkit-background-clip: text;
-          background-clip: text;
-          -webkit-text-fill-color: transparent;
-          animation: shimmer-sweep 3s linear infinite;
-          text-shadow: none;
-          filter: drop-shadow(0 2px 6px rgba(0,0,0,0.16)) drop-shadow(0 0 16px rgba(255,255,255,0.45));
+        /* ── 3D Bubble Typography for Title ── */
+        .title-3d-text {
+          color: var(--title-color);
+          text-shadow:
+            0 2px 0 #FFFFFF,
+            0 3px 0 rgba(255,255,255,0.9),
+            0 5px 0 rgba(0, 43, 127, 0.14),
+            0 12px 24px rgba(0, 43, 127, 0.22);
+          letter-spacing: -0.01em;
         }
 
         /* ── Half-body character rise-in from bottom ── */
@@ -213,32 +199,6 @@ export const RevealView: React.FC<RevealViewProps> = ({ result, onNext, onBack }
         .box-slide-up-1 { animation: box-slide-up 0.45s ease-out 0.55s both; }
         .box-slide-up-2 { animation: box-slide-up 0.45s ease-out 0.7s both; }
         .box-slide-up-3 { animation: box-slide-up 0.45s ease-out 0.85s both; }
-
-        /* ── 3D Card Depth Highlights ── */
-        .card-3d-white {
-          background-color: #FFFFFF;
-          box-shadow:
-            0 10px 28px -4px rgba(0, 43, 127, 0.14),
-            0 4px 12px -2px rgba(0, 43, 127, 0.08),
-            inset 0 2px 0 0 rgba(255, 255, 255, 0.95),
-            inset 0 -2px 0 0 rgba(0, 43, 127, 0.04);
-        }
-        .card-3d-superpower {
-          background: linear-gradient(135deg, #FFFFFF 0%, #FFF5F7 100%);
-          box-shadow:
-            0 10px 28px -4px rgba(255, 51, 102, 0.16),
-            0 4px 12px -2px rgba(255, 51, 102, 0.10),
-            inset 0 2px 0 0 rgba(255, 255, 255, 1),
-            inset 0 -2px 0 0 rgba(255, 51, 102, 0.06);
-        }
-        .card-3d-aiskill {
-          background: linear-gradient(135deg, #FFFFFF 0%, #F0F9FF 100%);
-          box-shadow:
-            0 10px 28px -4px rgba(2, 132, 199, 0.16),
-            0 4px 12px -2px rgba(2, 132, 199, 0.10),
-            inset 0 2px 0 0 rgba(255, 255, 255, 1),
-            inset 0 -2px 0 0 rgba(2, 132, 199, 0.06);
-        }
       `}</style>
 
       {/* Sky ambient lighting gradient */}
@@ -340,7 +300,7 @@ export const RevealView: React.FC<RevealViewProps> = ({ result, onNext, onBack }
 
           {/* Path Title EN (Fluid responsive typography) */}
           <h2
-            className="text-[clamp(1.75rem,5.5vw,2.85rem)] font-black uppercase leading-tight font-heading mt-1 sm:mt-1.5 title-shimmer px-1"
+            className="text-[clamp(1.75rem,5.5vw,2.85rem)] font-black uppercase leading-tight font-heading mt-1 sm:mt-1.5 title-3d-text px-1"
             style={{ '--title-color': bubbleTextColor } as React.CSSProperties}
           >
             {displayTitleEn}
@@ -466,14 +426,20 @@ export const RevealView: React.FC<RevealViewProps> = ({ result, onNext, onBack }
           </div>
         </div>
 
-        {/* ── Bottom Information Capsules (3D DEPTH CARDS WITH PURE SOLID WHITE & VIVID COLOR) ── */}
+        {/* ── Bottom Information Capsules (PURE SOLID WHITE 3D ELEVATED CARDS) ── */}
         <div className="shrink-0 space-y-2.5 sm:space-y-3 pt-2 pb-1.5">
           {/* 2-Column Grid: Superpower & AI Skill */}
           <div className="grid grid-cols-2 gap-2.5 sm:gap-3.5">
             {/* Superpower Card */}
-            <div className="card-3d-superpower border-2 border-rose-200/90 rounded-2xl sm:rounded-3xl p-3 sm:p-4 flex items-center gap-3 sm:gap-4 min-h-[76px] sm:min-h-[90px] md:min-h-[96px] box-slide-up-1 relative overflow-hidden group">
+            <div
+              className="rounded-2xl sm:rounded-3xl p-3 sm:p-4 flex items-center gap-3 sm:gap-4 min-h-[76px] sm:min-h-[90px] md:min-h-[96px] box-slide-up-1 relative border-2 border-[#FFD9E2]"
+              style={{
+                backgroundColor: '#FFFFFF',
+                boxShadow: '0 10px 26px -2px rgba(255, 51, 102, 0.16), 0 4px 10px rgba(0, 0, 0, 0.04), inset 0 2px 0 rgba(255, 255, 255, 1)',
+              }}
+            >
               {/* Large 3D Icon Container */}
-              <div className="w-13 h-13 sm:w-16 sm:h-16 md:w-18 md:h-18 rounded-2xl bg-gradient-to-tr from-[#FFE4E9] to-[#FFF0F3] flex items-center justify-center shrink-0 overflow-hidden p-2 border-2 border-rose-200 shadow-sm group-hover:scale-105 transition-transform">
+              <div className="w-13 h-13 sm:w-16 sm:h-16 md:w-18 md:h-18 rounded-2xl bg-[#FFE4E9] flex items-center justify-center shrink-0 overflow-hidden p-2 border border-rose-200 shadow-2xs">
                 <img
                   src="/assets/reveal/stickers/COMM/heart-pink.png"
                   alt="Superpower"
@@ -489,16 +455,22 @@ export const RevealView: React.FC<RevealViewProps> = ({ result, onNext, onBack }
                     Your Superpower
                   </span>
                 </div>
-                <span className="text-sm sm:text-base md:text-lg font-black text-rose-700 block leading-snug line-clamp-2">
+                <span className="text-sm sm:text-base md:text-lg font-black text-[#E11D48] block leading-snug line-clamp-2">
                   {superpower}
                 </span>
               </div>
             </div>
 
             {/* AI Skill Card */}
-            <div className="card-3d-aiskill border-2 border-sky-200/90 rounded-2xl sm:rounded-3xl p-3 sm:p-4 flex items-center gap-3 sm:gap-4 min-h-[76px] sm:min-h-[90px] md:min-h-[96px] box-slide-up-2 relative overflow-hidden group">
+            <div
+              className="rounded-2xl sm:rounded-3xl p-3 sm:p-4 flex items-center gap-3 sm:gap-4 min-h-[76px] sm:min-h-[90px] md:min-h-[96px] box-slide-up-2 relative border-2 border-[#BAE6FD]"
+              style={{
+                backgroundColor: '#FFFFFF',
+                boxShadow: '0 10px 26px -2px rgba(2, 132, 199, 0.16), 0 4px 10px rgba(0, 0, 0, 0.04), inset 0 2px 0 rgba(255, 255, 255, 1)',
+              }}
+            >
               {/* Large 3D Icon Container */}
-              <div className="w-13 h-13 sm:w-16 sm:h-16 md:w-18 md:h-18 rounded-2xl bg-gradient-to-tr from-[#E0F2FE] to-[#F0F9FF] flex items-center justify-center shrink-0 overflow-hidden p-2 border-2 border-sky-200 shadow-sm group-hover:scale-105 transition-transform">
+              <div className="w-13 h-13 sm:w-16 sm:h-16 md:w-18 md:h-18 rounded-2xl bg-[#E0F2FE] flex items-center justify-center shrink-0 overflow-hidden p-2 border border-sky-200 shadow-2xs">
                 <img
                   src={aiSkillIconSrc}
                   alt="AI Skill"
@@ -510,38 +482,43 @@ export const RevealView: React.FC<RevealViewProps> = ({ result, onNext, onBack }
               <div className="min-w-0 flex-1">
                 <div className="flex items-center gap-1 mb-0.5">
                   <Zap className="w-3.5 h-3.5 text-sky-500 fill-sky-500" />
-                  <span className="text-[10px] sm:text-xs font-black uppercase tracking-wider text-sky-600 block leading-tight">
+                  <span className="text-[10px] sm:text-xs font-black uppercase tracking-wider text-[#0284C7] block leading-tight">
                     Your AI Skill
                   </span>
                 </div>
-                <span className="text-sm sm:text-base md:text-lg font-black text-sky-800 block leading-snug line-clamp-2">
+                <span className="text-sm sm:text-base md:text-lg font-black text-[#0369A1] block leading-snug line-clamp-2">
                   {aiSkill}
                 </span>
               </div>
             </div>
           </div>
 
-          {/* Impact Message Box (100% Solid Pure White 3D Pill with Crisp Gold & Vivid Shadows) */}
-          <div className="card-3d-white border-2 border-amber-200/90 rounded-2xl sm:rounded-3xl px-4 sm:px-6 py-3.5 sm:py-4 flex items-center justify-between gap-3 sm:gap-4 box-slide-up-3 relative z-10">
+          {/* Impact Message Box (100% Solid Pure White 3D Pill with Crisp Border & Vivid Text) */}
+          <div
+            className="rounded-2xl sm:rounded-3xl px-4 sm:px-6 py-3.5 sm:py-4 flex items-center justify-between gap-3 sm:gap-4 box-slide-up-3 relative z-10 border-2 border-white/95"
+            style={{
+              backgroundColor: '#FFFFFF',
+              boxShadow: '0 12px 30px -4px rgba(0, 43, 127, 0.14), 0 4px 12px rgba(0, 0, 0, 0.04), inset 0 2px 0 rgba(255, 255, 255, 1)',
+            }}
+          >
             {/* Large 3D Heart */}
             <img
               src={impactHeartSrc}
               alt="Impact"
-              className="w-8 h-8 sm:w-10 sm:h-10 md:w-11 md:h-11 object-contain shrink-0 drop-shadow-[0_4px_10px_rgba(0,0,0,0.15)]"
+              className="w-8 h-8 sm:w-10 sm:h-10 md:w-11 md:h-11 object-contain shrink-0 drop-shadow-[0_4px_10px_rgba(0,0,0,0.12)]"
             />
             {/* Message */}
-            <p className="text-xs sm:text-sm md:text-base font-extrabold text-[#002B7F] leading-snug text-center flex-1">
+            <p className="text-xs sm:text-sm md:text-base font-extrabold text-[#1E293B] leading-snug text-center flex-1">
               {impact}
             </p>
             {/* Sparkles */}
-            <Sparkles className="w-5 h-5 sm:w-6 sm:h-6 text-amber-500 shrink-0 animate-pulse fill-amber-400" />
+            <Sparkles className="w-5 h-5 sm:w-6 sm:h-6 text-amber-400 shrink-0 animate-pulse fill-amber-300" />
           </div>
         </div>
       </div>
 
       {/* ── 4. Bottom Navigation Action Bar ──────────────────────────────────── */}
       <div className="relative z-30 shrink-0 px-3.5 sm:px-6 pb-[max(0.85rem,env(safe-area-inset-bottom))] pt-2.5 max-w-[680px] mx-auto w-full flex items-center justify-between gap-3 sm:gap-4">
-        {/* Back Button */}
         {onBack ? (
           <button
             onClick={onBack}

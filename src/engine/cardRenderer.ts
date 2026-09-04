@@ -44,6 +44,27 @@ function getAiSkillDesc(result: ResultPayload): string {
 }
 
 function wrapThaiText(ctx: CanvasRenderingContext2D, text: string, maxWidth: number): string[] {
+  if (typeof Intl !== 'undefined' && (Intl as any).Segmenter) {
+    try {
+      const segmenter = new (Intl as any).Segmenter('th', { granularity: 'word' });
+      const segments: string[] = Array.from(segmenter.segment(text), (s: any) => s.segment);
+      const lines: string[] = [];
+      let currentLine = '';
+
+      for (const word of segments) {
+        if (ctx.measureText(currentLine + word).width <= maxWidth) {
+          currentLine += word;
+        } else {
+          if (currentLine.trim()) lines.push(currentLine.trim());
+          currentLine = word.trimStart();
+        }
+      }
+      if (currentLine.trim()) lines.push(currentLine.trim());
+      return lines;
+    } catch (_e) {}
+  }
+
+  // Fallback token wrapping
   const tokens = text.split(/(\s+)/);
   const lines: string[] = [];
   let currentLine = '';
@@ -54,20 +75,7 @@ function wrapThaiText(ctx: CanvasRenderingContext2D, text: string, maxWidth: num
       currentLine = testLine;
     } else {
       if (currentLine.trim()) lines.push(currentLine.trim());
-      if (ctx.measureText(token).width > maxWidth) {
-        let chunk = '';
-        for (const char of token) {
-          if (ctx.measureText(chunk + char).width <= maxWidth) {
-            chunk += char;
-          } else {
-            if (chunk) lines.push(chunk);
-            chunk = char;
-          }
-        }
-        currentLine = chunk;
-      } else {
-        currentLine = token.trimStart();
-      }
+      currentLine = token.trimStart();
     }
   }
   if (currentLine.trim()) {
@@ -116,7 +124,7 @@ async function renderTemplateCard(
   ctx.imageSmoothingEnabled = true;
   ctx.imageSmoothingQuality = 'high';
 
-  // 1. Draw base template image cleanly
+  // 1. Draw base template image (pre-printed text inside boxes has already been cleaned from the image)
   ctx.drawImage(img, 0, 0, targetWidth, targetHeight);
 
   const theme = PATH_THEME[result.pathId] || {
@@ -126,256 +134,123 @@ async function renderTemplateCard(
     descColor: '#334155',
   };
 
+  const isNarrow = targetWidth <= 1150; // 576 width (PED female, COMM, TECH)
   const isPedFemale = result.pathId === 'PED' && result.characterType === 'female_student';
 
   if (isPedFemale) {
-    // ── Case 1: PED Female Template with Pre-drawn Dashed Box Layout ────────
-    // A. Your Superpower:
-    // Cover [Strength Name]
-    ctx.fillStyle = theme.lightBg;
-    roundRect(ctx, 195, 650, 310, 50, 10);
-    ctx.fill();
-
-    // Draw Strength Name
+    // ── Case 1: PED Female Template (print directly into the cleaned dashed boxes) ──
     ctx.save();
-    ctx.fillStyle = theme.primary;
-    ctx.font = `bold 28px ${CARD_FONT}`;
-    ctx.textAlign = 'left';
-    ctx.textBaseline = 'middle';
-    ctx.fillText(result.superpower, 204, 675);
-    ctx.restore();
-
-    // Redraw [Strength Description] dashed box & fill
-    ctx.save();
-    roundRect(ctx, 75, 724, 436, 166, 18);
-    ctx.fillStyle = '#FFFFFF';
-    ctx.fill();
-    ctx.strokeStyle = theme.border;
-    ctx.lineWidth = 2.5;
-    ctx.setLineDash([8, 6]);
-    ctx.stroke();
-    ctx.restore();
-
-    // Draw Thai strength description
-    ctx.save();
-    ctx.fillStyle = theme.descColor;
-    ctx.font = `600 23px ${CARD_FONT}`;
-    ctx.textAlign = 'center';
-    ctx.textBaseline = 'middle';
-    const strengthDesc = getSuperpowerDesc(result);
-    const sLines = wrapThaiText(ctx, strengthDesc, 390);
-    const startSY = 807 - ((sLines.length - 1) * 32) / 2;
-    sLines.forEach((line, i) => {
-      ctx.fillText(line, 75 + 436 / 2, startSY + i * 32);
-    });
-    ctx.restore();
-
-    // B. Your AI Skill:
-    // Cover [AI Skill Name]
-    ctx.fillStyle = theme.lightBg;
-    roundRect(ctx, 195, 1006, 310, 50, 10);
-    ctx.fill();
-
-    ctx.save();
-    ctx.fillStyle = theme.primary;
-    ctx.font = `bold 28px ${CARD_FONT}`;
-    ctx.textAlign = 'left';
-    ctx.textBaseline = 'middle';
-    ctx.fillText(result.aiSkill, 204, 1031);
-    ctx.restore();
-
-    // Redraw [AI Skill Description] dashed box & fill
-    ctx.save();
-    roundRect(ctx, 75, 1080, 436, 166, 18);
-    ctx.fillStyle = '#FFFFFF';
-    ctx.fill();
-    ctx.strokeStyle = theme.border;
-    ctx.lineWidth = 2.5;
-    ctx.setLineDash([8, 6]);
-    ctx.stroke();
-    ctx.restore();
-
-    ctx.save();
-    ctx.fillStyle = theme.descColor;
-    ctx.font = `600 23px ${CARD_FONT}`;
-    ctx.textAlign = 'center';
-    ctx.textBaseline = 'middle';
-    const aiDesc = getAiSkillDesc(result);
-    const aiLines = wrapThaiText(ctx, aiDesc, 390);
-    const startAiY = 1163 - ((aiLines.length - 1) * 32) / 2;
-    aiLines.forEach((line, i) => {
-      ctx.fillText(line, 75 + 436 / 2, startAiY + i * 32);
-    });
-    ctx.restore();
-
-    // C. Your Impact:
-    // Cover [Impact Title]
-    ctx.fillStyle = theme.lightBg;
-    roundRect(ctx, 195, 1513, 310, 50, 10);
-    ctx.fill();
-
-    ctx.save();
-    ctx.fillStyle = theme.primary;
-    ctx.font = `bold 28px ${CARD_FONT}`;
-    ctx.textAlign = 'left';
-    ctx.textBaseline = 'middle';
-    ctx.fillText(result.path.badge || 'Child Care Champion', 204, 1538);
-    ctx.restore();
-
-    // Redraw [Impact Description] dashed box & fill
-    ctx.save();
-    roundRect(ctx, 75, 1580, 436, 114, 18);
-    ctx.fillStyle = '#FFFFFF';
-    ctx.fill();
-    ctx.strokeStyle = theme.border;
-    ctx.lineWidth = 2.5;
-    ctx.setLineDash([8, 6]);
-    ctx.stroke();
-    ctx.restore();
-
-    ctx.save();
-    ctx.fillStyle = theme.descColor;
-    ctx.font = `600 22px ${CARD_FONT}`;
-    ctx.textAlign = 'center';
-    ctx.textBaseline = 'middle';
-    const impactLines = wrapThaiText(ctx, result.profileImpact, 390);
-    const startImpY = 1637 - ((impactLines.length - 1) * 30) / 2;
-    impactLines.forEach((line, i) => {
-      ctx.fillText(line, 75 + 436 / 2, startImpY + i * 30);
-    });
-    ctx.restore();
-  } else {
-    // ── Case 2: All Other Cards (ช่องสำหรับพิมพ์ dynamic text) ────────────────
-    // Determine slot X & Width based on card template ratio
-    const isNarrow = targetWidth <= 1150; // COMM, TECH (576 width)
-    const slotX = isNarrow ? 195 : 222;
-    const slotW = isNarrow ? 315 : 420;
-
-    // 1. Slot: Your Superpower
-    const spY = 696;
-    const spH = 212;
-    ctx.save();
-    ctx.shadowColor = 'rgba(0, 30, 80, 0.08)';
-    ctx.shadowBlur = 10;
-    ctx.shadowOffsetY = 3;
-    ctx.fillStyle = '#FFFFFF';
-    roundRect(ctx, slotX, spY, slotW, spH, 16);
-    ctx.fill();
-    ctx.shadowColor = 'transparent';
-    ctx.strokeStyle = theme.border;
-    ctx.lineWidth = 2;
-    ctx.setLineDash([8, 6]);
-    ctx.stroke();
-    ctx.setLineDash([]);
-
     // Superpower Title
     ctx.fillStyle = theme.primary;
-    ctx.font = `bold 23px ${CARD_FONT}`;
+    ctx.font = `bold 26px ${CARD_FONT}`;
     ctx.textAlign = 'left';
     ctx.textBaseline = 'middle';
-    ctx.fillText(result.superpower, slotX + 16, spY + 28);
+    ctx.fillText(result.superpower, 204, 695);
 
-    // Separator line
-    ctx.strokeStyle = theme.border + '50';
-    ctx.lineWidth = 1;
-    ctx.beginPath();
-    ctx.moveTo(slotX + 16, spY + 48);
-    ctx.lineTo(slotX + slotW - 16, spY + 48);
-    ctx.stroke();
-
-    // Superpower Thai Description
+    // Superpower Thai Description (inside dashed box)
     ctx.fillStyle = theme.descColor;
-    ctx.font = `600 19px ${CARD_FONT}`;
+    ctx.font = `600 22px ${CARD_FONT}`;
     ctx.textBaseline = 'top';
-    const sLines = wrapThaiText(ctx, getSuperpowerDesc(result), slotW - 32);
-    sLines.slice(0, 4).forEach((line, i) => {
-      ctx.fillText(line, slotX + 16, spY + 62 + i * 27);
+    const sLines = wrapThaiText(ctx, getSuperpowerDesc(result), 410);
+    const startSY = 750 + Math.max(0, (120 - sLines.length * 30) / 2);
+    sLines.forEach((line, i) => {
+      ctx.fillText(line, 88, startSY + i * 32);
     });
-    ctx.restore();
-
-    // 2. Slot: Your AI Skill
-    const aiY = 998;
-    const aiH = 212;
-    ctx.save();
-    ctx.shadowColor = 'rgba(0, 30, 80, 0.08)';
-    ctx.shadowBlur = 10;
-    ctx.shadowOffsetY = 3;
-    ctx.fillStyle = '#FFFFFF';
-    roundRect(ctx, slotX, aiY, slotW, aiH, 16);
-    ctx.fill();
-    ctx.shadowColor = 'transparent';
-    ctx.strokeStyle = theme.border;
-    ctx.lineWidth = 2;
-    ctx.setLineDash([8, 6]);
-    ctx.stroke();
-    ctx.setLineDash([]);
 
     // AI Skill Title
     ctx.fillStyle = theme.primary;
-    ctx.font = `bold 23px ${CARD_FONT}`;
-    ctx.textAlign = 'left';
+    ctx.font = `bold 26px ${CARD_FONT}`;
     ctx.textBaseline = 'middle';
-    ctx.fillText(result.aiSkill, slotX + 16, aiY + 28);
+    ctx.fillText(result.aiSkill, 204, 1045);
 
-    // Separator line
-    ctx.strokeStyle = theme.border + '50';
-    ctx.lineWidth = 1;
-    ctx.beginPath();
-    ctx.moveTo(slotX + 16, aiY + 48);
-    ctx.lineTo(slotX + slotW - 16, aiY + 48);
-    ctx.stroke();
-
-    // AI Skill Thai Description
+    // AI Skill Thai Description (inside dashed box)
     ctx.fillStyle = theme.descColor;
-    ctx.font = `600 19px ${CARD_FONT}`;
+    ctx.font = `600 22px ${CARD_FONT}`;
     ctx.textBaseline = 'top';
-    const aiLines = wrapThaiText(ctx, getAiSkillDesc(result), slotW - 32);
-    aiLines.slice(0, 4).forEach((line, i) => {
-      ctx.fillText(line, slotX + 16, aiY + 62 + i * 27);
+    const aiLines = wrapThaiText(ctx, getAiSkillDesc(result), 410);
+    const startAiY = 1095 + Math.max(0, (120 - aiLines.length * 30) / 2);
+    aiLines.forEach((line, i) => {
+      ctx.fillText(line, 88, startAiY + i * 32);
+    });
+
+    // Mood & Tone: UNTOUCHED!
+
+    // Impact Title
+    ctx.fillStyle = theme.primary;
+    ctx.font = `bold 26px ${CARD_FONT}`;
+    ctx.textBaseline = 'middle';
+    ctx.fillText(result.path.badge || 'Child Care Champion', 204, 1550);
+
+    // Impact Thai Description (inside dashed box)
+    ctx.fillStyle = theme.descColor;
+    ctx.font = `600 21px ${CARD_FONT}`;
+    ctx.textBaseline = 'top';
+    const impLines = wrapThaiText(ctx, result.profileImpact, 410);
+    const startImpY = 1600 + Math.max(0, (90 - impLines.length * 28) / 2);
+    impLines.forEach((line, i) => {
+      ctx.fillText(line, 88, startImpY + i * 30);
     });
     ctx.restore();
+  } else {
+    // ── Case 2: All Other Cards (print directly into the cleaned boxes on the image) ──
+    const textX = isNarrow ? 200 : 230;
+    const maxW = isNarrow ? 310 : 415;
 
-    // 3. Mood & Tone: Keep 100% untouched!
+    // Y offsets per path to align precisely with each card's pre-designed box
+    const Y_MAP: Record<string, { spTitle: number; spDesc: number; aiTitle: number; aiDesc: number; impDesc: number }> = {
+      COMM: { spTitle: 775, spDesc: 812, aiTitle: 1025, aiDesc: 1062, impDesc: 1525 },
+      TECH: { spTitle: 712, spDesc: 752, aiTitle: 994,  aiDesc: 1032, impDesc: 1525 },
+      ER:   { spTitle: 718, spDesc: 758, aiTitle: 1012, aiDesc: 1052, impDesc: 1550 },
+      MH:   { spTitle: 788, spDesc: 828, aiTitle: 1072, aiDesc: 1112, impDesc: 1625 },
+      OA:   { spTitle: 732, spDesc: 772, aiTitle: 1002, aiDesc: 1042, impDesc: 1535 },
+      MAT:  { spTitle: 742, spDesc: 782, aiTitle: 992,  aiDesc: 1032, impDesc: 1525 },
+      INT:  { spTitle: 712, spDesc: 752, aiTitle: 1012, aiDesc: 1052, impDesc: 1565 },
+      PED:  { spTitle: 668, spDesc: 708, aiTitle: 982,  aiDesc: 1022, impDesc: 1595 },
+    };
 
-    // 4. Slot: Your Impact
-    const impY = 1478;
-    const impH = 200;
+    const yConfig = Y_MAP[result.pathId] || {
+      spTitle: 730, spDesc: 770, aiTitle: 1010, aiDesc: 1050, impDesc: 1540
+    };
+
     ctx.save();
-    ctx.shadowColor = 'rgba(0, 30, 80, 0.08)';
-    ctx.shadowBlur = 10;
-    ctx.shadowOffsetY = 3;
-    ctx.fillStyle = '#FFFFFF';
-    roundRect(ctx, slotX, impY, slotW, impH, 16);
-    ctx.fill();
-    ctx.shadowColor = 'transparent';
-    ctx.strokeStyle = theme.border;
-    ctx.lineWidth = 2;
-    ctx.setLineDash([8, 6]);
-    ctx.stroke();
-    ctx.setLineDash([]);
-
-    // Impact Badge / Role
+    // 1. Superpower
     ctx.fillStyle = theme.primary;
-    ctx.font = `bold 22px ${CARD_FONT}`;
+    ctx.font = `bold 24px ${CARD_FONT}`;
     ctx.textAlign = 'left';
     ctx.textBaseline = 'middle';
-    ctx.fillText(result.path.badge || result.path.nameEn, slotX + 16, impY + 28);
+    ctx.fillText(result.superpower, textX, yConfig.spTitle);
 
-    // Separator line
-    ctx.strokeStyle = theme.border + '50';
-    ctx.lineWidth = 1;
-    ctx.beginPath();
-    ctx.moveTo(slotX + 16, impY + 48);
-    ctx.lineTo(slotX + slotW - 16, impY + 48);
-    ctx.stroke();
-
-    // Impact Thai Description
     ctx.fillStyle = theme.descColor;
     ctx.font = `600 19px ${CARD_FONT}`;
     ctx.textBaseline = 'top';
-    const impLines = wrapThaiText(ctx, result.profileImpact, slotW - 32);
+    const sLines = wrapThaiText(ctx, getSuperpowerDesc(result), maxW);
+    sLines.slice(0, 4).forEach((line, i) => {
+      ctx.fillText(line, textX, yConfig.spDesc + i * 27);
+    });
+
+    // 2. AI Skill
+    ctx.fillStyle = theme.primary;
+    ctx.font = `bold 24px ${CARD_FONT}`;
+    ctx.textBaseline = 'middle';
+    ctx.fillText(result.aiSkill, textX, yConfig.aiTitle);
+
+    ctx.fillStyle = theme.descColor;
+    ctx.font = `600 19px ${CARD_FONT}`;
+    ctx.textBaseline = 'top';
+    const aiLines = wrapThaiText(ctx, getAiSkillDesc(result), maxW);
+    aiLines.slice(0, 4).forEach((line, i) => {
+      ctx.fillText(line, textX, yConfig.aiDesc + i * 27);
+    });
+
+    // 3. Mood & Tone: UNTOUCHED!
+
+    // 4. Impact
+    ctx.fillStyle = theme.descColor;
+    ctx.font = `600 19px ${CARD_FONT}`;
+    ctx.textBaseline = 'top';
+    const impLines = wrapThaiText(ctx, result.profileImpact, maxW);
     impLines.slice(0, 4).forEach((line, i) => {
-      ctx.fillText(line, slotX + 16, impY + 60 + i * 27);
+      ctx.fillText(line, textX, yConfig.impDesc + i * 27);
     });
     ctx.restore();
   }
