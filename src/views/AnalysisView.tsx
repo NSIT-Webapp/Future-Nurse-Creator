@@ -1,5 +1,5 @@
 import React, { useEffect, useRef, useState } from 'react';
-import { ChevronLeft, Loader2, Sparkles, Zap } from 'lucide-react';
+import { ChevronLeft, Sparkles, Zap } from 'lucide-react';
 import confetti from 'canvas-confetti';
 
 import { CharacterType } from '../types';
@@ -151,14 +151,6 @@ export const AnalysisView: React.FC<AnalysisViewProps> = ({
 
     return () => clearInterval(interval);
   }, [onComplete]);
-
-  // Dynamic suspense analysis message based on progress percentage
-  const getStatusMessage = (pct: number) => {
-    if (pct < 25) return '🔍 กำลังประมวลผลคำตอบของคุณ...';
-    if (pct < 55) return '⚡ กำลังสแกนทักษะและบุคลิกภาพเฉพาะทาง...';
-    if (pct < 85) return '✨ กำลังคำนวณเส้นทางพยาบาลที่ใช่ที่สุด...';
-    return '🎉 ค้นพบพลังพยาบาลที่ใช่สำหรับคุณแล้ว!';
-  };
 
   // ── Render Single Role Badge Card — Group 2 Suspense Effects ──────────────
   const renderBadge = (
@@ -365,22 +357,22 @@ export const AnalysisView: React.FC<AnalysisViewProps> = ({
                 </h3>
               </div>
 
-              <div className="w-full sm:w-[260px] md:w-[300px] rounded-2xl bg-white/88 backdrop-blur-md border border-white/90 px-3 py-2 shadow-sm">
-                <div className="flex items-center gap-2">
-                  <Loader2 className="w-4 h-4 sm:w-5 sm:h-5 animate-spin text-[#FF3366] shrink-0" />
-                  <div className="flex-1 min-w-0">
-                    <div className="flex items-center justify-between gap-2 text-[10px] sm:text-[11px] font-black text-slate-800 font-heading leading-tight">
-                      <span className="truncate">{getStatusMessage(progress)}</span>
-                      <span className="text-blue-600 font-mono shrink-0 font-extrabold">{progress}%</span>
-                    </div>
-                    <div className="w-full bg-slate-200/70 rounded-full h-1.5 sm:h-2 mt-1 overflow-hidden">
-                      <div
-                        className="h-full bg-gradient-to-r from-sky-400 via-[#FF3366] to-[#FF6584] rounded-full transition-all duration-75 ease-out shadow-[0_0_8px_rgba(255,51,102,0.5)]"
-                        style={{ width: `${progress}%` }}
-                      />
-                    </div>
-                  </div>
+              <div className="rounded-full bg-white/88 backdrop-blur-md border border-white/90 px-4 py-2 shadow-sm flex items-center gap-2.5 self-start sm:self-end">
+                <div className="flex -space-x-1.5">
+                  {[0, 1, 2].map((dot) => (
+                    <span
+                      key={dot}
+                      className="w-2.5 h-2.5 rounded-full bg-[#FF3366] animate-pulse"
+                      style={{ animationDelay: `${dot * 0.18}s` }}
+                    />
+                  ))}
                 </div>
+                <span className="text-2xl sm:text-3xl font-black text-[#FF3366] font-heading leading-none tabular-nums">
+                  {progress}%
+                </span>
+                <span className="text-[9px] sm:text-[10px] font-black text-[#002B7F] uppercase tracking-wide whitespace-nowrap leading-tight">
+                  analyzed
+                </span>
               </div>
             </div>
           </div>
