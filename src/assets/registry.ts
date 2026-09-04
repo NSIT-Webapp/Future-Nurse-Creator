@@ -97,6 +97,21 @@ export const ASSETS = {
     TECH: { female: '/characters/TECH_female.png', male: '/characters/TECH_male.png' },
   },
 
+  // ── Official Future Nurse Card Templates (9:16 aspect ratio 576×1024) ──────
+  cards: {
+    backgroundOverlay: PLACEHOLDER('cards/background-overlay'),
+    templates: {
+      PED:  { female: '/assets/cards/PED_female.jpg',  male: '/assets/cards/PED_male.jpg'   },
+      MH:   { female: '/assets/cards/MH_female.jpg',   male: '/assets/cards/MH_male.jpg'    },
+      ER:   { female: '/assets/cards/ER_female.jpg',   male: '/assets/cards/ER_male.jpg'    },
+      OA:   { female: '/assets/cards/OA_female.jpg',   male: '/assets/cards/OA_male.jpg'    },
+      MAT:  { female: '/assets/cards/MAT_female.jpg',  male: '/assets/cards/MAT_female.jpg' },
+      COMM: { female: '/assets/cards/COMM_female.jpg', male: '/assets/cards/COMM_male.jpg'  },
+      INT:  { female: '/assets/cards/INT_female.jpg',  male: '/assets/cards/INT_female.jpg' },
+      TECH: { female: '/assets/cards/TECH_female.jpg', male: '/assets/cards/TECH_male.jpg'  },
+    },
+  },
+
   // ── Processing / Analysis screen (2 visual versions based on selected look) ──
   processing: {
     background:  '/assets/processing/background.png',
@@ -138,11 +153,6 @@ export const ASSETS = {
     COMM: { female: '/characters/COMM_female.png', male: '/characters/COMM_male.png' },
     INT:  { female: '/characters/INT_female.png',  male: '/characters/INT_male.png'  },
     TECH: { female: '/characters/TECH_female.png', male: '/characters/TECH_male.png' },
-  },
-
-  // ── Card template ────────────────────────────────────────────────────────────
-  cards: {
-    backgroundOverlay: PLACEHOLDER('cards/background-overlay'),
   },
 
   // ── Icons / decorative ───────────────────────────────────────────────────────
@@ -274,6 +284,16 @@ export function getRevealStickers(pathId: string): RevealStickerConfig[] {
 export function getCardCharacterUrl(pathId: string, gender: 'female' | 'male'): string {
   const entry = ASSETS.characters[pathId as CharacterPathKey];
   return entry ? entry[gender] : '';
+}
+
+/**
+ * Returns the official card template URL for a given Nursing Path and gender.
+ */
+export function getCardTemplateUrl(pathId: string, gender: 'female' | 'male' | string = 'female'): string {
+  const g: 'female' | 'male' = gender.startsWith('female') ? 'female' : 'male';
+  const entry = (ASSETS.cards.templates as Record<string, { female: string; male?: string }>)[pathId];
+  if (!entry) return '';
+  return entry[g] || entry.female || '';
 }
 
 /**

@@ -164,8 +164,9 @@ function getSfxContext(): AudioContext | null {
 }
 
 /**
- * Plays a bright, sparkling crystal chime ("ปิ๊งๆๆ" / fairy sparkle) when selecting a quiz option (A-F).
- * Synthesizes a rapid 3-step shimmering arpeggio with crystalline bell harmonics.
+ * 1. เสียงกดตัวเลือก (A-F) — "ปิ๊งๆๆ" (Crystal Sparkle / Twinkle Chime)
+ * สไตล์: ประกายแก้ววิ้งวับ 3 จังหวะเร็ว (Staccato Fairy Sparkle)
+ * โทน: เสียงสูงใส (High Register C6 - G7) ในคีย์ G Major เข้ากับเพลง "Spark Care"
  */
 export function playSelectSfx(optionKey?: string): void {
   if (isMuted) return;
@@ -173,66 +174,62 @@ export function playSelectSfx(optionKey?: string): void {
     const ctx = getSfxContext();
     if (!ctx) return;
 
-    // Bright pentatonic root frequencies (C6 - E7 range) for luminous, sparkling crystal tones
-    const rootPitches: Record<string, number> = {
-      A: 1318.51, // E6
-      B: 1479.98, // F#6
-      C: 1661.22, // G#6
-      D: 1975.53, // B6
-      E: 2217.46, // C#7
-      F: 2637.02, // E7
+    // Harmonic chords in G Major diatonic scale (สอดคล้องกับคอร์ดในเพลง Spark Care 100%)
+    const chordSparkles: Record<string, number[]> = {
+      A: [1567.98, 1975.53, 2349.32], // G6 -> B6 -> D7 (G Major Triad Sparkle)
+      B: [1760.00, 2217.46, 2637.02], // A6 -> C#7 -> E7 (A Major Shimmer)
+      C: [1567.98, 2093.00, 2637.02], // G6 -> C7 -> E7 (C Major Inversion)
+      D: [1318.51, 1567.98, 1975.53], // E6 -> G6 -> B6 (E minor Sweet)
+      E: [1174.66, 1479.98, 1760.00], // D6 -> F#6 -> A6 (D Major Crystal)
+      F: [1975.53, 2349.32, 3135.96], // B6 -> D7 -> G7 (High G Diamond Sparkle)
     };
-    const baseFreq = (optionKey && rootPitches[optionKey]) || 1479.98;
 
+    const notes = (optionKey && chordSparkles[optionKey]) || [1567.98, 1975.53, 2349.32];
     const now = ctx.currentTime;
 
-    // 3 rapid micro-sparkles: "ปิ๊ง - ปิ๊ง - ปิ๊ง!" (approx. 38ms spacing)
-    // Intervals: Root (1.0) -> Major 3rd (1.26) -> 5th/Octave (1.50)
-    const sparkles = [
-      { delay: 0.000, freqMultiplier: 1.00, volume: 0.15, duration: 0.18 },
-      { delay: 0.038, freqMultiplier: 1.26, volume: 0.18, duration: 0.22 },
-      { delay: 0.076, freqMultiplier: 1.50, volume: 0.20, duration: 0.28 },
-    ];
+    // 3 rapid micro-sparkles spaced 34ms apart ("ปิ๊ง - ปิ๊ง - ปิ๊ง!")
+    notes.forEach((freq, idx) => {
+      const startTime = now + idx * 0.034;
+      const duration = 0.16 + idx * 0.03;
+      const volume = 0.13 + idx * 0.03;
 
-    sparkles.forEach(({ delay, freqMultiplier, volume, duration }) => {
-      const startTime = now + delay;
-      const freq = baseFreq * freqMultiplier;
-
-      // 1) Pure fundamental sine wave (crystalline bell body)
+      // Crystalline bell sine
       const osc = ctx.createOscillator();
       const gain = ctx.createGain();
       osc.type = 'sine';
       osc.frequency.setValueAtTime(freq, startTime);
 
       gain.gain.setValueAtTime(0.0001, startTime);
-      gain.gain.linearRampToValueAtTime(volume, startTime + 0.003); // instant clickless attack
-      gain.gain.exponentialRampToValueAtTime(0.0001, startTime + duration); // shimmering bell decay
+      gain.gain.linearRampToValueAtTime(volume, startTime + 0.002);
+      gain.gain.exponentialRampToValueAtTime(0.0001, startTime + duration);
 
       osc.connect(gain);
       gain.connect(ctx.destination);
       osc.start(startTime);
       osc.stop(startTime + duration);
 
-      // 2) Crystal sparkle overtone (triangle harmonic at 2x octave for luminous glitter)
-      const shimmerOsc = ctx.createOscillator();
-      const shimmerGain = ctx.createGain();
-      shimmerOsc.type = 'triangle';
-      shimmerOsc.frequency.setValueAtTime(freq * 2.0, startTime);
+      // Light air shimmer overtone
+      const shim = ctx.createOscillator();
+      const shimGain = ctx.createGain();
+      shim.type = 'triangle';
+      shim.frequency.setValueAtTime(freq * 2.0, startTime);
 
-      shimmerGain.gain.setValueAtTime(0.0001, startTime);
-      shimmerGain.gain.linearRampToValueAtTime(volume * 0.35, startTime + 0.002);
-      shimmerGain.gain.exponentialRampToValueAtTime(0.0001, startTime + duration * 0.6);
+      shimGain.gain.setValueAtTime(0.0001, startTime);
+      shimGain.gain.linearRampToValueAtTime(volume * 0.3, startTime + 0.002);
+      shimGain.gain.exponentialRampToValueAtTime(0.0001, startTime + duration * 0.5);
 
-      shimmerOsc.connect(shimmerGain);
-      shimmerGain.connect(ctx.destination);
-      shimmerOsc.start(startTime);
-      shimmerOsc.stop(startTime + duration * 0.6);
+      shim.connect(shimGain);
+      shimGain.connect(ctx.destination);
+      shim.start(startTime);
+      shim.stop(startTime + duration * 0.5);
     });
   } catch (_e) {}
 }
 
 /**
- * Plays an upbeat, luminous 2-tone crystal chime when clicking "Next" (ถัดไป).
+ * 2. เสียงปุ่ม "ถัดไป" (Next Button) — "ตึ๊ง-ตึ๊งงง" (Warm Resonant Chime / Upward Perfect 5th)
+ * สไตล์: เสียงระฆังอบอุ่น กังวาน มั่นใจ (แตกต่างจากเสียงปิ๊งๆๆ ของตัวเลือกอย่างชัดเจน)
+ * โทน: D5 (587.33 Hz) -> G5 (783.99 Hz) คอร์ด V -> I ที่ให้ความรู้สึกก้าวหน้า สำเร็จ เข้ากับ Warm Piano ของเพลง
  */
 export function playNextSfx(): void {
   if (isMuted) return;
@@ -242,45 +239,51 @@ export function playNextSfx(): void {
 
     const now = ctx.currentTime;
 
-    // Rising cheerful high bells: G6 (1567.98 Hz) -> C7 (2093.00 Hz)
-    const notes = [
-      { time: now, freq: 1567.98, vol: 0.16, dur: 0.18 },
-      { time: now + 0.075, freq: 2093.00, vol: 0.22, dur: 0.32 },
+    // 2-tone warm progression: D5 (587.33 Hz) -> G5 (783.99 Hz)
+    // Richer, deeper, more sustained than the high staccato sparkles
+    const progression = [
+      { time: now, freq: 587.33, vol: 0.22, dur: 0.24 }, // D5 (Warmth)
+      { time: now + 0.09, freq: 783.99, vol: 0.28, dur: 0.40 }, // G5 (Triumphant Resolution)
     ];
 
-    notes.forEach(({ time, freq, vol, dur }) => {
+    progression.forEach(({ time, freq, vol, dur }) => {
+      // Fundamental warm body
       const osc = ctx.createOscillator();
       const gain = ctx.createGain();
       osc.type = 'sine';
       osc.frequency.setValueAtTime(freq, time);
 
       gain.gain.setValueAtTime(0.0001, time);
-      gain.gain.linearRampToValueAtTime(vol, time + 0.004);
+      gain.gain.linearRampToValueAtTime(vol, time + 0.006); // rounder, smoother attack
       gain.gain.exponentialRampToValueAtTime(0.0001, time + dur);
 
-      osc.connect(gain);
-      gain.connect(ctx.destination);
-      osc.start(time);
-      osc.stop(time + dur);
+      // Warm overtone (octave harmonic for round bell/chime resonance)
+      const warmOsc = ctx.createOscillator();
+      const warmGain = ctx.createGain();
+      warmOsc.type = 'triangle';
+      warmOsc.frequency.setValueAtTime(freq * 2.0, time);
 
-      // Light sparkle overtone
-      const shim = ctx.createOscillator();
-      const shimGain = ctx.createGain();
-      shim.type = 'triangle';
-      shim.frequency.setValueAtTime(freq * 2, time);
-      shimGain.gain.setValueAtTime(0.0001, time);
-      shimGain.gain.linearRampToValueAtTime(vol * 0.3, time + 0.003);
-      shimGain.gain.exponentialRampToValueAtTime(0.0001, time + dur * 0.5);
-      shim.connect(shimGain);
-      shimGain.connect(ctx.destination);
-      shim.start(time);
-      shim.stop(time + dur * 0.5);
+      warmGain.gain.setValueAtTime(0.0001, time);
+      warmGain.gain.linearRampToValueAtTime(vol * 0.25, time + 0.006);
+      warmGain.gain.exponentialRampToValueAtTime(0.0001, time + dur * 0.7);
+
+      osc.connect(gain);
+      warmOsc.connect(warmGain);
+      gain.connect(ctx.destination);
+      warmGain.connect(ctx.destination);
+
+      osc.start(time);
+      warmOsc.start(time);
+      osc.stop(time + dur);
+      warmOsc.stop(time + dur);
     });
   } catch (_e) {}
 }
 
 /**
- * Plays a gentle, pleasant pastel chime when clicking "Back" (ย้อนกลับ).
+ * 3. เสียงปุ่ม "ย้อนกลับ" (Back Button) — "ตุ่ม" (Soft Wooden/Marimba Tap)
+ * สไตล์: นุ่มนวล สุภาพ เสียงต่ำลงเล็กน้อย
+ * โทน: G4 (392.00 Hz) -> D4 (293.66 Hz)
  */
 export function playBackSfx(): void {
   if (isMuted) return;
@@ -293,12 +296,12 @@ export function playBackSfx(): void {
     const gain = ctx.createGain();
 
     osc.type = 'sine';
-    // Gentle downward soft bell: 1046.50 Hz (C6) -> 783.99 Hz (G5)
-    osc.frequency.setValueAtTime(1046.50, now);
-    osc.frequency.exponentialRampToValueAtTime(783.99, now + 0.12);
+    // Gentle downward soft tone
+    osc.frequency.setValueAtTime(392.00, now); // G4
+    osc.frequency.exponentialRampToValueAtTime(293.66, now + 0.12); // D4
 
     gain.gain.setValueAtTime(0.0001, now);
-    gain.gain.linearRampToValueAtTime(0.14, now + 0.004);
+    gain.gain.linearRampToValueAtTime(0.18, now + 0.005);
     gain.gain.exponentialRampToValueAtTime(0.0001, now + 0.14);
 
     osc.connect(gain);
@@ -306,6 +309,119 @@ export function playBackSfx(): void {
 
     osc.start(now);
     osc.stop(now + 0.14);
+  } catch (_e) {}
+}
+
+/**
+ * 4. เสียงปุ่ม "เริ่มสร้างอนาคตของคุณเลย!" — "🚀 Let's Go / Rocket Launch Fanfare"
+ * สไตล์: เสียงฟิ้วทะยานขึ้น (Rocket Riser) + คอร์ดฉลองชัยชนะก้าวสู่อนาคต (G4 -> B4 -> D5 -> G5)
+ * ให้ความรู้สึก: ตื่นเต้น มีพลัง ทะยานไปข้างหน้าแบบ "Let's Go!"
+ */
+export function playStartLaunchSfx(): void {
+  if (isMuted) return;
+  try {
+    const ctx = getSfxContext();
+    if (!ctx) return;
+
+    const now = ctx.currentTime;
+
+    // A. Sub-bass punch (ให้ความรู้สึกกดติดมือ มีน้ำหนัก ณ เสี้ยววินาทีแรก)
+    const subOsc = ctx.createOscillator();
+    const subGain = ctx.createGain();
+    subOsc.type = 'sine';
+    subOsc.frequency.setValueAtTime(160, now);
+    subOsc.frequency.exponentialRampToValueAtTime(45, now + 0.15);
+
+    subGain.gain.setValueAtTime(0.001, now);
+    subGain.gain.linearRampToValueAtTime(0.25, now + 0.006);
+    subGain.gain.exponentialRampToValueAtTime(0.0001, now + 0.16);
+
+    subOsc.connect(subGain);
+    subGain.connect(ctx.destination);
+    subOsc.start(now);
+    subOsc.stop(now + 0.16);
+
+    // B. Upward Whoosh / Rocket Riser (เสียงจรวดทะยานฟิ้วววแบบโมเดิร์น)
+    const sweepOsc = ctx.createOscillator();
+    const sweepGain = ctx.createGain();
+    sweepOsc.type = 'sawtooth';
+    sweepOsc.frequency.setValueAtTime(260, now);
+    sweepOsc.frequency.exponentialRampToValueAtTime(1280, now + 0.22);
+
+    const filter = ctx.createBiquadFilter();
+    filter.type = 'lowpass';
+    filter.frequency.setValueAtTime(650, now);
+    filter.frequency.exponentialRampToValueAtTime(3400, now + 0.22);
+    filter.Q.value = 2.5;
+
+    sweepGain.gain.setValueAtTime(0.001, now);
+    sweepGain.gain.linearRampToValueAtTime(0.18, now + 0.08);
+    sweepGain.gain.exponentialRampToValueAtTime(0.0001, now + 0.26);
+
+    sweepOsc.connect(filter);
+    filter.connect(sweepGain);
+    sweepGain.connect(ctx.destination);
+    sweepOsc.start(now);
+    sweepOsc.stop(now + 0.26);
+
+    // C. Triumphant 4-Note Major Arpeggio (Ascending Fanfare: G4 -> B4 -> D5 -> G5)
+    // จังหวะทะยานกระชับ 4 โน้ต ให้ฟีลลิ่ง "Let's - Go - To - Future!"
+    const fanfareNotes = [
+      { timeOffset: 0.04, freq: 392.00, dur: 0.22, vol: 0.20 }, // G4
+      { timeOffset: 0.10, freq: 493.88, dur: 0.24, vol: 0.23 }, // B4
+      { timeOffset: 0.16, freq: 587.33, dur: 0.28, vol: 0.26 }, // D5
+      { timeOffset: 0.22, freq: 783.99, dur: 0.65, vol: 0.32 }, // G5 (Triumphant High Peak!)
+    ];
+
+    fanfareNotes.forEach(({ timeOffset, freq, dur, vol }) => {
+      const noteTime = now + timeOffset;
+
+      const osc = ctx.createOscillator();
+      const gain = ctx.createGain();
+      osc.type = 'sine';
+      osc.frequency.setValueAtTime(freq, noteTime);
+
+      gain.gain.setValueAtTime(0.0001, noteTime);
+      gain.gain.linearRampToValueAtTime(vol, noteTime + 0.008);
+      gain.gain.exponentialRampToValueAtTime(0.0001, noteTime + dur);
+
+      osc.connect(gain);
+      gain.connect(ctx.destination);
+      osc.start(noteTime);
+      osc.stop(noteTime + dur);
+
+      // Warm overtone for arcade game polish
+      const harmOsc = ctx.createOscillator();
+      const harmGain = ctx.createGain();
+      harmOsc.type = 'triangle';
+      harmOsc.frequency.setValueAtTime(freq * 1.5, noteTime);
+
+      harmGain.gain.setValueAtTime(0.0001, noteTime);
+      harmGain.gain.linearRampToValueAtTime(vol * 0.3, noteTime + 0.008);
+      harmGain.gain.exponentialRampToValueAtTime(0.0001, noteTime + dur * 0.7);
+
+      harmOsc.connect(harmGain);
+      harmGain.connect(ctx.destination);
+      harmOsc.start(noteTime);
+      harmOsc.stop(noteTime + dur * 0.7);
+    });
+
+    // D. Final Diamond Sparkle Shimmer (G6 -> C7) ประกายวิ้งวับส่งท้าย
+    const peakTime = now + 0.24;
+    const sparkleOsc = ctx.createOscillator();
+    const sparkleGain = ctx.createGain();
+    sparkleOsc.type = 'sine';
+    sparkleOsc.frequency.setValueAtTime(1567.98, peakTime);
+    sparkleOsc.frequency.exponentialRampToValueAtTime(2093.00, peakTime + 0.35);
+
+    sparkleGain.gain.setValueAtTime(0.0001, peakTime);
+    sparkleGain.gain.linearRampToValueAtTime(0.16, peakTime + 0.01);
+    sparkleGain.gain.exponentialRampToValueAtTime(0.0001, peakTime + 0.45);
+
+    sparkleOsc.connect(sparkleGain);
+    sparkleGain.connect(ctx.destination);
+    sparkleOsc.start(peakTime);
+    sparkleOsc.stop(peakTime + 0.45);
   } catch (_e) {}
 }
 
@@ -327,4 +443,5 @@ export const audioManager = {
   playSelectSfx,
   playNextSfx,
   playBackSfx,
+  playStartLaunchSfx,
 };

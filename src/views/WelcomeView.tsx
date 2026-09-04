@@ -2,7 +2,7 @@ import React from 'react';
 import { ChevronRight } from 'lucide-react';
 import { ASSETS } from '../assets/registry';
 import { SoundControl } from '../components/SoundControl';
-import { playAudio, playNextSfx } from '../engine/audioManager';
+import { playAudio, playStartLaunchSfx } from '../engine/audioManager';
 
 interface WelcomeViewProps {
   onStart: () => void;
@@ -16,20 +16,25 @@ interface WelcomeViewProps {
  * 2. data-layer="home-title": 3D Title Wordmark + Ribbon (title-wordmark.png)
  * 3. data-layer="home-characters": Male & Female students with gentle floating motion (character-male.png & character-female.png)
  * 4. data-layer="home-sound": Modular Sound / Music Control (SoundControl.tsx)
- * 5. data-layer="home-cta": Start Button with soft pulsing glow & active touch feedback
+ * 5. data-layer="home-cta": Start Button with energetic "Let's Go!" launch SFX & active feedback
  * 6. data-layer="home-step-cards": 3-step cards with high-DPI native vector typography
  * 7. data-layer="home-mascot": Blue owl mascot with subtle natural bobbing (mascot.png)
- * 8. data-layer="home-footer": High-DPI vector footer text
  */
 export const WelcomeView: React.FC<WelcomeViewProps> = ({ onStart }) => {
+  const [isLaunching, setIsLaunching] = React.useState(false);
+
   React.useEffect(() => {
     playAudio();
   }, []);
 
   const handleStartClick = () => {
-    playNextSfx();
+    if (isLaunching) return;
+    setIsLaunching(true);
+    playStartLaunchSfx();
     playAudio();
-    onStart();
+    setTimeout(() => {
+      onStart();
+    }, 160);
   };
 
   return (
@@ -158,11 +163,18 @@ export const WelcomeView: React.FC<WelcomeViewProps> = ({ onStart }) => {
       >
         <button
           onClick={handleStartClick}
-          className="group w-full max-w-sm sm:max-w-md py-3 sm:py-3.5 px-3.5 rounded-full bg-gradient-to-r from-[#FF4E72] via-[#FF3366] to-[#783BE8] hover:from-[#ff5b7d] hover:to-[#8449f0] active:scale-[0.98] transition-all duration-150 flex items-center justify-between shadow-[0_8px_25px_rgba(255,51,102,0.45)] cursor-pointer focus:outline-none focus:ring-4 focus:ring-amber-400/50 animate-cta-pulse"
+          disabled={isLaunching}
+          className={`group w-full max-w-sm sm:max-w-md py-3 sm:py-3.5 px-3.5 rounded-full bg-gradient-to-r from-[#FF4E72] via-[#FF3366] to-[#783BE8] hover:from-[#ff5b7d] hover:to-[#8449f0] active:scale-[0.98] transition-all duration-150 flex items-center justify-between shadow-[0_8px_25px_rgba(255,51,102,0.45)] cursor-pointer focus:outline-none focus:ring-4 focus:ring-amber-400/50 ${
+            isLaunching ? 'scale-98 brightness-110 shadow-[0_0_30px_rgba(255,78,114,0.7)]' : 'animate-cta-pulse'
+          }`}
           aria-label="เริ่มสร้างอนาคตของคุณเลย! เริ่มค้นหา Future Nurse ของคุณ"
         >
           {/* Rocket Bubble */}
-          <div className="w-8 h-8 sm:w-9 sm:h-9 rounded-full bg-white flex items-center justify-center shadow-md shrink-0 group-hover:scale-105 transition-transform">
+          <div
+            className={`w-8 h-8 sm:w-9 sm:h-9 rounded-full bg-white flex items-center justify-center shadow-md shrink-0 transition-transform duration-200 ${
+              isLaunching ? 'scale-125 -translate-y-1 rotate-12' : 'group-hover:scale-105'
+            }`}
+          >
             <span className="text-base sm:text-lg">🚀</span>
           </div>
 
@@ -172,7 +184,11 @@ export const WelcomeView: React.FC<WelcomeViewProps> = ({ onStart }) => {
           </span>
 
           {/* Chevron */}
-          <div className="w-7 h-7 flex items-center justify-center text-white shrink-0 group-hover:translate-x-0.5 transition-transform">
+          <div
+            className={`w-7 h-7 flex items-center justify-center text-white shrink-0 transition-transform duration-200 ${
+              isLaunching ? 'translate-x-2' : 'group-hover:translate-x-0.5'
+            }`}
+          >
             <ChevronRight className="w-5 h-5 sm:w-6 sm:h-6 stroke-[3]" />
           </div>
         </button>
