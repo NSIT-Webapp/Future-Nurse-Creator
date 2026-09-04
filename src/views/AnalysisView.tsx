@@ -73,6 +73,9 @@ export const AnalysisView: React.FC<AnalysisViewProps> = ({
   const badgeTECH = findBadge('TECH');
   const badgeMAT  = isFemale ? findBadge('MAT') : null;
   const badgePositions = isFemale ? BADGE_POSITIONS : BADGE_POSITIONS_MALE;
+  const centerCharacterPlacement = isFemale
+    ? 'top-[50%] sm:top-[51%]'
+    : 'top-[47%] sm:top-[48%]';
 
   // Scanning sequence order (Circular Clockwise Orbit around center student)
   const scanSequence: string[] = isFemale
@@ -343,37 +346,39 @@ export const AnalysisView: React.FC<AnalysisViewProps> = ({
           {/* Laser Scanner Beam traversing vertically for sci-fi tension */}
           <div className="absolute inset-x-8 h-1 bg-gradient-to-r from-transparent via-cyan-400 to-transparent shadow-[0_0_16px_#38bdf8] animate-scan-beam pointer-events-none z-20" />
 
-          {/* ── Card Header: Title & Info ── */}
-          <div className="text-center shrink-0 pt-1 sm:pt-2">
-            {/* Analyzing Pill Badge */}
-            <div className="inline-flex items-center gap-1.5 px-4 py-1 rounded-full bg-gradient-to-r from-[#FF5E80] to-[#FF3366] text-white text-[10px] sm:text-xs font-black uppercase tracking-widest mb-1 shadow-sm">
-              <Sparkles className="w-2.5 h-2.5 animate-pulse" />
-              <span>ANALYZING</span>
-              <Sparkles className="w-2.5 h-2.5 animate-pulse" />
-            </div>
+          {/* ── Card Header: Title & Progress ── */}
+          <div className="shrink-0 pt-1 sm:pt-2">
+            <div className="flex flex-col sm:flex-row sm:items-end sm:justify-between gap-2 sm:gap-3">
+              <div className="text-left min-w-0 flex-1">
+                <div className="inline-flex items-center gap-1.5 px-4 py-1 rounded-full bg-gradient-to-r from-[#FF5E80] to-[#FF3366] text-white text-[10px] sm:text-xs font-black uppercase tracking-widest mb-1 shadow-sm">
+                  <Sparkles className="w-2.5 h-2.5 animate-pulse" />
+                  <span>ANALYZING</span>
+                  <Sparkles className="w-2.5 h-2.5 animate-pulse" />
+                </div>
 
-            {/* Main Headline */}
-            <h2 className="text-3xl sm:text-4xl md:text-5xl font-black text-slate-800 tracking-tight font-heading leading-tight drop-shadow-[0_1px_2px_rgba(255,255,255,0.95)]">
-              <span className="text-[#FF2D55]">AI </span>
-              กำลังวิเคราะห์
-            </h2>
-            <h3 className="text-base sm:text-xl md:text-2xl font-black text-[#0A2540] tracking-tight leading-snug drop-shadow-[0_1px_2px_rgba(255,255,255,0.95)]">
-              เส้นทางพยาบาลที่ใช่สำหรับคุณ...
-            </h3>
+                <h2 className="text-3xl sm:text-[2.35rem] md:text-5xl font-black text-slate-800 tracking-tight font-heading leading-tight sm:whitespace-nowrap drop-shadow-[0_1px_2px_rgba(255,255,255,0.95)]">
+                  <span className="text-[#FF2D55]">AI </span>
+                  กำลังวิเคราะห์
+                </h2>
+                <h3 className="text-base sm:text-xl md:text-2xl font-black text-[#0A2540] tracking-tight leading-snug drop-shadow-[0_1px_2px_rgba(255,255,255,0.95)]">
+                  เส้นทางพยาบาลที่ใช่สำหรับคุณ...
+                </h3>
+              </div>
 
-            <div className="w-full max-w-[560px] mx-auto mt-2 rounded-full bg-white/88 backdrop-blur-md border border-white/90 px-3 py-1.5 shadow-sm">
-              <div className="flex items-center gap-2">
-                <Loader2 className="w-4 h-4 sm:w-5 sm:h-5 animate-spin text-[#FF3366] shrink-0" />
-                <div className="flex-1 min-w-0">
-                  <div className="flex items-center justify-between gap-2 text-[10px] sm:text-[11px] font-black text-slate-800 font-heading leading-tight">
-                    <span className="truncate">{getStatusMessage(progress)}</span>
-                    <span className="text-blue-600 font-mono shrink-0 font-extrabold">{progress}%</span>
-                  </div>
-                  <div className="w-full bg-slate-200/70 rounded-full h-1.5 sm:h-2 mt-1 overflow-hidden">
-                    <div
-                      className="h-full bg-gradient-to-r from-sky-400 via-[#FF3366] to-[#FF6584] rounded-full transition-all duration-75 ease-out shadow-[0_0_8px_rgba(255,51,102,0.5)]"
-                      style={{ width: `${progress}%` }}
-                    />
+              <div className="w-full sm:w-[260px] md:w-[300px] rounded-2xl bg-white/88 backdrop-blur-md border border-white/90 px-3 py-2 shadow-sm">
+                <div className="flex items-center gap-2">
+                  <Loader2 className="w-4 h-4 sm:w-5 sm:h-5 animate-spin text-[#FF3366] shrink-0" />
+                  <div className="flex-1 min-w-0">
+                    <div className="flex items-center justify-between gap-2 text-[10px] sm:text-[11px] font-black text-slate-800 font-heading leading-tight">
+                      <span className="truncate">{getStatusMessage(progress)}</span>
+                      <span className="text-blue-600 font-mono shrink-0 font-extrabold">{progress}%</span>
+                    </div>
+                    <div className="w-full bg-slate-200/70 rounded-full h-1.5 sm:h-2 mt-1 overflow-hidden">
+                      <div
+                        className="h-full bg-gradient-to-r from-sky-400 via-[#FF3366] to-[#FF6584] rounded-full transition-all duration-75 ease-out shadow-[0_0_8px_rgba(255,51,102,0.5)]"
+                        style={{ width: `${progress}%` }}
+                      />
+                    </div>
                   </div>
                 </div>
               </div>
@@ -388,7 +393,7 @@ export const AnalysisView: React.FC<AnalysisViewProps> = ({
             <div className="absolute top-[61%] left-1/2 -translate-x-1/2 w-[62%] max-w-[430px] h-12 rounded-full border-2 border-cyan-200/60 shadow-[0_0_24px_rgba(56,189,248,0.35)] pointer-events-none" />
 
             {/* Center Character */}
-            <div className="absolute left-1/2 top-[50%] sm:top-[51%] -translate-x-1/2 -translate-y-1/2 z-10 h-[48%] sm:h-[52%] max-h-[390px] min-h-[190px] sm:min-h-[285px] flex items-center justify-center">
+            <div className={`absolute left-1/2 ${centerCharacterPlacement} -translate-x-1/2 -translate-y-1/2 z-10 h-[48%] sm:h-[52%] max-h-[390px] min-h-[190px] sm:min-h-[285px] flex items-center justify-center`}>
               <img
                 src={centerCharacterUrl}
                 alt={isFemale ? 'Female Student' : 'Male Student'}
