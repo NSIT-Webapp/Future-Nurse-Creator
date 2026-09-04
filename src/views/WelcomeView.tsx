@@ -62,36 +62,54 @@ export const WelcomeView: React.FC<WelcomeViewProps> = ({ onStart }) => {
 
       {/* ── 3. Title Wordmark Layer + Floating Decorative Icons ───────────── */}
       <div data-layer="home-title" className="relative z-30 flex flex-col items-center pt-0.5 pb-1 shrink-0">
-        {/* Floating Decorative Elements (Stethoscope, Bulb, Heart, Sparkles) */}
+        {/* Floating Decorative Elements (Stethoscope, Bulb, Heart, Sparkles, Medical Cross) */}
         <div className="absolute inset-0 pointer-events-none overflow-visible select-none">
-          {/* Stethoscope (Upper Left) */}
-          <span className="absolute left-[8%] sm:left-[10%] top-[25%] text-2xl sm:text-3xl drop-shadow-md animate-float-subtle opacity-90">
+          {/* 1. Gold Sparkle (Top Left, above Stethoscope) */}
+          <span
+            className="absolute left-[13%] sm:left-[16%] md:left-[20%] top-[10%] text-amber-400 text-2xl sm:text-3xl md:text-4xl drop-shadow-[0_0_12px_rgba(251,191,36,0.9)] animate-pulse select-none"
+            style={{ animationDuration: '2.5s' }}
+          >
+            ✦
+          </span>
+
+          {/* 2. Stethoscope (Mid Left, beside FUTURE / NURSE) */}
+          <span
+            className="absolute left-[4%] sm:left-[7%] md:left-[10%] top-[22%] text-4xl sm:text-5xl md:text-6xl drop-shadow-[0_8px_16px_rgba(0,43,127,0.35)] animate-float-subtle select-none -rotate-12 inline-block"
+            style={{ animationDuration: '3.8s' }}
+          >
             🩺
           </span>
-          {/* Lightbulb (Upper Right) */}
+
+          {/* 3. Pink Sparkle (Bottom Left, beside NURSE) */}
           <span
-            className="absolute right-[10%] sm:right-[12%] top-[8%] text-2xl sm:text-3xl drop-shadow-md animate-float-subtle opacity-90"
-            style={{ animationDelay: '0.8s' }}
+            className="absolute left-[11%] sm:left-[13%] md:left-[17%] top-[56%] text-[#FF3366] text-xl sm:text-2xl md:text-3xl drop-shadow-[0_0_10px_rgba(255,51,102,0.85)] animate-pulse select-none"
+            style={{ animationDuration: '2.2s', animationDelay: '0.6s' }}
+          >
+            ✦
+          </span>
+
+          {/* 4. Lightbulb (Top Right, above FUTURE / ribbon) */}
+          <span
+            className="absolute right-[7%] sm:right-[10%] md:right-[13%] top-[5%] text-4xl sm:text-5xl md:text-6xl drop-shadow-[0_0_24px_rgba(251,191,36,0.8)] drop-shadow-[0_8px_16px_rgba(0,43,127,0.25)] animate-float-subtle select-none rotate-12 inline-block"
+            style={{ animationDuration: '4.2s', animationDelay: '0.8s' }}
           >
             💡
           </span>
-          {/* Heart (Right of wordmark) */}
+
+          {/* 5. Heart (Mid Right, beside NURSE) */}
           <span
-            className="absolute right-[6%] sm:right-[8%] top-[42%] text-xl sm:text-2xl drop-shadow-md animate-float-subtle opacity-90"
-            style={{ animationDelay: '1.5s' }}
+            className="absolute right-[4%] sm:right-[7%] md:right-[9%] top-[34%] text-3xl sm:text-4xl md:text-5xl drop-shadow-[0_0_16px_rgba(255,51,102,0.7)] animate-float-subtle select-none rotate-6 inline-block"
+            style={{ animationDuration: '3.2s', animationDelay: '1.4s' }}
           >
             💖
           </span>
-          {/* Sparkle 1 */}
-          <span className="absolute left-[20%] top-[10%] text-amber-400 font-black text-sm drop-shadow-xs animate-pulse">
-            ✦
-          </span>
-          {/* Sparkle 2 */}
+
+          {/* 6. Medical Plus (Bottom Right, beside CREATOR) */}
           <span
-            className="absolute right-[22%] top-[55%] text-sky-400 font-black text-sm drop-shadow-xs animate-pulse"
-            style={{ animationDelay: '0.5s' }}
+            className="absolute right-[10%] sm:right-[13%] md:right-[16%] top-[60%] text-[#00A3FF] font-black text-2xl sm:text-3xl md:text-4xl drop-shadow-[0_0_12px_rgba(0,163,255,0.85)] animate-pulse select-none inline-block"
+            style={{ animationDuration: '2.8s', animationDelay: '1.0s' }}
           >
-            ✦
+            ✚
           </span>
         </div>
 
