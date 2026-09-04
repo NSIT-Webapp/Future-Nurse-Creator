@@ -101,9 +101,6 @@ export const WelcomeView: React.FC<WelcomeViewProps> = ({ onStart }) => {
           className="w-[70%] sm:w-[64%] max-w-sm h-auto object-contain pointer-events-none drop-shadow-md"
           draggable={false}
         />
-        <p className="text-[11px] sm:text-xs font-bold text-[#002B7F] mt-0.5 font-heading tracking-wide bg-white/75 backdrop-blur-[3px] px-3.5 py-0.5 rounded-full shadow-xs border border-white/60 drop-shadow-xs">
-          ค้นพบตัวตน สร้างอนาคตพยาบาลในแบบคุณ <span className="text-pink-500">💖</span>
-        </p>
       </div>
 
       {/* ── 4. Character Duo Layer (Mockup Scale & Position: Legs Behind CTA) ── */}
