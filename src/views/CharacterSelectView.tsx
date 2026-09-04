@@ -4,6 +4,7 @@ import { CharacterType } from '../types';
 import { ASSETS } from '../assets/registry';
 import { SoundControl } from '../components/SoundControl';
 import { QuizStepper } from '../components/QuizStepper';
+import { playSelectSfx, playNextSfx, playBackSfx } from '../engine/audioManager';
 
 interface CharacterSelectViewProps {
   initialCharacter?: CharacterType;
@@ -20,12 +21,23 @@ export const CharacterSelectView: React.FC<CharacterSelectViewProps> = ({
 }) => {
   const [selected, setSelected] = useState<CharacterType>(initialCharacter);
 
+  const handleCardSelect = (c: CharacterType) => {
+    playSelectSfx(c === 'female_student' ? 'E' : 'C');
+    setSelected(c);
+  };
+
   const handleNext = () => {
+    playNextSfx();
     if (onConfirm) {
       onConfirm(selected);
     } else if (onSelect) {
       onSelect(selected);
     }
+  };
+
+  const handleBack = () => {
+    playBackSfx();
+    onBack?.();
   };
 
   return (
@@ -92,7 +104,7 @@ export const CharacterSelectView: React.FC<CharacterSelectViewProps> = ({
 
             {/* ── Male Look Card ───────────────────────────────────────────── */}
             <div
-              onClick={() => setSelected('male_student')}
+              onClick={() => handleCardSelect('male_student')}
               className={`group relative rounded-[22px] sm:rounded-[28px] overflow-hidden cursor-pointer transition-all duration-300 flex flex-col items-center justify-between border-2 select-none shadow-md ${
                 selected === 'male_student'
                   ? 'border-[#1D63D8] ring-4 ring-blue-300/60 shadow-[0_10px_28px_rgba(29,99,216,0.28)] scale-[1.015]'
@@ -150,7 +162,7 @@ export const CharacterSelectView: React.FC<CharacterSelectViewProps> = ({
 
             {/* ── Female Look Card ─────────────────────────────────────────── */}
             <div
-              onClick={() => setSelected('female_student')}
+              onClick={() => handleCardSelect('female_student')}
               className={`group relative rounded-[22px] sm:rounded-[28px] overflow-hidden cursor-pointer transition-all duration-300 flex flex-col items-center justify-between border-2 select-none shadow-md ${
                 selected === 'female_student'
                   ? 'border-[#FF3366] ring-4 ring-rose-300/60 shadow-[0_10px_28px_rgba(255,51,102,0.28)] scale-[1.015]'
@@ -216,7 +228,7 @@ export const CharacterSelectView: React.FC<CharacterSelectViewProps> = ({
             {onBack && (
               <button
                 type="button"
-                onClick={onBack}
+                onClick={handleBack}
                 className="flex-1 max-w-[170px] py-2.5 sm:py-3 px-4 rounded-full bg-white hover:bg-slate-50 border-2 border-[#002B7F] text-[#002B7F] font-bold text-sm sm:text-base flex items-center justify-center gap-1.5 shadow-sm active:scale-95 transition-all"
               >
                 <ChevronLeft className="w-4 h-4 sm:w-5 sm:h-5 stroke-[2.5]" />

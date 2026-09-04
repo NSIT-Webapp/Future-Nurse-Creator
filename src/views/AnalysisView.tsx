@@ -13,15 +13,15 @@ interface AnalysisViewProps {
   onBack?: () => void;
 }
 
-const BADGE_THEMES: Record<string, { textColor: string; scanBg: string }> = {
-  PED:  { textColor: 'text-[#002B7F]', scanBg: 'ring-[#002B7F]' },
-  ER:   { textColor: 'text-[#DC2626]', scanBg: 'ring-[#DC2626]' },
-  COMM: { textColor: 'text-[#002B7F]', scanBg: 'ring-[#0284C7]' },
-  MH:   { textColor: 'text-[#4338CA]', scanBg: 'ring-[#4338CA]' },
-  OA:   { textColor: 'text-[#059669]', scanBg: 'ring-[#059669]' },
-  INT:  { textColor: 'text-[#002B7F]', scanBg: 'ring-[#002B7F]' },
-  TECH: { textColor: 'text-[#0284C7]', scanBg: 'ring-[#0284C7]' },
-  MAT:  { textColor: 'text-[#DC2626]', scanBg: 'ring-[#DC2626]' },
+const BADGE_THEMES: Record<string, { textColor: string }> = {
+  PED:  { textColor: 'text-[#002B7F]' },
+  ER:   { textColor: 'text-[#DC2626]' },
+  COMM: { textColor: 'text-[#002B7F]' },
+  MH:   { textColor: 'text-[#4338CA]' },
+  OA:   { textColor: 'text-[#059669]' },
+  INT:  { textColor: 'text-[#002B7F]' },
+  TECH: { textColor: 'text-[#0284C7]' },
+  MAT:  { textColor: 'text-[#DC2626]' },
 };
 
 export const AnalysisView: React.FC<AnalysisViewProps> = ({
@@ -34,14 +34,33 @@ export const AnalysisView: React.FC<AnalysisViewProps> = ({
   const badges = getProcessingBadges(characterType);
   const centerCharacterUrl = isFemale ? ASSETS.processing.female : ASSETS.processing.male;
 
-  // Active highlighted badge index (cycles sequentially to simulate AI scanning)
-  const [activeBadgeIdx, setActiveBadgeIdx] = useState(0);
-
   // Analysis progress percentage (0 -> 100%)
   const [progress, setProgress] = useState(0);
 
   // Stepper state: 1..8 steps
   const stepperSteps = [1, 2, 3, 4, 5, 6, 7, 8];
+
+  // Helper to find specific badge item by path ID
+  const findBadge = (id: string): ProcessingBadgeItem =>
+    badges.find((b) => b.pathId === id) || badges[0];
+
+  const badgePED  = findBadge('PED');
+  const badgeER   = findBadge('ER');
+  const badgeCOMM = findBadge('COMM');
+  const badgeMH   = findBadge('MH');
+  const badgeOA   = findBadge('OA');
+  const badgeINT  = findBadge('INT');
+  const badgeTECH = findBadge('TECH');
+  const badgeMAT  = isFemale ? findBadge('MAT') : null;
+
+  // Scanning sequence order (Circular Clockwise Orbit around center student)
+  const scanSequence: string[] = isFemale
+    ? ['PED', 'MAT', 'MH', 'OA', 'INT', 'TECH', 'COMM', 'ER']
+    : ['PED', 'MH', 'OA', 'INT', 'TECH', 'COMM', 'ER'];
+
+  // Active highlighted badge index
+  const [activeScanIdx, setActiveScanIdx] = useState(0);
+  const currentScanningPathId = scanSequence[activeScanIdx] || '';
 
   // Eagerly ensure all badge images are decoded in memory
   useEffect(() => {
@@ -51,14 +70,14 @@ export const AnalysisView: React.FC<AnalysisViewProps> = ({
     });
   }, [badges]);
 
-  // Cycling badge highlight every 350ms
+  // Clockwise orbit scanning cycle every 350ms
   useEffect(() => {
     const scanInterval = setInterval(() => {
-      setActiveBadgeIdx((prev) => (prev + 1) % badges.length);
+      setActiveScanIdx((prev) => (prev + 1) % scanSequence.length);
     }, 350);
 
     return () => clearInterval(scanInterval);
-  }, [badges.length]);
+  }, [scanSequence.length]);
 
   // Complete analysis smoothly over 7.5 seconds with live progress bar
   useEffect(() => {
@@ -95,26 +114,48 @@ export const AnalysisView: React.FC<AnalysisViewProps> = ({
     return '🎉 ค้นพบพลังพยาบาลที่ใช่สำหรับคุณแล้ว!';
   };
 
-  // Layout distribution matching official design mockups:
-  // Male (7 roles):
-  // - Left: PED, ER, COMM
-  // - Right: MH, OA, INT
-  // - Center Bottom: TECH
-  // Female (8 roles):
-  // - Left: PED, ER, COMM, MAT
-  // - Right: MH, OA, INT, TECH
-  const findBadge = (id: string): ProcessingBadgeItem =>
-    badges.find((b) => b.pathId === id) || badges[0];
+  // Reusable badge item renderer
+  const renderBadge = (badge: ProcessingBadgeItem, isFlipped: boolean = false) => {
+    const isScanning = currentScanningPathId === badge.pathId;
+    const theme = BADGE_THEMES[badge.pathId] || { textColor: 'text-[#002B7F]' };
 
-  const leftBadges: ProcessingBadgeItem[] = isFemale
-    ? [findBadge('PED'), findBadge('ER'), findBadge('COMM'), findBadge('MAT')]
-    : [findBadge('PED'), findBadge('ER'), findBadge('COMM')];
+    return (
+      <div
+        key={badge.pathId}
+        className={`flex flex-col items-center justify-center transition-all duration-300 select-none relative ${
+          isScanning
+            ? 'scale-115 z-30 drop-shadow-[0_0_22px_rgba(255,51,102,0.95)]'
+            : 'hover:scale-105 drop-shadow-xs'
+        }`}
+      >
+        {/* Live Scanning Tag */}
+        {isScanning && (
+          <div className="absolute -top-2.5 left-1/2 -translate-x-1/2 bg-[#FF3366] text-white text-[7px] sm:text-[8px] font-black px-1.5 py-0.2 rounded-full uppercase shadow-md flex items-center gap-0.5 whitespace-nowrap animate-pulse">
+            <Zap className="w-2.5 h-2.5 fill-current" />
+            <span>SCANNING</span>
+          </div>
+        )}
 
-  const rightBadges: ProcessingBadgeItem[] = isFemale
-    ? [findBadge('MH'), findBadge('OA'), findBadge('INT'), findBadge('TECH')]
-    : [findBadge('MH'), findBadge('OA'), findBadge('INT')];
+        {/* Floating Badge Icon (Flipped horizontally on right side to gaze inward) */}
+        <div className={`w-13 h-13 sm:w-15 sm:h-15 md:w-17 md:h-17 flex items-center justify-center ${isScanning ? 'animate-bounce-gentle' : ''}`}>
+          <img
+            src={badge.imgUrl}
+            alt={badge.titleEn}
+            className={`w-full h-full object-contain ${isFlipped ? 'scale-x-[-1]' : ''}`}
+            loading="eager"
+            decoding="sync"
+          />
+        </div>
 
-  const centerBottomBadge: ProcessingBadgeItem | null = !isFemale ? findBadge('TECH') : null;
+        {/* Badge Title */}
+        <span
+          className={`text-[7.5px] sm:text-[8.5px] md:text-[9.5px] font-black tracking-tight uppercase text-center mt-0.5 leading-tight px-0.5 max-w-[85px] sm:max-w-[110px] drop-shadow-[0_1px_2px_rgba(255,255,255,0.95)] ${theme.textColor}`}
+        >
+          {badge.titleEn}
+        </span>
+      </div>
+    );
+  };
 
   return (
     <div
@@ -127,10 +168,10 @@ export const AnalysisView: React.FC<AnalysisViewProps> = ({
     >
       <style>{`
         @keyframes scanbeam {
-          0% { top: 12%; opacity: 0; }
-          15% { opacity: 0.9; }
-          85% { opacity: 0.9; }
-          100% { top: 86%; opacity: 0; }
+          0% { top: 10%; opacity: 0; }
+          15% { opacity: 0.85; }
+          85% { opacity: 0.85; }
+          100% { top: 88%; opacity: 0; }
         }
         .animate-scan-beam {
           animation: scanbeam 2.4s ease-in-out infinite;
@@ -141,7 +182,7 @@ export const AnalysisView: React.FC<AnalysisViewProps> = ({
       <div className="absolute inset-0 bg-gradient-to-b from-sky-400/10 via-transparent to-blue-900/15 pointer-events-none" />
 
       {/* ── 1. Top Bar: Faculty Logo + Audio Toggle ──────────────────────────── */}
-      <div className="relative z-30 shrink-0 flex items-center justify-between px-3 sm:px-6 pt-2.5 sm:pt-3 max-w-[720px] mx-auto w-full">
+      <div className="relative z-30 shrink-0 flex items-center justify-between px-3 sm:px-6 pt-2 sm:pt-3 max-w-[720px] mx-auto w-full">
         {/* Faculty Logo Pill */}
         <div className="bg-white/95 backdrop-blur-md rounded-full px-3.5 py-1 shadow-md flex items-center gap-2 border border-white/80">
           <img
@@ -158,8 +199,7 @@ export const AnalysisView: React.FC<AnalysisViewProps> = ({
       </div>
 
       {/* ── 2. Stepper: 1..8 with Step 5 highlighted as ANALYZING ───────────── */}
-      {/* Increased pb-5 so the ANALYZING pill has ample breathing room and never touches the card */}
-      <div className="relative z-30 shrink-0 px-3 sm:px-6 pt-1 pb-4 sm:pb-5 max-w-[720px] mx-auto w-full">
+      <div className="relative z-30 shrink-0 px-3 sm:px-6 pt-1 pb-3 sm:pb-4 max-w-[720px] mx-auto w-full">
         <div className="flex items-center justify-between w-full">
           {stepperSteps.map((stepNum, idx) => {
             const isCompleted = stepNum < 5;
@@ -182,7 +222,7 @@ export const AnalysisView: React.FC<AnalysisViewProps> = ({
                     {stepNum}
                   </div>
 
-                  {/* Pink ANALYZING Pill under step 5 (Floats cleanly above card) */}
+                  {/* Pink ANALYZING Pill under step 5 */}
                   {isCurrent && (
                     <div className="absolute -bottom-4.5 left-1/2 -translate-x-1/2 px-2.5 py-0.5 rounded-full bg-[#FF3366] text-white font-black text-[8px] sm:text-[8.5px] tracking-wider uppercase shadow-sm whitespace-nowrap animate-pulse">
                       ANALYZING
@@ -207,10 +247,9 @@ export const AnalysisView: React.FC<AnalysisViewProps> = ({
       </div>
 
       {/* ── 3. Main Stage Card: High-Res Holographic Sky Window ───────────────── */}
-      {/* Lowered with mt-1 sm:mt-2 to guarantee comfortable clearance from stepper */}
-      <div className="relative z-20 flex-1 flex flex-col justify-between w-full max-w-[680px] md:max-w-[740px] mx-auto px-2 sm:px-4 min-h-0 mt-1 sm:mt-2">
+      <div className="relative z-20 flex-1 flex flex-col justify-between w-full max-w-[680px] md:max-w-[740px] mx-auto px-2 sm:px-4 min-h-0 mt-0.5 sm:mt-1">
         <div
-          className="h-full w-full rounded-3xl shadow-[0_16px_48px_rgba(0,43,127,0.22)] p-2.5 sm:p-3.5 flex flex-col justify-between overflow-hidden relative border border-white/80"
+          className="h-full w-full rounded-3xl shadow-[0_16px_48px_rgba(0,43,127,0.22)] p-2 sm:p-3 flex flex-col justify-between overflow-hidden relative border border-white/80"
           style={{
             backgroundImage: `url(${ASSETS.processing.innerCardBg})`,
             backgroundRepeat: 'no-repeat',
@@ -221,7 +260,7 @@ export const AnalysisView: React.FC<AnalysisViewProps> = ({
           {/* Laser Scanner Beam traversing vertically for sci-fi tension */}
           <div className="absolute inset-x-4 h-1 bg-gradient-to-r from-transparent via-cyan-400 to-transparent shadow-[0_0_16px_#38bdf8] animate-scan-beam pointer-events-none z-20" />
 
-          {/* ── Card Header: Title & Info (Compact Vertical Budget) ── */}
+          {/* ── Card Header: Title & Info ── */}
           <div className="text-center shrink-0 pt-0.5">
             {/* Analyzing Pill Badge */}
             <div className="inline-flex items-center gap-1.5 px-3 py-0.5 rounded-full bg-gradient-to-r from-[#FF5E80] to-[#FF3366] text-white text-[9px] sm:text-[10px] font-black uppercase tracking-widest mb-0.5 shadow-sm">
@@ -240,138 +279,85 @@ export const AnalysisView: React.FC<AnalysisViewProps> = ({
             </h3>
 
             {/* Sub-caption */}
-            <p className="text-[10.5px] sm:text-xs font-bold text-[#FF3366] mt-0.5 flex items-center justify-center gap-1 drop-shadow-[0_1px_1px_rgba(255,255,255,0.95)]">
+            <p className="text-[10px] sm:text-xs font-bold text-[#FF3366] mt-0.5 flex items-center justify-center gap-1 drop-shadow-[0_1px_1px_rgba(255,255,255,0.95)]">
               <span>💕 จากคำตอบทั้ง {totalQuestions} ข้อของคุณ 💕</span>
             </p>
           </div>
 
-          {/* ── Center Stage: Orbiting Badges & Enriched Center Student ── */}
-          <div className="flex-1 relative flex items-center justify-between min-h-0 overflow-hidden my-0.5 px-1 sm:px-3">
+          {/* ── Center Stage: Authentic Mockup Circular Orbit Layout ── */}
+          <div className="flex-1 relative flex flex-col justify-between min-h-0 overflow-hidden my-0.5 px-1 sm:px-2">
 
-            {/* Left Badges Column (Floating Transparent Badges with Large Icons) */}
-            <div className="w-[28%] sm:w-[26%] flex flex-col justify-between h-full z-20 py-1">
-              {leftBadges.map((badge, idx) => {
-                const isScanning = activeBadgeIdx === idx;
-                const theme = BADGE_THEMES[badge.pathId] || { textColor: 'text-[#002B7F]' };
-                return (
-                  <div
-                    key={badge.pathId}
-                    className={`flex flex-col items-center justify-center transition-all duration-300 select-none relative ${
-                      isScanning
-                        ? 'scale-115 z-30 drop-shadow-[0_0_22px_rgba(255,51,102,0.95)]'
-                        : 'hover:scale-105 drop-shadow-xs'
-                    }`}
-                  >
-                    {/* Live Scanning Tag */}
-                    {isScanning && (
-                      <div className="absolute -top-2.5 left-1/2 -translate-x-1/2 bg-[#FF3366] text-white text-[7px] sm:text-[8px] font-black px-1.5 py-0.2 rounded-full uppercase shadow-md flex items-center gap-0.5 whitespace-nowrap animate-pulse">
-                        <Zap className="w-2.5 h-2.5" />
-                        <span>SCANNING</span>
-                      </div>
-                    )}
+            {/* Pulsing Concentric Holographic Radar Aura in Center */}
+            <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-64 h-64 sm:w-80 sm:h-80 md:w-96 md:h-96 rounded-full bg-radial from-cyan-300/30 via-pink-300/10 to-transparent animate-pulse pointer-events-none" />
 
-                    {/* Large Floating Badge Icon (Nurses naturally face Right towards center student) */}
-                    <div className={`w-13 h-13 sm:w-16 sm:h-16 md:w-18 md:h-18 flex items-center justify-center ${isScanning ? 'animate-bounce-gentle' : ''}`}>
-                      <img
-                        src={badge.imgUrl}
-                        alt={badge.titleEn}
-                        className="w-full h-full object-contain"
-                        loading="eager"
-                        decoding="sync"
-                      />
-                    </div>
-                    <span
-                      className={`text-[8px] sm:text-[9.5px] md:text-[10px] font-black tracking-tight uppercase text-center mt-0.5 leading-tight px-0.5 drop-shadow-[0_1px_2px_rgba(255,255,255,0.95)] ${theme.textColor}`}
-                    >
-                      {badge.titleEn}
-                    </span>
-                  </div>
-                );
-              })}
-            </div>
-
-            {/* Center Student Standing on the Holographic Stage (Waist-Up Half Body) */}
-            <div className="flex-1 h-full relative flex flex-col items-center justify-end z-10 px-1 min-h-0 pb-0.5">
-              {/* Pulsing Concentric Holographic Aura */}
-              <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-56 h-56 sm:w-72 sm:h-72 md:w-84 md:h-84 rounded-full bg-radial from-cyan-300/35 via-pink-300/15 to-transparent animate-pulse pointer-events-none" />
-
-              {/* Student Character Full Image — Waist-Up, centered, large, charismatic and bold! */}
-              <div className="relative flex-1 w-full flex items-end justify-center min-h-0 max-h-[300px] sm:max-h-[360px] md:max-h-[400px]">
-                <img
-                  src={centerCharacterUrl}
-                  alt={isFemale ? 'Female Student' : 'Male Student'}
-                  className="h-full w-auto max-w-full object-contain drop-shadow-[0_16px_36px_rgba(0,43,127,0.4)] animate-float-subtle select-none z-10 scale-105 sm:scale-115"
-                  loading="eager"
-                  decoding="sync"
-                />
+            {/* ── TOP TIER: PED (left) | MAT (center if female) | MH (right) ── */}
+            <div className="relative z-20 flex items-start justify-between w-full px-1 sm:px-2 pt-0.5">
+              {/* Top Left: Pediatric Nurse */}
+              <div className="w-[28%] sm:w-[26%] flex justify-center">
+                {renderBadge(badgePED, false)}
               </div>
 
-              {/* Center Bottom Badge for Male (NURSING + TECHNOLOGY in Tech Hologram Frame) */}
-              {centerBottomBadge && (
-                <div
-                  className={`-mt-1 rounded-xl px-2.5 py-1 flex items-center gap-1.5 transition-all duration-300 z-20 ${
-                    activeBadgeIdx === 6
-                      ? 'scale-110 drop-shadow-[0_0_20px_rgba(56,189,248,0.9)]'
-                      : 'hover:scale-105 drop-shadow-xs'
-                  }`}
-                >
-                  <div className="w-8 h-8 sm:w-10 sm:h-10 overflow-hidden flex items-center justify-center shrink-0">
-                    <img
-                      src={centerBottomBadge.imgUrl}
-                      alt={centerBottomBadge.titleEn}
-                      className="w-full h-full object-contain"
-                      loading="eager"
-                      decoding="sync"
-                    />
-                  </div>
-                  <span className="text-[8px] sm:text-[9px] md:text-[10px] font-black text-[#0284C7] tracking-tight uppercase leading-tight whitespace-nowrap drop-shadow-[0_1px_2px_rgba(255,255,255,0.95)]">
-                    NURSING + TECHNOLOGY
-                  </span>
-                </div>
-              )}
+              {/* Top Center: Maternal & Newborn (Female only) */}
+              <div className="flex-1 flex justify-center">
+                {badgeMAT ? renderBadge(badgeMAT, false) : <div className="h-4" />}
+              </div>
+
+              {/* Top Right: Mental Health Nurse (Gaze Inward) */}
+              <div className="w-[28%] sm:w-[26%] flex justify-center">
+                {renderBadge(badgeMH, true)}
+              </div>
             </div>
 
-            {/* Right Badges Column (Mirrored scale-x-[-1] so nurses gaze Inwards toward student!) */}
-            <div className="w-[28%] sm:w-[26%] flex flex-col justify-between h-full z-20 py-1">
-              {rightBadges.map((badge, rIdx) => {
-                const globalIdx = leftBadges.length + rIdx;
-                const isScanning = activeBadgeIdx === globalIdx;
-                const theme = BADGE_THEMES[badge.pathId] || { textColor: 'text-[#002B7F]' };
-                return (
-                  <div
-                    key={badge.pathId}
-                    className={`flex flex-col items-center justify-center transition-all duration-300 select-none relative ${
-                      isScanning
-                        ? 'scale-115 z-30 drop-shadow-[0_0_22px_rgba(255,51,102,0.95)]'
-                        : 'hover:scale-105 drop-shadow-xs'
-                    }`}
-                  >
-                    {/* Live Scanning Tag */}
-                    {isScanning && (
-                      <div className="absolute -top-2.5 left-1/2 -translate-x-1/2 bg-[#FF3366] text-white text-[7px] sm:text-[8px] font-black px-1.5 py-0.2 rounded-full uppercase shadow-md flex items-center gap-0.5 whitespace-nowrap animate-pulse">
-                        <Zap className="w-2.5 h-2.5" />
-                        <span>SCANNING</span>
-                      </div>
-                    )}
+            {/* ── MIDDLE TIER: Flank Badges + Center Student ── */}
+            <div className="relative z-10 flex-1 flex items-center justify-between min-h-0 px-1 sm:px-2">
+              {/* Left Flank: Emergency (upper) + Community (lower) */}
+              <div className="w-[28%] sm:w-[26%] flex flex-col justify-around h-full py-0.5 z-20 space-y-1.5 sm:space-y-2.5">
+                {renderBadge(badgeER, false)}
+                {renderBadge(badgeCOMM, false)}
+              </div>
 
-                    {/* Large Floating Badge Icon — Mirrored horizontally to gaze LEFT towards center student! */}
-                    <div className={`w-13 h-13 sm:w-16 sm:h-16 md:w-18 md:h-18 flex items-center justify-center ${isScanning ? 'animate-bounce-gentle' : ''}`}>
-                      <img
-                        src={badge.imgUrl}
-                        alt={badge.titleEn}
-                        className="w-full h-full object-contain scale-x-[-1]"
-                        loading="eager"
-                        decoding="sync"
-                      />
-                    </div>
-                    <span
-                      className={`text-[8px] sm:text-[9.5px] md:text-[10px] font-black tracking-tight uppercase text-center mt-0.5 leading-tight px-0.5 drop-shadow-[0_1px_2px_rgba(255,255,255,0.95)] ${theme.textColor}`}
-                    >
-                      {badge.titleEn}
-                    </span>
-                  </div>
-                );
-              })}
+              {/* Center Column: Student Character (Waist-up, centered between tiers) */}
+              <div className="flex-1 h-full relative flex items-center justify-center min-h-0 px-1">
+                <div className="relative w-full h-full flex items-center justify-center max-h-[280px] sm:max-h-[340px] md:max-h-[380px]">
+                  <img
+                    src={centerCharacterUrl}
+                    alt={isFemale ? 'Female Student' : 'Male Student'}
+                    className="h-full w-auto max-w-full object-contain drop-shadow-[0_16px_36px_rgba(0,43,127,0.38)] animate-float-subtle select-none scale-105 sm:scale-115"
+                    loading="eager"
+                    decoding="sync"
+                  />
+                </div>
+              </div>
+
+              {/* Right Flank: Older Adult (upper) + International (lower) (Gaze Inward) */}
+              <div className="w-[28%] sm:w-[26%] flex flex-col justify-around h-full py-0.5 z-20 space-y-1.5 sm:space-y-2.5">
+                {renderBadge(badgeOA, true)}
+                {renderBadge(badgeINT, true)}
+              </div>
+            </div>
+
+            {/* ── BOTTOM TIER: Nursing + Technology in Center Hologram Frame ── */}
+            <div className="relative z-20 flex justify-center w-full pb-1">
+              <div
+                className={`rounded-xl px-2.5 py-1 flex items-center gap-1.5 transition-all duration-300 ${
+                  currentScanningPathId === 'TECH'
+                    ? 'scale-110 drop-shadow-[0_0_20px_rgba(56,189,248,0.95)]'
+                    : 'hover:scale-105 drop-shadow-xs'
+                }`}
+              >
+                <div className="w-8 h-8 sm:w-10 sm:h-10 overflow-hidden flex items-center justify-center shrink-0">
+                  <img
+                    src={badgeTECH.imgUrl}
+                    alt={badgeTECH.titleEn}
+                    className="w-full h-full object-contain"
+                    loading="eager"
+                    decoding="sync"
+                  />
+                </div>
+                <span className="text-[8px] sm:text-[9px] md:text-[10px] font-black text-[#0284C7] tracking-tight uppercase leading-tight whitespace-nowrap drop-shadow-[0_1px_2px_rgba(255,255,255,0.95)]">
+                  NURSING + TECHNOLOGY
+                </span>
+              </div>
             </div>
 
           </div>
@@ -379,7 +365,7 @@ export const AnalysisView: React.FC<AnalysisViewProps> = ({
       </div>
 
       {/* ── 4. Floating AI Robot Mascot Status Bar (Outside Card on Campus Background) ──── */}
-      <div className="relative z-20 shrink-0 px-3 sm:px-6 pt-2 max-w-[680px] md:max-w-[740px] mx-auto w-full">
+      <div className="relative z-20 shrink-0 px-3 sm:px-6 pt-1.5 max-w-[680px] md:max-w-[740px] mx-auto w-full">
         <div className="bg-white/95 backdrop-blur-md border border-white/90 rounded-2xl px-3.5 py-2 sm:py-2.5 shadow-md flex items-center justify-between gap-3">
           <div className="flex items-center gap-2.5 sm:gap-3 flex-1 min-w-0">
             <img
@@ -399,7 +385,7 @@ export const AnalysisView: React.FC<AnalysisViewProps> = ({
                   style={{ width: `${progress}%` }}
                 />
               </div>
-              <div className="text-[10.5px] sm:text-xs font-bold text-pink-600 leading-tight mt-0.5">
+              <div className="text-[10px] sm:text-[11px] font-bold text-pink-600 leading-tight mt-0.5">
                 โปรดรอสักครู่ ระบบกำลังค้นหาตัวตนที่แท้จริงของคุณ 💕
               </div>
             </div>
@@ -413,7 +399,7 @@ export const AnalysisView: React.FC<AnalysisViewProps> = ({
       </div>
 
       {/* ── 5. Bottom Navigation & Action Bar (Outside Card on Campus Background) ──── */}
-      <div className="relative z-20 shrink-0 px-3 sm:px-6 pb-2.5 sm:pb-3.5 pt-1.5 max-w-[680px] md:max-w-[740px] mx-auto w-full flex items-center justify-between gap-3">
+      <div className="relative z-20 shrink-0 px-3 sm:px-6 pb-2.5 sm:pb-3.5 pt-1 max-w-[680px] md:max-w-[740px] mx-auto w-full flex items-center justify-between gap-3">
         {/* Back Button */}
         {onBack ? (
           <button

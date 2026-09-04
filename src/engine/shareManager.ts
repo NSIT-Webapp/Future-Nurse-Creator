@@ -97,6 +97,43 @@ export function downloadCard(cardDataUrl: string, result: ResultPayload): void {
   a.click();
 }
 
+// ── Mobile Result URL ─────────────────────────────────────────────────────────
+
+/** Builds the full mobile result URL for the given result payload. */
+export function getMobileResultUrl(result: ResultPayload): string {
+  const encoded = encodeResultState(result);
+  const base = window.location.origin + window.location.pathname;
+  return `${base}#result=${encoded}`;
+}
+
+// ── Official Hashtags ─────────────────────────────────────────────────────────
+
+export const OFFICIAL_HASHTAGS = [
+  '#NSMahidol',
+  '#พยาบาลมหิดล',
+  '#เส้นทางที่ใช่ของฉัน',
+  '#FutureNurse'
+];
+
+export function getHashtagsString(): string {
+  return OFFICIAL_HASHTAGS.join(' ');
+}
+
+// ── Social Share URLs ─────────────────────────────────────────────────────────
+
+export function getLineShareUrl(url: string, text: string): string {
+  return `https://line.me/R/msg/text/?${encodeURIComponent(`${text}\n${url}`)}`;
+}
+
+export function getFacebookShareUrl(url: string): string {
+  return `https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(url)}`;
+}
+
+export function getTwitterShareUrl(url: string, text: string): string {
+  const tags = 'NSMahidol,พยาบาลมหิดล,FutureNurse,เส้นทางที่ใช่ของฉัน';
+  return `https://twitter.com/intent/tweet?text=${encodeURIComponent(text)}&url=${encodeURIComponent(url)}&hashtags=${encodeURIComponent(tags)}`;
+}
+
 // ── Caption builder ───────────────────────────────────────────────────────────
 
 /** Builds the standard social media caption + hashtags. */
@@ -104,8 +141,8 @@ export function buildShareCaption(result: ResultPayload): string {
   return [
     `My Future Nursing Path is ${result.path.nameEn} ${result.path.emoji}`,
     `Superpower: ${result.superpower}`,
-    `ค้นพบ Future Nurse ในแบบของฉันที่ NSMU Open House 2026`,
+    `ค้นพบ Future Nurse ในแบบของฉันที่ คณะพยาบาลศาสตร์ มหาวิทยาลัยมหิดล`,
     ``,
-    `#NSMUOPENHOUSE2026 #NURSESOFTHELAND #NSMUTCAS70 #MahidolNursing #คณะพยาบาลศาสตร์มหิดล`,
+    getHashtagsString(),
   ].join('\n');
 }

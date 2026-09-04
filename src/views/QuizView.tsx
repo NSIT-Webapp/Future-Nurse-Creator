@@ -13,6 +13,7 @@ import { Question } from '../types';
 import { ASSETS, getQuestionCharacterUrl } from '../assets/registry';
 import { SoundControl } from '../components/SoundControl';
 import { QuizStepper } from '../components/QuizStepper';
+import { playSelectSfx, playNextSfx, playBackSfx } from '../engine/audioManager';
 
 interface QuizViewProps {
   question: Question;
