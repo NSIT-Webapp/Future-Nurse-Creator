@@ -1,5 +1,5 @@
 import React, { useEffect } from 'react';
-import { ChevronLeft, ArrowRight, Sparkles, Heart, Zap } from 'lucide-react';
+import { ChevronLeft, ArrowRight, Sparkles } from 'lucide-react';
 import confetti from 'canvas-confetti';
 
 import { ResultPayload } from '../types';
@@ -41,6 +41,21 @@ export const RevealView: React.FC<RevealViewProps> = ({ result, onNext, onBack }
   const aiSkill = result.aiSkill || pathInfo.signatureAiSkill || 'Healthcare AI Creator';
   const impact = result.profileImpact || pathInfo.signatureImpact || 'สร้างความเปลี่ยนแปลงที่ดีเพื่อสุขภาวะของผู้คน';
 
+  // 3D Skill and Impact Icons
+  const aiSkillIconSrc =
+    pathId === 'OA' ? '/assets/reveal/stickers/TECH/clipboard-medical.png' :
+    pathId === 'ER' ? '/assets/reveal/stickers/ER/heart-ecg.png' :
+    pathId === 'COMM' ? '/assets/reveal/stickers/COMM/group-circle.png' :
+    pathId === 'INT' ? '/assets/reveal/stickers/INT/globe.png' :
+    pathId === 'MH' ? '/assets/reveal/stickers/MH/brain-smile.png' :
+    pathId === 'PED' ? '/assets/reveal/stickers/PED/star-blue-smile.png' :
+    pathId === 'MAT' ? '/assets/reveal/stickers/MAT/baby-in-heart.png' :
+    '/assets/reveal/stickers/TECH/chip-ai.png';
+
+  const impactHeartSrc = pathId === 'OA'
+    ? '/assets/reveal/stickers/OA/heart-green.png'
+    : '/assets/reveal/stickers/COMM/heart-pink.png';
+
   // Confetti celebration on view reveal
   useEffect(() => {
     try {
@@ -66,27 +81,27 @@ export const RevealView: React.FC<RevealViewProps> = ({ result, onNext, onBack }
       <style>{`
         @keyframes float-stagger-1 {
           0%, 100% { transform: translateY(0px) rotate(0deg); }
-          50% { transform: translateY(-7px) rotate(2deg); }
+          50% { transform: translateY(-8px) rotate(2deg); }
         }
         @keyframes float-stagger-2 {
           0%, 100% { transform: translateY(0px) rotate(0deg); }
-          50% { transform: translateY(-9px) rotate(-3deg); }
+          50% { transform: translateY(-10px) rotate(-3deg); }
         }
         @keyframes float-stagger-3 {
           0%, 100% { transform: translateY(0px) rotate(0deg); }
-          50% { transform: translateY(-6px) rotate(3deg); }
+          50% { transform: translateY(-7px) rotate(3deg); }
         }
         @keyframes aura-spin-glow {
           0% { transform: translate(-50%, -50%) rotate(0deg) scale(1); opacity: 0.65; }
-          50% { transform: translate(-50%, -50%) rotate(180deg) scale(1.05); opacity: 0.9; }
+          50% { transform: translate(-50%, -50%) rotate(180deg) scale(1.06); opacity: 0.9; }
           100% { transform: translate(-50%, -50%) rotate(360deg) scale(1); opacity: 0.65; }
         }
         .text-3d-bubble {
           text-shadow:
             0 1px 0 #fff,
-            0 2px 0 rgba(255,255,255,0.7),
-            0 3px 0 rgba(0,0,0,0.12),
-            0 6px 12px rgba(0,43,127,0.18);
+            0 2px 0 rgba(255,255,255,0.85),
+            0 3px 0 rgba(0,0,0,0.15),
+            0 8px 16px rgba(0,43,127,0.22);
         }
       `}</style>
 
@@ -160,38 +175,47 @@ export const RevealView: React.FC<RevealViewProps> = ({ result, onNext, onBack }
 
       {/* ── 3. Main Card Window: Frosted Glass Dreamy Container ─────────────── */}
       <div className="relative z-20 flex-1 flex flex-col justify-between w-full max-w-[680px] md:max-w-[720px] mx-auto px-2 sm:px-4 min-h-0 mt-1 sm:mt-2">
-        <div className="h-full w-full rounded-3xl bg-white/92 backdrop-blur-md shadow-[0_16px_48px_rgba(0,43,127,0.2)] border border-white/95 p-3 sm:p-4 flex flex-col justify-between overflow-hidden relative">
+        <div className="h-full w-full rounded-3xl bg-white/92 backdrop-blur-md shadow-[0_16px_48px_rgba(0,43,127,0.2)] border border-white/95 p-3 sm:p-4.5 flex flex-col justify-between overflow-hidden relative">
 
           {/* ── Card Header: REVEAL Badge, Subtitle & Path Title ── */}
           <div className="text-center shrink-0 pt-0.5">
             {/* Reveal Sparkle Pill */}
-            <div className="inline-flex items-center gap-1.5 px-3.5 py-0.5 rounded-full bg-[#FFF0F3] border border-[#FFCCD5] text-[#FF3366] text-[9.5px] sm:text-[10.5px] font-black uppercase tracking-widest mb-0.5 shadow-xs">
+            <div className="inline-flex items-center gap-1.5 px-3.5 py-0.5 rounded-full bg-[#FFF0F3] border border-[#FFCCD5] text-[#FF3366] text-[9.5px] sm:text-[10.5px] font-black uppercase tracking-widest mb-1 shadow-xs">
               <Sparkles className="w-3 h-3 animate-pulse" />
               <span>✦ REVEAL ✦</span>
               <Sparkles className="w-3 h-3 animate-pulse" />
             </div>
 
             {/* Subtitle */}
-            <h3 className="text-xs sm:text-sm font-bold text-slate-700 tracking-tight">
-              <span className="text-[#FF2D55] font-extrabold">AI </span>
+            <h3 className="text-sm sm:text-base md:text-lg font-black text-slate-800 tracking-tight leading-snug">
+              <span className="text-[#FF2D55] font-black">AI </span>
               พบเส้นทางพยาบาลที่ใช่สำหรับคุณแล้ว!
             </h3>
 
-            {/* Path English Name — 3D Bubble typography in path's vibrant color */}
+            {/* Caption with pink hearts */}
+            <p className="text-[11px] sm:text-xs font-bold text-[#FF3366] mt-0.5 flex items-center justify-center gap-1.5 drop-shadow-[0_1px_1px_rgba(255,255,255,0.8)]">
+              <span>💕</span>
+              <span>จากคำตอบทั้ง 5 ข้อของคุณ</span>
+              <span>💕</span>
+            </p>
+
+            {/* Path English Name — Big 3D Bubble typography in path's vibrant color */}
             <h2
-              className="text-2xl sm:text-3xl md:text-[34px] font-black tracking-tight uppercase leading-tight font-heading mt-0.5 text-3d-bubble"
+              className="text-2xl sm:text-3xl md:text-4xl font-black tracking-tight uppercase leading-tight font-heading mt-1 text-3d-bubble"
               style={{ color: bubbleTextColor }}
             >
               {displayTitleEn}
             </h2>
 
-            {/* Path Thai Ribbon Pill */}
+            {/* Path Thai Ribbon Pill with Flanking White Hearts */}
             <div className="inline-flex items-center justify-center mt-1">
               <div
-                className="px-4 py-0.5 sm:py-1 rounded-full text-white text-xs sm:text-sm font-extrabold shadow-sm tracking-wide"
+                className="px-5 py-1 sm:py-1.5 rounded-full text-white text-xs sm:text-sm md:text-base font-extrabold shadow-md tracking-wide flex items-center gap-2"
                 style={{ backgroundColor: ribbonColor }}
               >
-                {displayRibbonTh}
+                <span className="text-[10px] sm:text-xs opacity-90">🤍</span>
+                <span>{displayRibbonTh}</span>
+                <span className="text-[10px] sm:text-xs opacity-90">🤍</span>
               </div>
             </div>
           </div>
@@ -200,17 +224,17 @@ export const RevealView: React.FC<RevealViewProps> = ({ result, onNext, onBack }
           <div className="flex-1 relative flex items-center justify-center min-h-0 overflow-visible my-1">
             {/* Pulsing Concentric Aura Portal */}
             <div
-              className="absolute top-1/2 left-1/2 w-64 h-64 sm:w-76 sm:h-76 md:w-84 md:h-84 rounded-full pointer-events-none"
+              className="absolute top-1/2 left-1/2 w-68 h-68 sm:w-80 sm:h-80 md:w-92 md:h-92 rounded-full pointer-events-none"
               style={{
-                background: `radial-gradient(circle, ${themeColor}33 0%, #FF658422 45%, transparent 70%)`,
+                background: `radial-gradient(circle, ${themeColor}38 0%, #FF658428 45%, transparent 72%)`,
                 animation: 'aura-spin-glow 14s linear infinite',
               }}
             />
 
             {/* Inner Ring with Subtle Golden/White Border */}
-            <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-52 h-52 sm:w-64 sm:h-64 md:w-72 md:h-72 rounded-full border border-white/80 shadow-[0_0_24px_rgba(255,255,255,0.8)] pointer-events-none" />
+            <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-56 h-56 sm:w-68 sm:h-68 md:w-76 md:h-76 rounded-full border-2 border-white/80 shadow-[0_0_28px_rgba(255,255,255,0.85)] pointer-events-none" />
 
-            {/* Floating 3D Stickers (Surrounding Character) */}
+            {/* Floating 3D Stickers (Enlarged and positioned to frame character) */}
             <div className="absolute inset-0 pointer-events-none z-20">
               {stickers.map((sticker, sIdx) => {
                 const animStyle = sIdx % 3 === 0
@@ -238,7 +262,7 @@ export const RevealView: React.FC<RevealViewProps> = ({ result, onNext, onBack }
                         height: 'auto',
                         transform: sticker.rotate ? `rotate(${sticker.rotate})` : undefined,
                       }}
-                      className="object-contain drop-shadow-[0_8px_16px_rgba(0,0,0,0.18)]"
+                      className="object-contain drop-shadow-[0_10px_20px_rgba(0,0,0,0.2)]"
                       loading="eager"
                       decoding="sync"
                     />
@@ -248,7 +272,7 @@ export const RevealView: React.FC<RevealViewProps> = ({ result, onNext, onBack }
             </div>
 
             {/* Center Character (1 of 16 outcomes) */}
-            <div className="relative z-10 h-full flex items-end justify-center min-h-0 max-h-[300px] sm:max-h-[360px] md:max-h-[400px]">
+            <div className="relative z-10 h-full flex items-end justify-center min-h-0 max-h-[300px] sm:max-h-[360px] md:max-h-[410px]">
               <img
                 src={characterImgUrl}
                 alt={`${displayTitleEn} - ${isFemale ? 'Female' : 'Male'}`}
@@ -259,49 +283,60 @@ export const RevealView: React.FC<RevealViewProps> = ({ result, onNext, onBack }
             </div>
           </div>
 
-          {/* ── Card Bottom: Superpower, AI Skill, and Impact Cards ── */}
-          <div className="shrink-0 space-y-1.5 z-20">
+          {/* ── Card Bottom: Superpower, AI Skill, and Impact Cards (Enlarged) ── */}
+          <div className="shrink-0 space-y-2 z-20 pt-1">
             {/* Two Column Grid: Superpower & AI Skill */}
-            <div className="grid grid-cols-2 gap-2">
+            <div className="grid grid-cols-2 gap-2 sm:gap-2.5">
               {/* Your Superpower Capsule */}
-              <div className="bg-[#FFF5F7] border border-[#FFE0E6] rounded-2xl p-2 sm:p-2.5 flex items-center gap-2 shadow-xs">
-                <div className="w-7 h-7 sm:w-8 sm:h-8 rounded-full bg-[#FFE4E9] flex items-center justify-center shrink-0 text-[#FF3366]">
-                  <Heart className="w-4 h-4 fill-[#FF3366]" />
+              <div className="bg-[#FFF5F7]/95 border-2 border-[#FFD9E2] rounded-2xl sm:rounded-3xl p-2.5 sm:p-3 flex items-center gap-2.5 shadow-sm min-h-[66px] sm:min-h-[74px]">
+                <div className="w-10 h-10 sm:w-12 sm:h-12 rounded-2xl bg-[#FFE4E9] flex items-center justify-center shrink-0 shadow-2xs overflow-hidden p-1">
+                  <img
+                    src="/assets/reveal/stickers/COMM/heart-pink.png"
+                    alt="Superpower Icon"
+                    className="w-full h-full object-contain drop-shadow-2xs"
+                  />
                 </div>
                 <div className="min-w-0 flex-1">
-                  <span className="text-[9px] sm:text-[10px] font-black uppercase tracking-wider text-[#FF3366] block leading-tight">
-                    YOUR SUPERPOWER
+                  <span className="text-[10.5px] sm:text-xs font-bold uppercase tracking-wider text-[#FF3366] block leading-tight">
+                    Your Superpower
                   </span>
-                  <span className="text-xs sm:text-sm font-extrabold text-slate-800 block truncate leading-tight mt-0.5">
+                  <span className="text-xs sm:text-sm md:text-base font-black text-[#E11D48] block leading-tight mt-0.5 line-clamp-2">
                     {superpower}
                   </span>
                 </div>
               </div>
 
               {/* Your AI Skill Capsule */}
-              <div className="bg-[#F0F9FF] border border-[#BAE6FD] rounded-2xl p-2 sm:p-2.5 flex items-center gap-2 shadow-xs">
-                <div className="w-7 h-7 sm:w-8 sm:h-8 rounded-full bg-[#E0F2FE] flex items-center justify-center shrink-0 text-[#0284C7]">
-                  <Zap className="w-4 h-4 fill-[#0284C7]" />
+              <div className="bg-[#F0F9FF]/95 border-2 border-[#BAE6FD] rounded-2xl sm:rounded-3xl p-2.5 sm:p-3 flex items-center gap-2.5 shadow-sm min-h-[66px] sm:min-h-[74px]">
+                <div className="w-10 h-10 sm:w-12 sm:h-12 rounded-2xl bg-[#E0F2FE] flex items-center justify-center shrink-0 shadow-2xs overflow-hidden p-1">
+                  <img
+                    src={aiSkillIconSrc}
+                    alt="AI Skill Icon"
+                    className="w-full h-full object-contain drop-shadow-2xs"
+                  />
                 </div>
                 <div className="min-w-0 flex-1">
-                  <span className="text-[9px] sm:text-[10px] font-black uppercase tracking-wider text-[#0284C7] block leading-tight">
-                    YOUR AI SKILL
+                  <span className="text-[10.5px] sm:text-xs font-bold uppercase tracking-wider text-[#0284C7] block leading-tight">
+                    Your AI Skill
                   </span>
-                  <span className="text-xs sm:text-sm font-extrabold text-slate-800 block truncate leading-tight mt-0.5">
+                  <span className="text-xs sm:text-sm md:text-base font-black text-[#0369A1] block leading-tight mt-0.5 line-clamp-2">
                     {aiSkill}
                   </span>
                 </div>
               </div>
             </div>
 
-            {/* Impact Message Box */}
-            <div className="bg-white/80 border border-slate-200/80 rounded-2xl px-3 py-1.5 sm:py-2 text-center shadow-xs">
-              <span className="text-[9px] sm:text-[10px] font-extrabold uppercase tracking-wider text-slate-400 block mb-0.5">
-                🌟 YOUR IMPACT
-              </span>
-              <p className="text-[11px] sm:text-xs md:text-[13px] font-bold text-slate-700 leading-snug">
-                &ldquo;{impact}&rdquo;
+            {/* Impact Message Box (Enlarged Pill with 3D Heart & Sparkles) */}
+            <div className="bg-white/95 border-2 border-white/90 rounded-2xl sm:rounded-3xl px-3.5 sm:px-5 py-2.5 sm:py-3.5 shadow-sm flex items-center justify-between gap-2.5 sm:gap-3">
+              <img
+                src={impactHeartSrc}
+                alt="Impact Heart"
+                className="w-7 h-7 sm:w-9 sm:h-9 object-contain shrink-0 drop-shadow-2xs"
+              />
+              <p className="text-xs sm:text-sm md:text-[14.5px] font-bold text-slate-700 leading-snug text-center flex-1">
+                {impact}
               </p>
+              <Sparkles className="w-4 h-4 sm:w-5 sm:h-5 text-amber-400 shrink-0 animate-pulse" />
             </div>
           </div>
 

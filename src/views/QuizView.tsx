@@ -100,6 +100,23 @@ export const QuizView: React.FC<QuizViewProps> = ({
     });
   }, []);
 
+  const handleSelectOption = (key: string) => {
+    playSelectSfx(key);
+    onSelectOption(key);
+  };
+
+  const handleBack = () => {
+    playBackSfx();
+    onBack?.();
+  };
+
+  const handleNext = () => {
+    if (canProceed) {
+      playNextSfx();
+      onNext?.();
+    }
+  };
+
   return (
     <div
       className="relative w-full h-full min-h-full flex flex-col justify-between select-none overflow-y-auto overflow-x-hidden animate-fade-in pb-4"
@@ -193,7 +210,7 @@ export const QuizView: React.FC<QuizViewProps> = ({
                   <button
                     key={opt.key}
                     type="button"
-                    onClick={() => onSelectOption(opt.key)}
+                    onClick={() => handleSelectOption(opt.key)}
                     className={`group relative w-full flex items-center justify-between p-2.5 sm:p-3 rounded-2xl border transition-all duration-150 active:scale-[0.99] text-left cursor-pointer select-none ${
                       isSelected
                         ? `bg-rose-50 ${theme.borderActive} border-2 shadow-md ring-2 ${theme.ringActive}`
@@ -246,7 +263,7 @@ export const QuizView: React.FC<QuizViewProps> = ({
               {/* Back Button */}
               <button
                 type="button"
-                onClick={onBack}
+                onClick={handleBack}
                 className="inline-flex items-center gap-1.5 px-4 sm:px-6 py-2.5 rounded-full border-2 border-[#002B7F] text-[#002B7F] bg-white hover:bg-sky-50 active:scale-95 font-bold text-xs sm:text-sm font-heading transition-all shadow-xs"
               >
                 <ChevronLeft className="w-4 h-4 stroke-[3]" />
@@ -257,7 +274,7 @@ export const QuizView: React.FC<QuizViewProps> = ({
               <button
                 type="button"
                 disabled={!canProceed}
-                onClick={onNext}
+                onClick={handleNext}
                 className={`inline-flex items-center gap-1.5 px-6 sm:px-9 py-2.5 rounded-full font-extrabold text-xs sm:text-sm font-heading transition-all duration-150 shadow-md ${
                   canProceed
                     ? 'bg-gradient-to-r from-[#FF4E72] via-[#FF3366] to-[#783BE8] hover:from-[#ff5b7d] hover:to-[#8449f0] active:scale-95 text-white shadow-[0_4px_15px_rgba(255,51,102,0.4)] cursor-pointer'
