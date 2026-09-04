@@ -92,13 +92,28 @@ async function renderTemplateCard(
     el.src = templateUrl;
   });
 
-  // 1. Draw base high-res template image
-  ctx.drawImage(img, 0, 0, width, height);
+  const sourceWidth = img.naturalWidth || img.width || width;
+  const sourceHeight = img.naturalHeight || img.height || height;
+  const scaleX = sourceWidth / width;
+  const scaleY = sourceHeight / height;
+
+  if (ctx.canvas.width !== sourceWidth || ctx.canvas.height !== sourceHeight) {
+    ctx.canvas.width = sourceWidth;
+    ctx.canvas.height = sourceHeight;
+    ctx.imageSmoothingEnabled = true;
+    ctx.imageSmoothingQuality = 'high';
+  }
+
+  // 1. Draw base template image without changing its native aspect ratio
+  ctx.drawImage(img, 0, 0, sourceWidth, sourceHeight);
 
   // 2. Smart Dynamic Text Overlay for Pediatric Nursing (with dashed bracket placeholders)
   const isPedFemale = result.pathId === 'PED' && result.characterType === 'female_student';
 
   if (isPedFemale) {
+    ctx.save();
+    ctx.scale(scaleX, scaleY);
+
     // A. Your Superpower:
     // Cover [Strength Name]
     ctx.fillStyle = '#FFF2F4';
@@ -212,6 +227,8 @@ async function renderTemplateCard(
     impactLines.forEach((line, i) => {
       ctx.fillText(line, 75 + 436 / 2, startImpY + i * 30);
     });
+    ctx.restore();
+
     ctx.restore();
   }
 }

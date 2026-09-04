@@ -35,6 +35,7 @@ export const CardPreviewView: React.FC<CardPreviewViewProps> = ({
   const [generating, setGenerating] = useState(true);
   const [isFlipped, setIsFlipped] = useState(false);
   const [isZoomed, setIsZoomed] = useState(false);
+  const [cardAspect, setCardAspect] = useState<string>('9 / 16');
   const [tilt, setTilt] = useState({ x: 0, y: 0, active: false });
   const hasFiredConfetti = useRef(false);
 
@@ -82,6 +83,21 @@ export const CardPreviewView: React.FC<CardPreviewViewProps> = ({
       mounted = false;
     };
   }, [result, onCardReady]);
+
+  useEffect(() => {
+    if (!cardDataUrl) {
+      setCardAspect('9 / 16');
+      return;
+    }
+
+    const img = new Image();
+    img.onload = () => {
+      if (img.naturalWidth && img.naturalHeight) {
+        setCardAspect(`${img.naturalWidth} / ${img.naturalHeight}`);
+      }
+    };
+    img.src = cardDataUrl;
+  }, [cardDataUrl]);
 
   // #1 Pointer move for 3D Tilt and Holographic Foil Reflection
   const handlePointerMove = (e: React.PointerEvent<HTMLDivElement>) => {
@@ -232,8 +248,8 @@ export const CardPreviewView: React.FC<CardPreviewViewProps> = ({
 
             {/* 3D Perspective Canvas Container */}
             <div
-              className="relative h-full max-h-[460px] sm:max-h-[520px] md:max-h-[560px] aspect-[9/16] cursor-pointer select-none"
-              style={{ perspective: '1200px' }}
+              className="relative h-full max-h-[460px] sm:max-h-[520px] md:max-h-[560px] max-w-full cursor-pointer select-none"
+              style={{ perspective: '1200px', aspectRatio: cardAspect }}
               onPointerMove={handlePointerMove}
               onPointerLeave={handlePointerLeave}
               onClick={() => setIsFlipped((f) => !f)}
@@ -264,7 +280,7 @@ export const CardPreviewView: React.FC<CardPreviewViewProps> = ({
                       <img
                         src={cardDataUrl}
                         alt={`Future Nurse Card — ${result.path.nameEn}`}
-                        className="w-full h-full object-cover select-none"
+                        className="w-full h-full object-contain select-none"
                         draggable={false}
                       />
 
@@ -461,7 +477,8 @@ export const CardPreviewView: React.FC<CardPreviewViewProps> = ({
 
           {/* Zoomed high-res card */}
           <div
-            className="relative max-h-[88vh] aspect-[9/16] rounded-2xl sm:rounded-3xl overflow-hidden shadow-2xl border-2 border-white/40 animate-scale-up"
+            className="relative max-h-[88vh] max-w-[92vw] rounded-2xl sm:rounded-3xl overflow-hidden shadow-2xl border-2 border-white/40 animate-scale-up"
+            style={{ aspectRatio: cardAspect }}
             onClick={(e) => e.stopPropagation()}
           >
             <img

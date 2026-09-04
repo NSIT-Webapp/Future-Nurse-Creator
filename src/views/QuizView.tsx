@@ -160,8 +160,8 @@ export const QuizView: React.FC<QuizViewProps> = ({
 
             {/* Nurse Mascot: In front of white card (z-20), peeking behind Row A (z-30) */}
             {/* Stacked pre-rendered images guarantee 0ms instant transition without delay or pop-in */}
-            <div className="absolute -top-20 sm:-top-24 md:-top-28 right-2 sm:right-4 md:right-6 w-38 sm:w-46 md:w-52 aspect-[3/4] pointer-events-none z-20 drop-shadow-[0_12px_28px_rgba(0,43,127,0.22)] select-none">
-              <div className="relative w-full h-full animate-float-subtle">
+            <div className="absolute top-3 sm:top-2 md:top-1 right-4 sm:right-5 md:right-6 w-[7.5rem] sm:w-[9.5rem] md:w-44 aspect-[3/4] pointer-events-none z-20 drop-shadow-[0_12px_28px_rgba(0,43,127,0.22)] select-none overflow-visible">
+              <div className="relative w-full h-full animate-float-subtle flex items-start justify-center">
                 {ALL_QUESTION_STEPS.map((step) => {
                   const isCurrent = step === currentStep;
                   return (
@@ -171,7 +171,7 @@ export const QuizView: React.FC<QuizViewProps> = ({
                       alt={`Nurse Character Step ${step}`}
                       loading="eager"
                       decoding="sync"
-                      className={`absolute inset-0 w-full h-full object-contain transition-opacity duration-150 ease-out will-change-[opacity] ${
+                      className={`absolute inset-x-0 top-0 w-full h-full object-contain object-top transition-opacity duration-150 ease-out will-change-[opacity] ${
                         isCurrent ? 'opacity-100 z-10' : 'opacity-0 z-0 pointer-events-none'
                       }`}
                       draggable={false}
