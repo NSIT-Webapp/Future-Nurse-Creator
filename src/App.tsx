@@ -173,9 +173,9 @@ export function App() {
       {/* 3:4 Portrait Content Canvas: fixed 3:4 composition, centered, background-filled around */}
       <div className="canvas-3-4 flex flex-col relative shadow-2xl">
         {/* Kiosk chrome: header with step indicator + reset (shown on quiz/result flow) */}
-        {screen !== 'welcome' && screen !== 'quiz' && screen !== 'character' && (
+        {screen !== 'welcome' && screen !== 'quiz' && screen !== 'character' && screen !== 'analysis' && (
           <Header
-            showReset={screen !== 'analysis' && screen !== 'thank_you_reset'}
+            showReset={screen !== 'thank_you_reset'}
             onReset={handleReset}
           />
         )}
@@ -205,7 +205,17 @@ export function App() {
             onBack={handleBackQuestion}
           />
         )}
-        {screen === 'analysis'     && <AnalysisView onComplete={handleAnalysisComplete} characterType={characterType} />}
+        {screen === 'analysis'     && (
+          <AnalysisView
+            onComplete={handleAnalysisComplete}
+            characterType={characterType}
+            totalQuestions={questionsData.questions.length}
+            onBack={() => {
+              resetActivity();
+              setScreen('character');
+            }}
+          />
+        )}
         {screen === 'reveal'       && result && (
           <RevealView result={result} onNext={handleRevealNext} />
         )}

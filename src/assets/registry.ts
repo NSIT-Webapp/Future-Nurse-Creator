@@ -115,13 +115,13 @@ export const ASSETS = {
         TECH: '/assets/processing/badges/female/TECH.png',
       },
       male: {
-        PED:  PLACEHOLDER('processing/badges/male/PED'),
-        MH:   PLACEHOLDER('processing/badges/male/MH'),
+        PED:  '/assets/processing/badges/male/PED.png',
+        MH:   '/assets/processing/badges/male/MH.png',
         ER:   '/assets/processing/badges/male/ER.png',
         OA:   '/assets/processing/badges/male/OA.png',
         COMM: '/assets/processing/badges/male/COMM.png',
-        INT:  PLACEHOLDER('processing/badges/male/INT'),
-        TECH: PLACEHOLDER('processing/badges/male/TECH'),
+        INT:  '/assets/processing/badges/male/INT.png',
+        TECH: '/assets/processing/badges/male/TECH.png',
       },
     },
   },
@@ -206,3 +206,39 @@ export function getRevealArtworkUrl(pathId: string, gender: 'female' | 'male' | 
   const entry = ASSETS.reveal[pathId as RevealPathKey];
   return entry ? entry[g] : PLACEHOLDER(`reveal/${pathId}_${g}`);
 }
+
+export interface ProcessingBadgeItem {
+  pathId: string;
+  titleEn: string;
+  imgUrl: string;
+}
+
+/**
+ * Returns list of badges for the analyzing screen (8 for female, 7 for male).
+ */
+export function getProcessingBadges(gender: 'female' | 'male' | string = 'female'): ProcessingBadgeItem[] {
+  const isFemale = gender.startsWith('female');
+  if (isFemale) {
+    return [
+      { pathId: 'PED',  titleEn: 'PEDIATRIC NURSE',         imgUrl: ASSETS.processing.badges.female.PED },
+      { pathId: 'MH',   titleEn: 'MENTAL HEALTH NURSE',      imgUrl: ASSETS.processing.badges.female.MH },
+      { pathId: 'ER',   titleEn: 'EMERGENCY NURSE',          imgUrl: ASSETS.processing.badges.female.ER },
+      { pathId: 'OA',   titleEn: 'OLDER ADULT NURSE',        imgUrl: ASSETS.processing.badges.female.OA },
+      { pathId: 'MAT',  titleEn: 'MATERNAL & NEWBORN NURSE', imgUrl: ASSETS.processing.badges.female.MAT },
+      { pathId: 'COMM', titleEn: 'COMMUNITY NURSE',          imgUrl: ASSETS.processing.badges.female.COMM },
+      { pathId: 'INT',  titleEn: 'INTERNATIONAL NURSE',      imgUrl: ASSETS.processing.badges.female.INT },
+      { pathId: 'TECH', titleEn: 'NURSING + TECHNOLOGY',     imgUrl: ASSETS.processing.badges.female.TECH },
+    ];
+  } else {
+    return [
+      { pathId: 'PED',  titleEn: 'PEDIATRIC NURSE',     imgUrl: ASSETS.processing.badges.male.PED },
+      { pathId: 'MH',   titleEn: 'MENTAL HEALTH NURSE',  imgUrl: ASSETS.processing.badges.male.MH },
+      { pathId: 'ER',   titleEn: 'EMERGENCY NURSE',      imgUrl: ASSETS.processing.badges.male.ER },
+      { pathId: 'OA',   titleEn: 'OLDER ADULT NURSE',    imgUrl: ASSETS.processing.badges.male.OA },
+      { pathId: 'COMM', titleEn: 'COMMUNITY NURSE',      imgUrl: ASSETS.processing.badges.male.COMM },
+      { pathId: 'INT',  titleEn: 'INTERNATIONAL NURSE',  imgUrl: ASSETS.processing.badges.male.INT },
+      { pathId: 'TECH', titleEn: 'NURSING + TECHNOLOGY', imgUrl: ASSETS.processing.badges.male.TECH },
+    ];
+  }
+}
+
