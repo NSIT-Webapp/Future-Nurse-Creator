@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import { ChevronLeft, Loader2, Sparkles, Zap } from 'lucide-react';
 import confetti from 'canvas-confetti';
 
@@ -62,6 +62,14 @@ export const AnalysisView: React.FC<AnalysisViewProps> = ({
   const [activeScanIdx, setActiveScanIdx] = useState(0);
   const currentScanningPathId = scanSequence[activeScanIdx] || '';
 
+  // ── Group 2: Badge Suspense Effects State ─────────────────────────────────
+  // revealedRef: tracks which cards have EVER been scanned (avoids stale closure)
+  // revealedSet: same info as a React state for rendering
+  // flipId: the card currently playing its one-shot flip-reveal animation
+  const revealedRef = useRef<Set<string>>(new Set());
+  const [revealedSet, setRevealedSet] = useState<Set<string>>(new Set());
+  const [flipId, setFlipId] = useState<string | null>(null);
+
   // Eagerly ensure all badge images are decoded in memory
   useEffect(() => {
     badges.forEach((b) => {
@@ -78,6 +86,20 @@ export const AnalysisView: React.FC<AnalysisViewProps> = ({
 
     return () => clearInterval(scanInterval);
   }, [scanSequence.length]);
+
+  // First-reveal tracking: when scan visits a card for the first time → trigger flip-reveal
+  useEffect(() => {
+    const id = scanSequence[activeScanIdx];
+    if (!id || revealedRef.current.has(id)) return;
+    revealedRef.current.add(id); // mark immediately via ref to prevent duplicate triggers
+    setFlipId(id);               // start flip animation
+    const t = setTimeout(() => {
+      // After 480ms the flip is complete: permanently reveal the card
+      setRevealedSet((prev) => { const s = new Set(prev); s.add(id); return s; });
+      setFlipId(null);
+    }, 480);
+    return () => clearTimeout(t);
+  }, [activeScanIdx, scanSequence]);
 
   // Complete analysis smoothly over 7.5 seconds with live progress bar
   useEffect(() => {
@@ -114,50 +136,84 @@ export const AnalysisView: React.FC<AnalysisViewProps> = ({
     return '🎉 ค้นพบพลังพยาบาลที่ใช่สำหรับคุณแล้ว!';
   };
 
-  // ── Render Single Role Badge Card (All 8 cards are 100% identical in size and styling) ──────
+  // ── Render Single Role Badge Card — Group 2 Suspense Effects ──────────────
   const renderBadge = (badge: ProcessingBadgeItem, isFlipped: boolean = false) => {
-    const isScanning = currentScanningPathId === badge.pathId;
+    const isScanning  = currentScanningPathId === badge.pathId;
+    const isRevealed  = revealedSet.has(badge.pathId);
+    const isFlipping  = flipId === badge.pathId;
+    const nextScanId  = scanSequence[(activeScanIdx + 1) % scanSequence.length];
+    // Mystery = not yet revealed, not scanning, not mid-flip
+    const isMystery   = !isRevealed && !isScanning && !isFlipping;
+    // Pre-glow = next card about to be scanned (still mysterious)
+    const isNextInLine = isMystery && nextScanId === badge.pathId;
     const theme = BADGE_THEMES[badge.pathId] || { textColor: 'text-[#002B7F]' };
 
     return (
       <div
         key={badge.pathId}
-        className={`flex flex-col items-center justify-start w-[80px] sm:w-[92px] md:w-[104px] transition-all duration-300 select-none relative ${
-          isScanning
-            ? 'scale-110 z-30 drop-shadow-[0_0_22px_rgba(255,51,102,0.95)]'
-            : 'hover:scale-105 drop-shadow-xs z-10'
+        className={`flex flex-col items-center justify-start w-[80px] sm:w-[92px] md:w-[104px] select-none relative ${
+          isFlipping
+            ? 'animate-badge-flip z-40'
+            : isScanning
+            ? 'scale-110 z-30 drop-shadow-[0_0_22px_rgba(255,51,102,0.95)] transition-transform duration-200'
+            : isNextInLine
+            ? 'animate-preglow z-20 scale-105'
+            : isMystery
+            ? 'animate-mystery-flicker z-10'
+            : 'hover:scale-105 z-10 transition-all duration-300'
         }`}
       >
-        {/* Live Scanning Tag */}
-        {isScanning && (
-          <div className="absolute -top-2.5 left-1/2 -translate-x-1/2 bg-[#FF3366] text-white text-[7px] sm:text-[8px] font-black px-1.5 py-0.5 rounded-full uppercase shadow-md flex items-center gap-0.5 whitespace-nowrap animate-pulse z-40">
+        {/* ── Scanning / Unlocked! tag ── */}
+        {(isScanning || isFlipping) && (
+          <div className="absolute -top-3 left-1/2 -translate-x-1/2 bg-[#FF3366] text-white text-[7px] sm:text-[8px] font-black px-1.5 py-0.5 rounded-full uppercase shadow-md flex items-center gap-0.5 whitespace-nowrap animate-pulse z-40">
             <Zap className="w-2.5 h-2.5 fill-current" />
-            <span>SCANNING</span>
+            <span>{isFlipping ? 'UNLOCKED!' : 'SCANNING'}</span>
           </div>
         )}
 
-        {/* Role Badge Icon Box (Strict identical size for all cards) */}
-        <div className={`w-[60px] h-[60px] sm:w-[72px] sm:h-[72px] md:w-[80px] md:h-[80px] flex items-center justify-center shrink-0 ${isScanning ? 'animate-bounce-gentle' : ''}`}>
+        {/* ── NEXT ▶ pre-glow warning tag ── */}
+        {isNextInLine && !isScanning && (
+          <div className="absolute -top-3 left-1/2 -translate-x-1/2 bg-amber-400 text-white text-[7px] font-black px-1.5 py-0.5 rounded-full uppercase flex items-center gap-0.5 whitespace-nowrap z-30 animate-pulse shadow-sm">
+            <span>NEXT ▶</span>
+          </div>
+        )}
+
+        {/* ── Badge Icon Box with Overlay Effects ── */}
+        <div className={`w-[60px] h-[60px] sm:w-[72px] sm:h-[72px] md:w-[80px] md:h-[80px] flex items-center justify-center shrink-0 relative overflow-hidden rounded-xl ${(isScanning || isFlipping) ? 'animate-bounce-gentle' : ''}`}>
+          {/* Badge Image (blurred when mystery) */}
           <img
             src={badge.imgUrl}
             alt={badge.titleEn}
-            className={`w-full h-full object-contain ${isFlipped ? 'scale-x-[-1]' : ''}`}
+            className={`w-full h-full object-contain transition-all duration-300 ${isFlipped ? 'scale-x-[-1]' : ''} ${isMystery ? 'blur-[2px] brightness-75 saturate-50' : ''}`}
             loading="eager"
             decoding="sync"
           />
+
+          {/* 🔮 MYSTERY OVERLAY: Dark gradient + pulsing ? mark (unrevealed cards) */}
+          {isMystery && (
+            <div className="absolute inset-0 rounded-xl bg-gradient-to-br from-purple-950/65 to-orange-950/45 flex items-center justify-center z-20 pointer-events-none">
+              <span className="text-white/95 text-xl sm:text-2xl font-black animate-pulse select-none drop-shadow-[0_0_12px_rgba(251,146,60,0.95)]">?</span>
+            </div>
+          )}
+
+          {/* ✨ RAINBOW SHIMMER OVERLAY: flowing light on all revealed cards */}
+          {isRevealed && !isScanning && <div className="shimmer-overlay" />}
         </div>
 
-        {/* Badge Title (Fixed height ensures uniform card box size across all 8 badges) */}
+        {/* ── Badge Title ── */}
         <div className="h-[22px] sm:h-[26px] md:h-[28px] flex items-center justify-center w-full mt-0.5">
           <span
-            className={`text-[7.5px] sm:text-[8.5px] md:text-[9.5px] font-black tracking-tight uppercase text-center leading-tight px-0.5 drop-shadow-[0_1px_2px_rgba(255,255,255,0.95)] line-clamp-2 ${theme.textColor}`}
+            className={`text-[7.5px] sm:text-[8.5px] md:text-[9.5px] font-black tracking-tight uppercase text-center leading-tight px-0.5 drop-shadow-[0_1px_2px_rgba(255,255,255,0.95)] line-clamp-2 transition-colors duration-300 ${
+              isMystery ? 'text-white/60' : theme.textColor
+            }`}
           >
-            {badge.titleEn}
+            {isMystery ? '???' : badge.titleEn}
           </span>
         </div>
       </div>
     );
   };
+
 
   return (
     <div
