@@ -24,6 +24,27 @@ const BADGE_THEMES: Record<string, { textColor: string }> = {
   MAT:  { textColor: 'text-[#DC2626]' },
 };
 
+const BADGE_POSITIONS: Record<string, string> = {
+  PED:  'left-[5%] sm:left-[7%] top-[12%]',
+  MAT:  'left-1/2 top-[11%] sm:top-[10%] -translate-x-1/2',
+  MH:   'right-[5%] sm:right-[7%] top-[12%]',
+  ER:   'left-[4%] top-[38%]',
+  OA:   'right-[4%] top-[38%]',
+  COMM: 'left-[10%] sm:left-[9%] bottom-[6%] sm:bottom-[10%]',
+  TECH: 'left-1/2 bottom-[1%] sm:bottom-[3%] -translate-x-1/2',
+  INT:  'right-[10%] sm:right-[9%] bottom-[6%] sm:bottom-[10%]',
+};
+
+const BADGE_POSITIONS_MALE: Record<string, string> = {
+  PED:  'left-[6%] sm:left-[8%] top-[13%]',
+  MH:   'right-[6%] sm:right-[8%] top-[13%]',
+  ER:   'left-[5%] top-[40%]',
+  OA:   'right-[5%] top-[40%]',
+  COMM: 'left-[12%] sm:left-[13%] bottom-[6%] sm:bottom-[10%]',
+  TECH: 'left-1/2 bottom-[1%] sm:bottom-[3%] -translate-x-1/2',
+  INT:  'right-[12%] sm:right-[13%] bottom-[6%] sm:bottom-[10%]',
+};
+
 export const AnalysisView: React.FC<AnalysisViewProps> = ({
   onComplete,
   characterType = 'female_student',
@@ -52,6 +73,7 @@ export const AnalysisView: React.FC<AnalysisViewProps> = ({
   const badgeINT  = findBadge('INT');
   const badgeTECH = findBadge('TECH');
   const badgeMAT  = isFemale ? findBadge('MAT') : null;
+  const badgePositions = isFemale ? BADGE_POSITIONS : BADGE_POSITIONS_MALE;
 
   // Scanning sequence order (Circular Clockwise Orbit around center student)
   const scanSequence: string[] = isFemale
@@ -137,7 +159,11 @@ export const AnalysisView: React.FC<AnalysisViewProps> = ({
   };
 
   // ── Render Single Role Badge Card — Group 2 Suspense Effects ──────────────
-  const renderBadge = (badge: ProcessingBadgeItem, isFlipped: boolean = false) => {
+  const renderBadge = (
+    badge: ProcessingBadgeItem,
+    isFlipped: boolean = false,
+    placementClass: string = ''
+  ) => {
     const isScanning  = currentScanningPathId === badge.pathId;
     const isRevealed  = revealedSet.has(badge.pathId);
     const isFlipping  = flipId === badge.pathId;
@@ -151,7 +177,7 @@ export const AnalysisView: React.FC<AnalysisViewProps> = ({
     return (
       <div
         key={badge.pathId}
-        className={`flex flex-col items-center justify-start w-[80px] sm:w-[92px] md:w-[104px] select-none relative ${
+        className={`absolute ${placementClass} flex flex-col items-center justify-start w-[68px] sm:w-[104px] md:w-[122px] select-none ${
           isFlipping
             ? 'animate-badge-flip z-40'
             : isScanning
@@ -179,7 +205,7 @@ export const AnalysisView: React.FC<AnalysisViewProps> = ({
         )}
 
         {/* ── Badge Icon Box with Overlay Effects ── */}
-        <div className={`w-[60px] h-[60px] sm:w-[72px] sm:h-[72px] md:w-[80px] md:h-[80px] flex items-center justify-center shrink-0 relative overflow-hidden rounded-xl ${(isScanning || isFlipping) ? 'animate-bounce-gentle' : ''}`}>
+        <div className={`w-[50px] h-[50px] sm:w-[78px] sm:h-[78px] md:w-[94px] md:h-[94px] flex items-center justify-center shrink-0 relative overflow-hidden rounded-2xl ${(isScanning || isFlipping) ? 'animate-bounce-gentle' : ''}`}>
           {/* Badge Image (blurred when mystery) */}
           <img
             src={badge.imgUrl}
@@ -191,7 +217,7 @@ export const AnalysisView: React.FC<AnalysisViewProps> = ({
 
           {/* 🔮 MYSTERY OVERLAY: Dark gradient + pulsing ? mark (unrevealed cards) */}
           {isMystery && (
-            <div className="absolute inset-0 rounded-xl bg-gradient-to-br from-purple-950/65 to-orange-950/45 flex items-center justify-center z-20 pointer-events-none">
+            <div className="absolute inset-0 rounded-2xl bg-gradient-to-br from-purple-950/65 to-orange-950/45 flex items-center justify-center z-20 pointer-events-none">
               <span className="text-white/95 text-xl sm:text-2xl font-black animate-pulse select-none drop-shadow-[0_0_12px_rgba(251,146,60,0.95)]">?</span>
             </div>
           )}
@@ -201,9 +227,9 @@ export const AnalysisView: React.FC<AnalysisViewProps> = ({
         </div>
 
         {/* ── Badge Title ── */}
-        <div className="h-[22px] sm:h-[26px] md:h-[28px] flex items-center justify-center w-full mt-0.5">
+        <div className="h-[22px] sm:h-[30px] md:h-[34px] flex items-center justify-center w-full mt-0.5 sm:mt-1">
           <span
-            className={`text-[7.5px] sm:text-[8.5px] md:text-[9.5px] font-black tracking-tight uppercase text-center leading-tight px-0.5 drop-shadow-[0_1px_2px_rgba(255,255,255,0.95)] line-clamp-2 transition-colors duration-300 ${
+            className={`text-[7px] sm:text-[10px] md:text-[11px] font-black tracking-tight uppercase text-center leading-tight px-0.5 drop-shadow-[0_1px_2px_rgba(255,255,255,0.95)] line-clamp-2 transition-colors duration-300 ${
               isMystery ? 'text-white/60' : theme.textColor
             }`}
           >
@@ -240,7 +266,7 @@ export const AnalysisView: React.FC<AnalysisViewProps> = ({
       <div className="absolute inset-0 bg-gradient-to-b from-sky-400/10 via-transparent to-blue-900/15 pointer-events-none" />
 
       {/* ── 1. Top Bar: Faculty Logo + Audio Toggle ──────────────────────────── */}
-      <div className="relative z-30 shrink-0 flex items-center justify-between px-3 sm:px-6 pt-2 sm:pt-3 max-w-[720px] mx-auto w-full">
+      <div className="relative z-30 shrink-0 flex items-center justify-between px-4 sm:px-7 pt-3 sm:pt-4 max-w-[820px] mx-auto w-full">
         {/* Faculty Logo Pill */}
         <div className="bg-white/95 backdrop-blur-md rounded-full px-3.5 py-1 shadow-md flex items-center gap-2 border border-white/80">
           <img
@@ -257,7 +283,7 @@ export const AnalysisView: React.FC<AnalysisViewProps> = ({
       </div>
 
       {/* ── 2. Stepper: 1..8 with Step 5 highlighted as ANALYZING ───────────── */}
-      <div className="relative z-30 shrink-0 px-3 sm:px-6 pt-1 pb-3 sm:pb-4 max-w-[720px] mx-auto w-full">
+      <div className="relative z-30 shrink-0 px-4 sm:px-7 pt-2 pb-5 sm:pb-6 max-w-[820px] mx-auto w-full">
         <div className="flex items-center justify-between w-full">
           {stepperSteps.map((stepNum, idx) => {
             const isCompleted = stepNum < 5;
@@ -269,7 +295,7 @@ export const AnalysisView: React.FC<AnalysisViewProps> = ({
                 {/* Step Circle & Badge */}
                 <div className="flex flex-col items-center shrink-0 relative">
                   <div
-                    className={`w-7 h-7 sm:w-8 sm:h-8 rounded-full flex items-center justify-center font-black text-xs sm:text-sm font-heading transition-all duration-300 ${
+                    className={`w-8 h-8 sm:w-10 sm:h-10 rounded-full flex items-center justify-center font-black text-sm sm:text-base font-heading transition-all duration-300 ${
                       isCurrent
                         ? 'bg-gradient-to-tr from-[#FF3366] to-[#FF6584] text-white shadow-[0_0_18px_rgba(255,51,102,0.65)] scale-110 ring-4 ring-rose-200/80'
                         : isCompleted
@@ -282,7 +308,7 @@ export const AnalysisView: React.FC<AnalysisViewProps> = ({
 
                   {/* Pink ANALYZING Pill under step 5 */}
                   {isCurrent && (
-                    <div className="absolute -bottom-4.5 left-1/2 -translate-x-1/2 px-2.5 py-0.5 rounded-full bg-[#FF3366] text-white font-black text-[8px] sm:text-[8.5px] tracking-wider uppercase shadow-sm whitespace-nowrap animate-pulse">
+                    <div className="absolute -bottom-5 left-1/2 -translate-x-1/2 px-3 py-0.5 rounded-full bg-[#FF3366] text-white font-black text-[8.5px] sm:text-[9px] tracking-wider uppercase shadow-sm whitespace-nowrap animate-pulse">
                       ANALYZING
                     </div>
                   )}
@@ -305,9 +331,9 @@ export const AnalysisView: React.FC<AnalysisViewProps> = ({
       </div>
 
       {/* ── 3. Main Stage Card: High-Res Holographic Sky Window ───────────────── */}
-      <div className="relative z-20 flex-1 flex flex-col justify-between w-full max-w-[680px] md:max-w-[740px] mx-auto px-2 sm:px-4 min-h-0 mt-0.5 sm:mt-1">
+      <div className="relative z-20 flex-1 flex flex-col justify-between w-full max-w-[780px] md:max-w-[820px] mx-auto px-3 sm:px-5 min-h-0 mt-1">
         <div
-          className="h-full w-full rounded-3xl shadow-[0_16px_48px_rgba(0,43,127,0.22)] p-2 sm:p-3 flex flex-col justify-between overflow-hidden relative border border-white/80"
+          className="h-full w-full rounded-[2rem] shadow-[0_18px_52px_rgba(0,43,127,0.22)] p-4 sm:p-5 md:p-6 flex flex-col justify-between overflow-hidden relative border-4 border-white/85"
           style={{
             backgroundImage: `url(${ASSETS.processing.innerCardBg})`,
             backgroundRepeat: 'no-repeat',
@@ -316,94 +342,71 @@ export const AnalysisView: React.FC<AnalysisViewProps> = ({
           }}
         >
           {/* Laser Scanner Beam traversing vertically for sci-fi tension */}
-          <div className="absolute inset-x-4 h-1 bg-gradient-to-r from-transparent via-cyan-400 to-transparent shadow-[0_0_16px_#38bdf8] animate-scan-beam pointer-events-none z-20" />
+          <div className="absolute inset-x-8 h-1 bg-gradient-to-r from-transparent via-cyan-400 to-transparent shadow-[0_0_16px_#38bdf8] animate-scan-beam pointer-events-none z-20" />
 
           {/* ── Card Header: Title & Info ── */}
-          <div className="text-center shrink-0 pt-0.5">
+          <div className="text-center shrink-0 pt-1 sm:pt-2">
             {/* Analyzing Pill Badge */}
-            <div className="inline-flex items-center gap-1.5 px-3 py-0.5 rounded-full bg-gradient-to-r from-[#FF5E80] to-[#FF3366] text-white text-[9px] sm:text-[10px] font-black uppercase tracking-widest mb-0.5 shadow-sm">
+            <div className="inline-flex items-center gap-1.5 px-4 py-1 rounded-full bg-gradient-to-r from-[#FF5E80] to-[#FF3366] text-white text-[10px] sm:text-xs font-black uppercase tracking-widest mb-1 shadow-sm">
               <Sparkles className="w-2.5 h-2.5 animate-pulse" />
               <span>ANALYZING</span>
               <Sparkles className="w-2.5 h-2.5 animate-pulse" />
             </div>
 
             {/* Main Headline */}
-            <h2 className="text-xl sm:text-2xl md:text-3xl font-black text-slate-800 tracking-tight font-heading leading-tight drop-shadow-[0_1px_2px_rgba(255,255,255,0.95)]">
+            <h2 className="text-3xl sm:text-4xl md:text-5xl font-black text-slate-800 tracking-tight font-heading leading-tight drop-shadow-[0_1px_2px_rgba(255,255,255,0.95)]">
               <span className="text-[#FF2D55]">AI </span>
               กำลังวิเคราะห์
             </h2>
-            <h3 className="text-xs sm:text-sm md:text-base font-black text-[#0A2540] tracking-tight leading-snug drop-shadow-[0_1px_2px_rgba(255,255,255,0.95)]">
+            <h3 className="text-base sm:text-xl md:text-2xl font-black text-[#0A2540] tracking-tight leading-snug drop-shadow-[0_1px_2px_rgba(255,255,255,0.95)]">
               เส้นทางพยาบาลที่ใช่สำหรับคุณ...
             </h3>
 
             {/* Sub-caption */}
-            <p className="text-[10px] sm:text-xs font-bold text-[#FF3366] mt-0.5 flex items-center justify-center gap-1 drop-shadow-[0_1px_1px_rgba(255,255,255,0.95)]">
+            <p className="text-xs sm:text-sm font-bold text-[#FF3366] mt-1 flex items-center justify-center gap-1 drop-shadow-[0_1px_1px_rgba(255,255,255,0.95)]">
               <span>💕 จากคำตอบทั้ง {totalQuestions} ข้อของคุณ 💕</span>
             </p>
           </div>
 
-          {/* ── Center Stage: 3-Column Radial Orbit (Matching Reference Mockup 1:1) ── */}
-          <div className="flex-1 relative flex items-center justify-between min-h-0 overflow-hidden my-0.5 px-0.5 sm:px-2">
+          {/* ── Center Stage: Radial Orbit Inspired by the Reference Mockup ── */}
+          <div className="flex-1 relative min-h-[330px] sm:min-h-[520px] md:min-h-[600px] overflow-hidden my-1 sm:my-2 px-1 sm:px-2">
 
             {/* Pulsing Concentric Holographic Radar Aura in Center */}
-            <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-64 h-64 sm:w-80 sm:h-80 md:w-96 md:h-96 rounded-full bg-radial from-cyan-300/30 via-pink-300/10 to-transparent animate-pulse pointer-events-none" />
+            <div className="absolute top-[52%] left-1/2 -translate-x-1/2 -translate-y-1/2 w-[72%] max-w-[460px] aspect-square rounded-full bg-radial from-cyan-300/30 via-pink-300/10 to-transparent animate-pulse pointer-events-none" />
+            <div className="absolute top-[58%] left-1/2 -translate-x-1/2 w-[56%] max-w-[360px] h-10 rounded-full border-2 border-cyan-200/60 shadow-[0_0_24px_rgba(56,189,248,0.35)] pointer-events-none" />
 
-            {/* ── COLUMN 1: LEFT FLANK (PED, ER, COMM) ── */}
-            <div className="w-1/3 flex flex-col items-center justify-between h-full py-0.5 z-20">
-              {renderBadge(badgePED, false)}
-              {renderBadge(badgeER, false)}
-              {renderBadge(badgeCOMM, false)}
+            {/* Center Character */}
+            <div className="absolute left-1/2 top-[50%] sm:top-[51%] -translate-x-1/2 -translate-y-1/2 z-10 h-[44%] sm:h-[46%] max-h-[305px] min-h-[170px] sm:min-h-[210px] flex items-center justify-center">
+              <img
+                src={centerCharacterUrl}
+                alt={isFemale ? 'Female Student' : 'Male Student'}
+                className="h-full w-auto max-w-[250px] sm:max-w-[310px] object-contain drop-shadow-[0_16px_32px_rgba(0,43,127,0.36)] animate-float-subtle select-none"
+                loading="eager"
+                decoding="sync"
+              />
             </div>
 
-            {/* ── COLUMN 2: CENTER (MAT at Top, Student in Middle, TECH at Bottom) ── */}
-            <div className="w-1/3 flex flex-col items-center justify-between h-full py-0.5 z-20">
-              {/* Top Center: MAT (Female only) or spacer for Male */}
-              <div className="flex items-start justify-center">
-                {badgeMAT ? (
-                  renderBadge(badgeMAT, false)
-                ) : (
-                  <div className="w-[80px] sm:w-[92px] md:w-[104px] h-[84px] sm:h-[98px]" />
-                )}
-              </div>
-
-              {/* Center Character (Waist-Up Student) */}
-              <div className="flex-1 w-full flex items-center justify-center min-h-0 relative -my-1 z-10">
-                <div className="h-full max-h-[190px] sm:max-h-[235px] md:max-h-[275px] flex items-center justify-center">
-                  <img
-                    src={centerCharacterUrl}
-                    alt={isFemale ? 'Female Student' : 'Male Student'}
-                    className="h-full w-auto max-w-full object-contain drop-shadow-[0_12px_28px_rgba(0,43,127,0.35)] animate-float-subtle select-none scale-105 sm:scale-110"
-                    loading="eager"
-                    decoding="sync"
-                  />
-                </div>
-              </div>
-
-              {/* Bottom Center: TECH (Strictly identical size to all other 7 cards!) */}
-              <div className="flex items-end justify-center">
-                {renderBadge(badgeTECH, false)}
-              </div>
-            </div>
-
-            {/* ── COLUMN 3: RIGHT FLANK (MH, OA, INT - Gaze Inward) ── */}
-            <div className="w-1/3 flex flex-col items-center justify-between h-full py-0.5 z-20">
-              {renderBadge(badgeMH, true)}
-              {renderBadge(badgeOA, true)}
-              {renderBadge(badgeINT, true)}
-            </div>
+            {renderBadge(badgePED, false, badgePositions.PED)}
+            {badgeMAT && renderBadge(badgeMAT, false, badgePositions.MAT)}
+            {renderBadge(badgeMH, true, badgePositions.MH)}
+            {renderBadge(badgeER, false, badgePositions.ER)}
+            {renderBadge(badgeOA, true, badgePositions.OA)}
+            {renderBadge(badgeCOMM, false, badgePositions.COMM)}
+            {renderBadge(badgeTECH, false, badgePositions.TECH)}
+            {renderBadge(badgeINT, true, badgePositions.INT)}
 
           </div>
         </div>
       </div>
 
       {/* ── 4. Floating AI Robot Mascot Status Bar (Outside Card on Campus Background) ──── */}
-      <div className="relative z-20 shrink-0 px-3 sm:px-6 pt-1.5 max-w-[680px] md:max-w-[740px] mx-auto w-full">
-        <div className="bg-white/95 backdrop-blur-md border border-white/90 rounded-2xl px-3.5 py-2 sm:py-2.5 shadow-md flex items-center justify-between gap-3">
+      <div className="relative z-20 shrink-0 px-4 sm:px-7 pt-2 max-w-[780px] md:max-w-[820px] mx-auto w-full">
+        <div className="bg-white/95 backdrop-blur-md border border-white/90 rounded-3xl px-4 py-2.5 sm:py-3 shadow-md flex items-center justify-between gap-3">
           <div className="flex items-center gap-2.5 sm:gap-3 flex-1 min-w-0">
             <img
               src={ASSETS.processing.robot}
               alt="AI Robot Mascot"
-              className="w-9 h-9 sm:w-11 sm:h-11 md:w-12 md:h-12 object-contain drop-shadow-sm animate-mascot-bob shrink-0"
+              className="w-11 h-11 sm:w-14 sm:h-14 md:w-16 md:h-16 object-contain drop-shadow-sm animate-mascot-bob shrink-0"
             />
             <div className="text-left flex-1 min-w-0">
               <div className="flex items-center justify-between text-xs sm:text-sm font-black text-slate-800 font-heading leading-tight">
@@ -431,7 +434,7 @@ export const AnalysisView: React.FC<AnalysisViewProps> = ({
       </div>
 
       {/* ── 5. Bottom Navigation & Action Bar (Outside Card on Campus Background) ──── */}
-      <div className="relative z-20 shrink-0 px-3 sm:px-6 pb-2.5 sm:pb-3.5 pt-1 max-w-[680px] md:max-w-[740px] mx-auto w-full flex items-center justify-between gap-3">
+      <div className="relative z-20 shrink-0 px-4 sm:px-7 pb-3 sm:pb-4 pt-2 max-w-[780px] md:max-w-[820px] mx-auto w-full flex items-center justify-between gap-3">
         {/* Back Button */}
         {onBack ? (
           <button
