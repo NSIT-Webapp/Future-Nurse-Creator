@@ -85,9 +85,6 @@ export const CharacterSelectView: React.FC<CharacterSelectViewProps> = ({
               <span>เลือกคาแรกเตอร์ที่อยากให้แสดงในผลลัพธ์</span>
               <span className="text-pink-400 text-xs">✦</span>
             </p>
-            <p className="text-[11px] sm:text-xs text-slate-400 font-medium">
-              ตัวเลือกนี้ไม่มีผลต่อผลการวิเคราะห์
-            </p>
           </div>
 
           {/* ── 2 Big Choice Cards (Male & Female) ─────────────────────────── */}
@@ -211,12 +208,6 @@ export const CharacterSelectView: React.FC<CharacterSelectViewProps> = ({
               </div>
             </div>
 
-          </div>
-
-          {/* Bottom Hint Note */}
-          <div className="shrink-0 mt-2 flex items-center gap-1.5 text-[11px] sm:text-xs text-slate-500 font-medium">
-            <span className="text-pink-500 font-bold">✦</span>
-            <span>คุณสามารถเปลี่ยน Look ได้ภายหลังในหน้าผลลัพธ์</span>
           </div>
 
           {/* ── Action Buttons Row ─────────────────────────────────────────── */}
