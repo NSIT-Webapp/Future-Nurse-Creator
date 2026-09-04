@@ -101,14 +101,14 @@ export const ASSETS = {
   cards: {
     backgroundOverlay: PLACEHOLDER('cards/background-overlay'),
     templates: {
-      PED:  { female: '/assets/cards/PED_female.jpg',  male: '/assets/cards/PED_male.jpg'   },
-      MH:   { female: '/assets/cards/MH_female.jpg',   male: '/assets/cards/MH_male.jpg'    },
-      ER:   { female: '/assets/cards/ER_female.jpg',   male: '/assets/cards/ER_male.jpg'    },
-      OA:   { female: '/assets/cards/OA_female.jpg',   male: '/assets/cards/OA_male.jpg'    },
-      MAT:  { female: '/assets/cards/MAT_female.jpg',  male: '/assets/cards/MAT_female.jpg' },
-      COMM: { female: '/assets/cards/COMM_female.jpg', male: '/assets/cards/COMM_male.jpg'  },
-      INT:  { female: '/assets/cards/INT_female.jpg',  male: '/assets/cards/INT_female.jpg' },
-      TECH: { female: '/assets/cards/TECH_female.jpg', male: '/assets/cards/TECH_male.jpg'  },
+      PED:  { female: '/assets/cards/PED_female_clean.jpg',  male: '/assets/cards/PED_male_clean.jpg'   },
+      MH:   { female: '/assets/cards/MH_female_clean.jpg',   male: '/assets/cards/MH_male_clean.jpg'    },
+      ER:   { female: '/assets/cards/ER_female_clean.jpg',   male: '/assets/cards/ER_male_clean.jpg'    },
+      OA:   { female: '/assets/cards/OA_female_clean.jpg',   male: '/assets/cards/OA_male_clean.jpg'    },
+      MAT:  { female: '/assets/cards/MAT_female_clean.jpg',  male: '/assets/cards/MAT_female_clean.jpg' },
+      COMM: { female: '/assets/cards/COMM_female_clean.jpg', male: '/assets/cards/COMM_male_clean.jpg'  },
+      INT:  { female: '/assets/cards/INT_female_clean.jpg',  male: '/assets/cards/INT_female_clean.jpg' },
+      TECH: { female: '/assets/cards/TECH_female_clean.jpg', male: '/assets/cards/TECH_male_clean.jpg'  },
     },
   },
 

@@ -688,20 +688,20 @@ function drawDynamicTemplateText(
         x: 186,
         w: 318,
         rows: [
-          { y: 642, h: 238, title: result.superpower, desc: getSuperpowerDesc(result), titleSize: 29, descSize: 22, titleLines: 1, descLines: 3 },
-          { y: 996, h: 238, title: result.aiSkill, desc: getAiSkillDesc(result), titleSize: 27, descSize: 21, titleLines: 2, descLines: 3 },
-          { y: 1320, h: 116, title: FAMILY_LABEL[result.strengthFamily], desc: result.path.moodTone, titleSize: 24, descSize: 19, titleLines: 1, descLines: 2 },
-          { y: 1510, h: 150, title: identity.archetype, desc: result.profileImpact, titleSize: 24, descSize: 19, titleLines: 1, descLines: 3 },
+          { y: 642, h: 238, label: 'Your Superpower', title: result.superpower, desc: getSuperpowerDesc(result), titleSize: 27, descSize: 21, titleLines: 1, descLines: 3 },
+          { y: 996, h: 238, label: 'Your AI Skill', title: result.aiSkill, desc: getAiSkillDesc(result), titleSize: 25, descSize: 20, titleLines: 2, descLines: 3 },
+          { y: 1320, h: 116, label: 'Mood & Tone', title: FAMILY_LABEL[result.strengthFamily], desc: result.path.moodTone, titleSize: 22, descSize: 18, titleLines: 1, descLines: 2 },
+          { y: 1510, h: 150, label: 'Your Impact', title: identity.archetype, desc: result.profileImpact, titleSize: 22, descSize: 18, titleLines: 1, descLines: 3 },
         ],
       }
     : {
         x: 190,
         w: 330,
         rows: [
-          { y: 664, h: 170, title: result.superpower, desc: getSuperpowerDesc(result), titleSize: 28, descSize: 20, titleLines: 2, descLines: 2 },
-          { y: 960, h: 176, title: result.aiSkill, desc: getAiSkillDesc(result), titleSize: 26, descSize: 19, titleLines: 2, descLines: 3 },
-          { y: 1238, h: 118, title: FAMILY_LABEL[result.strengthFamily], desc: result.path.moodTone, titleSize: 23, descSize: 18, titleLines: 1, descLines: 2 },
-          { y: 1470, h: 142, title: identity.archetype, desc: result.profileImpact, titleSize: 23, descSize: 18, titleLines: 1, descLines: 3 },
+          { y: 664, h: 170, label: 'Your Superpower', title: result.superpower, desc: getSuperpowerDesc(result), titleSize: 26, descSize: 19, titleLines: 2, descLines: 2 },
+          { y: 960, h: 176, label: 'Your AI Skill', title: result.aiSkill, desc: getAiSkillDesc(result), titleSize: 24, descSize: 18, titleLines: 2, descLines: 3 },
+          { y: 1238, h: 118, label: 'Mood & Tone', title: FAMILY_LABEL[result.strengthFamily], desc: result.path.moodTone, titleSize: 21, descSize: 17, titleLines: 1, descLines: 2 },
+          { y: 1470, h: 142, label: 'Your Impact', title: identity.archetype, desc: result.profileImpact, titleSize: 21, descSize: 17, titleLines: 1, descLines: 3 },
         ],
       };
 
@@ -716,6 +716,7 @@ function drawDynamicTemplateText(
       y: row.y,
       w: layout.w,
       h: row.h,
+      label: row.label,
       title: row.title,
       desc: row.desc,
       titleSize: row.titleSize,
@@ -736,6 +737,7 @@ function drawDynamicTextPatch(
     y: number;
     w: number;
     h: number;
+    label: string;
     title: string;
     desc: string;
     titleSize: number;
@@ -745,7 +747,7 @@ function drawDynamicTextPatch(
     color: string;
   }
 ) {
-  const { x, y, w, h, title, desc, titleSize, descSize, titleLines, descLines, color } = options;
+  const { x, y, w, h, label, title, desc, titleSize, descSize, titleLines, descLines, color } = options;
 
   ctx.save();
   ctx.shadowColor = 'rgba(0, 43, 127, 0.08)';
@@ -761,12 +763,16 @@ function drawDynamicTextPatch(
   ctx.stroke();
 
   ctx.fillStyle = color;
+  ctx.font = `800 18px ${CARD_FONT}`;
+  ctx.fillText(label, x, y);
+
+  ctx.fillStyle = color;
   ctx.font = `900 ${titleSize}px ${CARD_FONT}`;
-  const renderedTitle = fitWrappedText(ctx, title, x, y, w, titleSize + 6, titleLines);
+  const renderedTitle = fitWrappedText(ctx, title, x, y + 26, w, titleSize + 5, titleLines);
 
   ctx.fillStyle = '#002B7F';
   ctx.font = `700 ${descSize}px ${CARD_FONT}`;
-  const descY = y + renderedTitle * (titleSize + 6) + 8;
+  const descY = y + 34 + renderedTitle * (titleSize + 5) + 8;
   fitWrappedText(ctx, desc, x, descY, w, descSize + 7, descLines);
   ctx.restore();
 }
