@@ -3,7 +3,7 @@ import { ChevronLeft, ArrowRight, Sparkles } from 'lucide-react';
 import confetti from 'canvas-confetti';
 
 import { ResultPayload } from '../types';
-import { ASSETS, getRevealStickers } from '../assets/registry';
+import { ASSETS, getRevealArtworkUrl, getRevealStickers, isPlaceholder } from '../assets/registry';
 import { SoundControl } from '../components/SoundControl';
 import pathsData from '../data/paths.json';
 
@@ -72,6 +72,9 @@ export const RevealView: React.FC<RevealViewProps> = ({ result, onNext, onBack }
     ? '/assets/reveal/stickers/OA/heart-green.png'
     : '/assets/reveal/stickers/COMM/heart-pink.png';
 
+  const revealArtworkUrl = getRevealArtworkUrl(pathId, isFemale ? 'female' : 'male');
+  const hasFullRevealArtwork = !isPlaceholder(revealArtworkUrl);
+
   // ── Effect 3: Star particles (stable across renders) ─────────────────────
   const stars = useMemo(() => generateStars(18), []);
 
@@ -84,6 +87,50 @@ export const RevealView: React.FC<RevealViewProps> = ({ result, onNext, onBack }
       }, 500);
     } catch (_e) {}
   }, [themeColor]);
+
+  if (hasFullRevealArtwork) {
+    return (
+      <div
+        className="relative h-full w-full overflow-hidden select-none bg-cover animate-fade-in"
+        style={{ backgroundImage: `url(${ASSETS.reveal.background})`, backgroundPosition: 'center bottom', backgroundSize: 'cover' }}
+        data-slot="reveal-root"
+      >
+        <div className="absolute inset-0 bg-gradient-to-b from-sky-100/35 via-transparent to-blue-900/10 pointer-events-none" />
+
+        <div className="relative z-10 mx-auto h-full max-w-full" style={{ aspectRatio: '941 / 1672' }}>
+          <img
+            src={revealArtworkUrl}
+            alt={`${displayTitleEn} reveal result`}
+            className="h-full w-full object-contain select-none"
+            loading="eager"
+            decoding="sync"
+          />
+
+          <SoundControl
+            trackUrl={ASSETS.home.bgmTrack}
+            size="lg"
+            className="absolute right-[3.7%] top-[1.55%] z-20 h-[4.6%] min-h-[44px] w-[18%] min-w-[120px] opacity-0"
+          />
+
+          {onBack && (
+            <button
+              type="button"
+              onClick={onBack}
+              className="absolute bottom-[1.3%] left-[6.5%] z-20 h-[6.6%] w-[36%] rounded-full focus:outline-none focus:ring-4 focus:ring-blue-400/60 active:scale-[0.985] transition-transform"
+              aria-label="ย้อนกลับ"
+            />
+          )}
+
+          <button
+            type="button"
+            onClick={onNext}
+            className="absolute bottom-[1.3%] right-[6.7%] z-20 h-[6.6%] w-[45%] rounded-full focus:outline-none focus:ring-4 focus:ring-rose-400/60 active:scale-[0.985] transition-transform"
+            aria-label="ดูการ์ดของฉัน"
+          />
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div
