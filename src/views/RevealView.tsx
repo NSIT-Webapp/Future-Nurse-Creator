@@ -1,12 +1,11 @@
 import React, { useEffect, useMemo } from 'react';
-import { ChevronLeft, ArrowRight, Sparkles } from 'lucide-react';
+import { ChevronLeft, ChevronRight, Sparkles } from 'lucide-react';
 import confetti from 'canvas-confetti';
 
 import { ResultPayload } from '../types';
-import { ASSETS, getRevealArtworkUrl, getRevealStickers, isPlaceholder } from '../assets/registry';
+import { ASSETS, getRevealStickers } from '../assets/registry';
 import { SoundControl } from '../components/SoundControl';
 import pathsData from '../data/paths.json';
-import { getCardIdentity } from '../data/cardIdentity';
 
 interface RevealViewProps {
   result: ResultPayload;
@@ -72,14 +71,10 @@ export const RevealView: React.FC<RevealViewProps> = ({ result, onNext, onBack }
     ? '/assets/reveal/stickers/OA/heart-green.png'
     : '/assets/reveal/stickers/COMM/heart-pink.png';
 
-  const revealArtworkUrl = getRevealArtworkUrl(pathId, isFemale ? 'female' : 'male');
-  const hasFullRevealArtwork = !isPlaceholder(revealArtworkUrl);
-  const cardIdentity = getCardIdentity(result);
-
-  // ── Effect 3: Star particles (stable across renders) ─────────────────────
+  // Star particles (stable across renders)
   const stars = useMemo(() => generateStars(18), []);
 
-  // ── Confetti on mount ─────────────────────────────────────────────────────
+  // Confetti on mount
   useEffect(() => {
     try {
       confetti({ particleCount: 120, spread: 90, origin: { y: 0.35 }, colors: [themeColor, '#FF3366', '#38BDF8', '#F59E0B', '#10B981'] });
@@ -88,62 +83,6 @@ export const RevealView: React.FC<RevealViewProps> = ({ result, onNext, onBack }
       }, 500);
     } catch (_e) {}
   }, [themeColor]);
-
-  if (hasFullRevealArtwork) {
-    return (
-      <div
-        className="relative h-full w-full flex flex-col overflow-hidden select-none bg-cover animate-fade-in"
-        style={{ backgroundImage: `url(${ASSETS.reveal.background})`, backgroundPosition: 'center bottom', backgroundSize: 'cover' }}
-        data-slot="reveal-root"
-      >
-        <div className="absolute inset-0 bg-gradient-to-b from-sky-100/50 via-white/10 to-blue-900/20 pointer-events-none" />
-
-        <div className="relative z-30 shrink-0 flex items-center justify-between px-4 sm:px-6 pt-3 sm:pt-4 max-w-[720px] mx-auto w-full">
-          <div className="bg-white/95 backdrop-blur-md rounded-full px-3 py-1.5 shadow-md flex items-center gap-2 border border-white/80">
-            <img src={ASSETS.home.facultyLogo} alt="มหาวิทยาลัยมหิดล" className="h-7 sm:h-8 w-auto object-contain" />
-          </div>
-          <SoundControl
-            trackUrl={ASSETS.home.bgmTrack}
-            size="md"
-            className="shadow-[0_8px_22px_rgba(29,99,216,0.22)]"
-          />
-        </div>
-
-        <div className="relative z-10 flex-1 min-h-0 flex items-center justify-center px-3 sm:px-5 py-2">
-          <div
-            className="relative w-full overflow-hidden rounded-[2rem] sm:rounded-[2.4rem] shadow-[0_22px_55px_rgba(18,78,145,0.22)]"
-            style={{
-              aspectRatio: '941 / 1118',
-              maxWidth: 'min(100%, calc((100dvh - 9.75rem) * 941 / 1118))',
-              maxHeight: '100%',
-            }}
-          >
-            <img
-              src={revealArtworkUrl}
-              alt={`${displayTitleEn} reveal result`}
-              className="absolute left-0 w-full select-none"
-              style={{ top: '-35.1%' }}
-              loading="eager"
-              decoding="sync"
-            />
-          </div>
-        </div>
-
-        <div className="relative z-30 shrink-0 px-4 sm:px-6 pb-4 sm:pb-5 pt-2 max-w-[680px] mx-auto w-full flex items-center justify-between gap-3">
-          {onBack ? (
-            <button onClick={onBack} className="min-h-[52px] flex-1 px-4 py-3 rounded-full bg-white/95 hover:bg-white text-[#002B7F] font-black text-base sm:text-lg border border-white shadow-[0_10px_24px_rgba(29,99,216,0.18)] flex items-center justify-center gap-2 active:scale-95 transition-all focus:outline-none focus:ring-4 focus:ring-blue-400/40">
-              <ChevronLeft className="w-6 h-6 text-[#002B7F]" />
-              <span>ย้อนกลับ</span>
-            </button>
-          ) : <div className="flex-1" />}
-          <button onClick={onNext} className="min-h-[52px] flex-[1.45] px-4 py-3 rounded-full bg-gradient-to-r from-[#FF3366] via-[#FF5E80] to-[#FF3366] hover:from-[#FF2D55] hover:to-[#FF5E80] text-white font-black text-base sm:text-lg shadow-[0_12px_30px_rgba(255,51,102,0.36)] flex items-center justify-center gap-2 active:scale-95 transition-all animate-cta-pulse focus:outline-none focus:ring-4 focus:ring-rose-400/40">
-            <span>ดูการ์ดของฉัน</span>
-            <ArrowRight className="w-6 h-6" />
-          </button>
-        </div>
-      </div>
-    );
-  }
 
   return (
     <div
@@ -160,11 +99,16 @@ export const RevealView: React.FC<RevealViewProps> = ({ result, onNext, onBack }
         /* ── Aura glow ── */
         @keyframes aura-pulse { 0%,100%{opacity:.6;transform:translateX(-50%) scale(1);} 50%{opacity:.9;transform:translateX(-50%) scale(1.06);} }
 
-        /* ── CTA button ── */
-        @keyframes cta-pulse { 0%,100%{box-shadow:0 6px 24px rgba(255,51,102,.45);} 50%{box-shadow:0 8px 32px rgba(255,51,102,.7);} }
-        .animate-cta-pulse { animation: cta-pulse 2.5s ease-in-out infinite; }
+        /* ── CTA Button Pulse & Shimmer ── */
+        @keyframes cta-glow {
+          0%, 100% { box-shadow: 0 8px 28px rgba(255, 51, 102, 0.45), 0 0 0 0 rgba(255, 51, 102, 0.2); }
+          50% { box-shadow: 0 12px 36px rgba(255, 51, 102, 0.7), 0 0 0 8px rgba(255, 51, 102, 0); }
+        }
+        .btn-next-cta {
+          animation: cta-glow 2.5s ease-in-out infinite;
+        }
 
-        /* ── EFFECT 1: Holographic shimmer on title ── */
+        /* ── Holographic shimmer on title ── */
         @keyframes shimmer-sweep {
           0%   { background-position: -200% center; }
           100% { background-position: 200% center; }
@@ -189,7 +133,7 @@ export const RevealView: React.FC<RevealViewProps> = ({ result, onNext, onBack }
           filter: drop-shadow(0 2px 8px rgba(0,0,0,0.18)) drop-shadow(0 0 20px rgba(255,255,255,0.5));
         }
 
-        /* ── EFFECT 2: Character rise-in from bottom ── */
+        /* ── Character rise-in from bottom ── */
         @keyframes char-rise-in {
           0%   { transform: translateY(60px) scale(0.85); opacity: 0; }
           65%  { transform: translateY(0px) scale(1.01); opacity: 1; }
@@ -201,7 +145,7 @@ export const RevealView: React.FC<RevealViewProps> = ({ result, onNext, onBack }
           opacity: 0;
         }
 
-        /* ── EFFECT 3: Star particles float up ── */
+        /* ── Star particles float up ── */
         @keyframes star-float {
           0%   { transform: translateY(0px) scale(1); opacity: var(--star-opacity); }
           50%  { transform: translateY(-30vh) scale(1.3); opacity: calc(var(--star-opacity) * 0.8); }
@@ -215,13 +159,6 @@ export const RevealView: React.FC<RevealViewProps> = ({ result, onNext, onBack }
           animation: star-float var(--star-dur) ease-in-out infinite;
           animation-delay: var(--star-delay);
           pointer-events: none;
-        }
-        .star-particle::after {
-          content: '';
-          position: absolute;
-          inset: -2px;
-          border-radius: 50%;
-          background: radial-gradient(circle, rgba(255,255,255,1) 0%, transparent 70%);
         }
 
         /* ── Header fade-slide in ── */
@@ -244,7 +181,7 @@ export const RevealView: React.FC<RevealViewProps> = ({ result, onNext, onBack }
       {/* Sky gradient overlay */}
       <div className="absolute inset-0 bg-gradient-to-b from-white/10 via-transparent to-blue-900/20 pointer-events-none" />
 
-      {/* ── EFFECT 3: Star Particles ─────────────────────────────────────── */}
+      {/* Star Particles */}
       <div className="absolute inset-0 overflow-hidden pointer-events-none z-0">
         {stars.map((s) => (
           <div
@@ -263,7 +200,7 @@ export const RevealView: React.FC<RevealViewProps> = ({ result, onNext, onBack }
         ))}
       </div>
 
-      {/* Top Bar */}
+      {/* ── 1. Top Bar ──────────────────────────────────────────────────────── */}
       <div className="relative z-30 shrink-0 flex items-center justify-between px-3 sm:px-5 pt-2.5 sm:pt-3 max-w-[720px] mx-auto w-full header-slide-in">
         <div className="bg-white/95 backdrop-blur-md rounded-full px-3 py-1 shadow-md flex items-center gap-2 border border-white/80">
           <img src={ASSETS.home.facultyLogo} alt="มหาวิทยาลัยมหิดล" className="h-6 sm:h-7 w-auto object-contain" />
@@ -271,7 +208,7 @@ export const RevealView: React.FC<RevealViewProps> = ({ result, onNext, onBack }
         <SoundControl trackUrl={ASSETS.home.bgmTrack} size="md" />
       </div>
 
-      {/* Main Content */}
+      {/* ── 2. Main Content Area ────────────────────────────────────────────── */}
       <div className="relative z-20 flex-1 flex flex-col min-h-0 w-full max-w-[680px] mx-auto px-3 sm:px-4">
 
         {/* Header Block */}
@@ -291,7 +228,7 @@ export const RevealView: React.FC<RevealViewProps> = ({ result, onNext, onBack }
             <span>💕</span><span>จากคำตอบทั้ง 5 ข้อของคุณ</span><span>💕</span>
           </p>
 
-          {/* ── EFFECT 1: Holographic Shimmer Title ── */}
+          {/* Holographic Shimmer Title */}
           <h2
             className="text-[28px] sm:text-[34px] md:text-[40px] font-black uppercase leading-tight font-heading mt-1.5 title-shimmer"
             style={{ '--title-color': bubbleTextColor } as React.CSSProperties}
@@ -305,15 +242,6 @@ export const RevealView: React.FC<RevealViewProps> = ({ result, onNext, onBack }
               <span>{displayRibbonTh}</span>
               <span className="opacity-90">♥</span>
             </div>
-          </div>
-
-          <div className="mt-1.5 inline-flex max-w-full flex-col items-center rounded-2xl bg-white/90 px-4 py-1.5 shadow-md border border-white/80">
-            <span className="text-[10px] sm:text-[11px] font-black uppercase tracking-widest" style={{ color: bubbleTextColor }}>
-              {cardIdentity.archetype}
-            </span>
-            <span className="text-[10px] sm:text-[11px] font-bold text-slate-600 leading-tight">
-              {cardIdentity.thName}
-            </span>
           </div>
         </div>
 
@@ -338,7 +266,7 @@ export const RevealView: React.FC<RevealViewProps> = ({ result, onNext, onBack }
             })}
           </div>
 
-          {/* ── EFFECT 2: Character rise-in from bottom ── */}
+          {/* Character */}
           <div className="relative z-10 flex items-end justify-center w-full h-full max-h-[340px] sm:max-h-[390px] md:max-h-[440px]">
             <img
               src={characterImgUrl}
@@ -380,17 +308,33 @@ export const RevealView: React.FC<RevealViewProps> = ({ result, onNext, onBack }
         </div>
       </div>
 
-      {/* Bottom Nav */}
-      <div className="relative z-30 shrink-0 px-3 sm:px-5 pb-3 sm:pb-4 pt-2 max-w-[680px] mx-auto w-full flex items-center justify-between gap-3">
+      {/* ── 3. Bottom Navigation Buttons (Styled to Match Mockup) ─────────────── */}
+      <div className="relative z-30 shrink-0 px-3 sm:px-6 pb-3.5 sm:pb-5 pt-2 max-w-[680px] mx-auto w-full flex items-center justify-between gap-3 sm:gap-4">
+        {/* Back Button: White pill with blue icon and navy text */}
         {onBack ? (
-          <button onClick={onBack} className="px-5 py-2 sm:py-2.5 rounded-full bg-white/95 hover:bg-white text-[#002B7F] font-bold text-xs sm:text-sm border border-white shadow-md flex items-center gap-1.5 active:scale-95 transition-all">
-            <ChevronLeft className="w-4 h-4 text-[#002B7F]" />
+          <button
+            onClick={onBack}
+            className="flex-1 max-w-[160px] sm:max-w-[190px] h-12 sm:h-13 rounded-full bg-white/95 hover:bg-white text-[#002B7F] font-black text-sm sm:text-base border-2 border-white/90 shadow-[0_6px_20px_rgba(0,43,127,0.12)] flex items-center justify-center gap-2 active:scale-95 transition-all cursor-pointer backdrop-blur-md"
+          >
+            <ChevronLeft className="w-5 h-5 text-[#002B7F] stroke-[2.5]" />
             <span>ย้อนกลับ</span>
           </button>
-        ) : <div />}
-        <button onClick={onNext} className="px-6 sm:px-8 py-2.5 sm:py-3 rounded-full bg-gradient-to-r from-[#FF3366] via-[#FF5E80] to-[#FF3366] hover:from-[#FF2D55] hover:to-[#FF5E80] text-white font-black text-xs sm:text-sm shadow-lg flex items-center gap-2 active:scale-95 transition-all animate-cta-pulse">
-          <span>ดูการ์ดของฉัน</span>
-          <ArrowRight className="w-4 h-4" />
+        ) : (
+          <div />
+        )}
+
+        {/* View My Card CTA Button: Glossy Pink Gradient with Right Arrow */}
+        <button
+          onClick={onNext}
+          className="flex-[2] max-w-[280px] sm:max-w-[320px] h-12 sm:h-13 rounded-full bg-gradient-to-r from-[#FF3366] via-[#FF537A] to-[#FF3366] text-white font-black text-sm sm:text-base shadow-lg shadow-rose-500/35 flex items-center justify-center gap-2 active:scale-95 transition-all cursor-pointer btn-next-cta relative overflow-hidden group"
+        >
+          {/* Glass sheen highlight on top */}
+          <div className="absolute inset-x-0 top-0 h-[45%] bg-gradient-to-b from-white/35 to-transparent rounded-t-full pointer-events-none" />
+          
+          <span className="relative z-10 tracking-wide drop-shadow-[0_1px_2px_rgba(0,0,0,0.2)]">
+            ดูการ์ดของฉัน
+          </span>
+          <ChevronRight className="relative z-10 w-5 h-5 text-white stroke-[3] group-hover:translate-x-0.5 transition-transform" />
         </button>
       </div>
     </div>

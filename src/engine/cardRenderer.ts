@@ -233,6 +233,7 @@ async function renderTemplateCard(
     ctx.restore();
   }
 
+  drawDynamicTemplateText(ctx, result, sourceWidth, sourceHeight, scaleX, scaleY);
   drawCollectibleFinish(ctx, result, scaleX, scaleY);
 }
 
@@ -666,6 +667,134 @@ function drawCollectibleFinish(
   fitText(ctx, identity.thName, ribbonX + ribbonW / 2, ribbonY + 52, ribbonW - 112, 21);
 
   ctx.restore();
+}
+
+function drawDynamicTemplateText(
+  ctx: CanvasRenderingContext2D,
+  result: ResultPayload,
+  sourceWidth: number,
+  sourceHeight: number,
+  scaleX = 1,
+  scaleY = 1
+) {
+  const themeColor = result.path.color || '#2563EB';
+  const identity = getCardIdentity(result);
+  const sourceRatio = sourceWidth / sourceHeight;
+  const isNarrowCard = sourceRatio < 0.62;
+  const isPedFemale = result.pathId === 'PED' && result.characterType === 'female_student';
+
+  const layout = isPedFemale || isNarrowCard
+    ? {
+        x: 186,
+        w: 318,
+        rows: [
+          { y: 642, h: 238, title: result.superpower, desc: getSuperpowerDesc(result), titleSize: 29, descSize: 22, titleLines: 1, descLines: 3 },
+          { y: 996, h: 238, title: result.aiSkill, desc: getAiSkillDesc(result), titleSize: 27, descSize: 21, titleLines: 2, descLines: 3 },
+          { y: 1320, h: 116, title: FAMILY_LABEL[result.strengthFamily], desc: result.path.moodTone, titleSize: 24, descSize: 19, titleLines: 1, descLines: 2 },
+          { y: 1510, h: 150, title: identity.archetype, desc: result.profileImpact, titleSize: 24, descSize: 19, titleLines: 1, descLines: 3 },
+        ],
+      }
+    : {
+        x: 190,
+        w: 330,
+        rows: [
+          { y: 664, h: 170, title: result.superpower, desc: getSuperpowerDesc(result), titleSize: 28, descSize: 20, titleLines: 2, descLines: 2 },
+          { y: 960, h: 176, title: result.aiSkill, desc: getAiSkillDesc(result), titleSize: 26, descSize: 19, titleLines: 2, descLines: 3 },
+          { y: 1238, h: 118, title: FAMILY_LABEL[result.strengthFamily], desc: result.path.moodTone, titleSize: 23, descSize: 18, titleLines: 1, descLines: 2 },
+          { y: 1470, h: 142, title: identity.archetype, desc: result.profileImpact, titleSize: 23, descSize: 18, titleLines: 1, descLines: 3 },
+        ],
+      };
+
+  ctx.save();
+  ctx.scale(scaleX, scaleY);
+  ctx.textAlign = 'left';
+  ctx.textBaseline = 'top';
+
+  layout.rows.forEach((row) => {
+    drawDynamicTextPatch(ctx, {
+      x: layout.x,
+      y: row.y,
+      w: layout.w,
+      h: row.h,
+      title: row.title,
+      desc: row.desc,
+      titleSize: row.titleSize,
+      descSize: row.descSize,
+      titleLines: row.titleLines,
+      descLines: row.descLines,
+      color: themeColor,
+    });
+  });
+
+  ctx.restore();
+}
+
+function drawDynamicTextPatch(
+  ctx: CanvasRenderingContext2D,
+  options: {
+    x: number;
+    y: number;
+    w: number;
+    h: number;
+    title: string;
+    desc: string;
+    titleSize: number;
+    descSize: number;
+    titleLines: number;
+    descLines: number;
+    color: string;
+  }
+) {
+  const { x, y, w, h, title, desc, titleSize, descSize, titleLines, descLines, color } = options;
+
+  ctx.save();
+  ctx.shadowColor = 'rgba(0, 43, 127, 0.08)';
+  ctx.shadowBlur = 12;
+  ctx.shadowOffsetY = 4;
+  ctx.fillStyle = 'rgba(255, 255, 255, 0.82)';
+  roundRect(ctx, x - 10, y - 8, w + 20, h + 16, 16);
+  ctx.fill();
+  ctx.shadowColor = 'transparent';
+  ctx.strokeStyle = hexToRgba(color, 0.18);
+  ctx.lineWidth = 1.2;
+  roundRect(ctx, x - 10, y - 8, w + 20, h + 16, 16);
+  ctx.stroke();
+
+  ctx.fillStyle = color;
+  ctx.font = `900 ${titleSize}px ${CARD_FONT}`;
+  const renderedTitle = fitWrappedText(ctx, title, x, y, w, titleSize + 6, titleLines);
+
+  ctx.fillStyle = '#002B7F';
+  ctx.font = `700 ${descSize}px ${CARD_FONT}`;
+  const descY = y + renderedTitle * (titleSize + 6) + 8;
+  fitWrappedText(ctx, desc, x, descY, w, descSize + 7, descLines);
+  ctx.restore();
+}
+
+function fitWrappedText(
+  ctx: CanvasRenderingContext2D,
+  text: string,
+  x: number,
+  y: number,
+  maxWidth: number,
+  lineHeight: number,
+  maxLines: number
+) {
+  const lines = wrapThaiText(ctx, text, maxWidth);
+  const visibleLines = lines.slice(0, maxLines);
+  if (lines.length > maxLines && visibleLines.length) {
+    let last = visibleLines[visibleLines.length - 1];
+    while (last.length > 0 && ctx.measureText(`${last}...`).width > maxWidth) {
+      last = last.slice(0, -1);
+    }
+    visibleLines[visibleLines.length - 1] = `${last.trim()}...`;
+  }
+
+  visibleLines.forEach((line, index) => {
+    ctx.fillText(line, x, y + index * lineHeight);
+  });
+
+  return Math.max(visibleLines.length, 1);
 }
 
 function fitText(

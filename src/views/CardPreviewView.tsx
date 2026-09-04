@@ -131,7 +131,7 @@ export const CardPreviewView: React.FC<CardPreviewViewProps> = ({
       <div className="absolute top-20 left-6 text-pink-300/60 text-lg sm:text-xl pointer-events-none animate-pulse">
         💖
       </div>
-      <div className="absolute top-36 right-8 text-amber-300/70 text-base sm:text-lg pointer-events-none animate-bounce">
+      <div className="absolute top-36 right-8 text-amber-300/70 text-base sm:text-lg pointer-events-none animate-pulse">
         ✨
       </div>
       <div className="absolute bottom-28 left-8 text-amber-300/60 text-sm sm:text-base pointer-events-none">
