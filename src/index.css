@@ -1,0 +1,95 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  html, body {
+    height: 100%;
+    margin: 0;
+    padding: 0;
+    -webkit-tap-highlight-color: transparent;
+    -webkit-touch-callout: none;
+    user-select: none;
+    background-color: #040d1a;
+  }
+}
+
+/* ── Fixed 3:4 Content Canvas ───────────────────────────────────────────────
+ * Preserves the exact 3:4 design composition across any display:
+ * - On 3:4 native viewports (e.g. iPad 7/8/9 810×1080): fills exactly (0px unused)
+ * - On taller portrait viewports (e.g. iPad 10 / Air 820×1180, Pro 11 834×1194):
+ *     fits by width, centers vertically, background extends top/bottom
+ * - On wider landscape displays (e.g. 1080p, 4K):
+ *     fits by height, centers horizontally, background extends left/right
+ * Never stretches or distorts the 3:4 design composition.
+ */
+.canvas-3-4 {
+  width: min(100vw, calc(100dvh * 3 / 4), calc(100vh * 3 / 4));
+  height: min(100dvh, min(100vh, calc(100vw * 4 / 3)));
+  aspect-ratio: 3 / 4;
+}
+
+/* Custom animations */
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(6px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes scaleUp {
+  from { opacity: 0; transform: scale(0.94); }
+  to { opacity: 1; transform: scale(1); }
+}
+
+@keyframes floatSubtle {
+  0%, 100% { transform: translateY(0px); }
+  50% { transform: translateY(-3px); }
+}
+
+@keyframes mascotBob {
+  0%, 100% { transform: translateY(0px) rotate(0deg); }
+  50% { transform: translateY(-2px) rotate(1.5deg); }
+}
+
+@keyframes ctaPulseSoft {
+  0%, 100% {
+    box-shadow: 0 8px 25px rgba(255, 51, 102, 0.4);
+    transform: scale(1);
+  }
+  50% {
+    box-shadow: 0 10px 30px rgba(255, 51, 102, 0.55);
+    transform: scale(1.008);
+  }
+}
+
+.animate-fade-in {
+  animation: fadeIn 0.35s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+.animate-scale-up {
+  animation: scaleUp 0.3s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+.animate-float-subtle {
+  animation: floatSubtle 4s ease-in-out infinite;
+}
+
+.animate-mascot-bob {
+  animation: mascotBob 3.5s ease-in-out infinite;
+}
+
+.animate-cta-pulse {
+  animation: ctaPulseSoft 2.8s ease-in-out infinite;
+}
+
+/* Custom Scrollbar */
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+::-webkit-scrollbar-track {
+  background: rgba(0, 0, 0, 0.2);
+}
+::-webkit-scrollbar-thumb {
+  background: rgba(255, 255, 255, 0.2);
+  border-radius: 3px;
+}

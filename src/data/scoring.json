@@ -1,0 +1,89 @@
+{
+  "pathScoring": {
+    "q1": {
+      "A": { "PED":0, "MH":0, "ER":3, "OA":1, "MAT":1, "COMM":0, "INT":0, "TECH":2 },
+      "B": { "PED":2, "MH":3, "ER":0, "OA":1, "MAT":2, "COMM":0, "INT":0, "TECH":0 },
+      "C": { "PED":1, "MH":0, "ER":1, "OA":3, "MAT":2, "COMM":0, "INT":0, "TECH":0 },
+      "D": { "PED":0, "MH":0, "ER":0, "OA":0, "MAT":1, "COMM":3, "INT":2, "TECH":0 },
+      "E": { "PED":0, "MH":0, "ER":1, "OA":0, "MAT":0, "COMM":1, "INT":1, "TECH":3 },
+      "F": { "PED":1, "MH":1, "ER":1, "OA":1, "MAT":1, "COMM":2, "INT":3, "TECH":1 }
+    },
+    "q2": {
+      "A": { "PED":1, "MH":3, "ER":0, "OA":1, "MAT":2, "COMM":0, "INT":0, "TECH":0 },
+      "B": { "PED":0, "MH":0, "ER":3, "OA":0, "MAT":0, "COMM":1, "INT":0, "TECH":2 },
+      "C": { "PED":3, "MH":1, "ER":0, "OA":1, "MAT":1, "COMM":1, "INT":2, "TECH":0 },
+      "D": { "PED":1, "MH":1, "ER":0, "OA":3, "MAT":2, "COMM":0, "INT":0, "TECH":0 },
+      "E": { "PED":0, "MH":0, "ER":0, "OA":0, "MAT":1, "COMM":3, "INT":2, "TECH":0 },
+      "F": { "PED":0, "MH":0, "ER":1, "OA":0, "MAT":0, "COMM":1, "INT":1, "TECH":3 }
+    },
+    "q3": {
+      "A": { "PED":2, "MH":3, "ER":0, "OA":1, "MAT":2, "COMM":0, "INT":0, "TECH":0 },
+      "B": { "PED":0, "MH":0, "ER":3, "OA":1, "MAT":0, "COMM":2, "INT":0, "TECH":1 },
+      "C": { "PED":1, "MH":0, "ER":1, "OA":3, "MAT":2, "COMM":0, "INT":0, "TECH":0 },
+      "D": { "PED":2, "MH":1, "ER":0, "OA":0, "MAT":1, "COMM":2, "INT":3, "TECH":0 },
+      "E": { "PED":1, "MH":0, "ER":1, "OA":0, "MAT":0, "COMM":0, "INT":1, "TECH":3 },
+      "F": { "PED":0, "MH":1, "ER":0, "OA":0, "MAT":0, "COMM":2, "INT":3, "TECH":0 }
+    },
+    "q4": {
+      "A": { "PED":2, "MH":3, "ER":0, "OA":1, "MAT":2, "COMM":0, "INT":0, "TECH":0 },
+      "B": { "PED":1, "MH":0, "ER":1, "OA":3, "MAT":2, "COMM":0, "INT":0, "TECH":0 },
+      "C": { "PED":0, "MH":0, "ER":3, "OA":0, "MAT":1, "COMM":0, "INT":0, "TECH":2 },
+      "D": { "PED":0, "MH":1, "ER":0, "OA":1, "MAT":0, "COMM":3, "INT":2, "TECH":0 },
+      "E": { "PED":0, "MH":1, "ER":1, "OA":1, "MAT":1, "COMM":1, "INT":3, "TECH":2 },
+      "F": { "PED":3, "MH":2, "ER":0, "OA":0, "MAT":1, "COMM":1, "INT":2, "TECH":0 }
+    },
+    "q5": {
+      "A": { "PED":2, "MH":3, "ER":0, "OA":1, "MAT":2, "COMM":0, "INT":0, "TECH":0 },
+      "B": { "PED":0, "MH":0, "ER":3, "OA":0, "MAT":0, "COMM":0, "INT":0, "TECH":2 },
+      "C": { "PED":3, "MH":1, "ER":0, "OA":1, "MAT":1, "COMM":1, "INT":1, "TECH":2 },
+      "D": { "PED":1, "MH":0, "ER":0, "OA":2, "MAT":1, "COMM":3, "INT":1, "TECH":0 },
+      "E": { "PED":0, "MH":1, "ER":0, "OA":0, "MAT":0, "COMM":2, "INT":3, "TECH":0 },
+      "F": { "PED":0, "MH":0, "ER":1, "OA":0, "MAT":0, "COMM":1, "INT":1, "TECH":3 }
+    }
+  },
+  "traitScoring": {
+    "q1": {
+      "A": { "EMP":0, "OBS":1, "ACT":3, "COM":0, "COL":0, "INN":0 },
+      "B": { "EMP":3, "OBS":0, "ACT":0, "COM":1, "COL":0, "INN":0 },
+      "C": { "EMP":1, "OBS":3, "ACT":0, "COM":0, "COL":0, "INN":0 },
+      "D": { "EMP":0, "OBS":0, "ACT":0, "COM":1, "COL":3, "INN":0 },
+      "E": { "EMP":0, "OBS":0, "ACT":1, "COM":0, "COL":0, "INN":3 },
+      "F": { "EMP":0, "OBS":2, "ACT":0, "COM":2, "COL":0, "INN":0 }
+    },
+    "q2": {
+      "A": { "EMP":3, "OBS":0, "ACT":0, "COM":0, "COL":0, "INN":0 },
+      "B": { "EMP":0, "OBS":0, "ACT":3, "COM":0, "COL":0, "INN":0 },
+      "C": { "EMP":1, "OBS":0, "ACT":0, "COM":3, "COL":0, "INN":0 },
+      "D": { "EMP":2, "OBS":2, "ACT":0, "COM":0, "COL":0, "INN":0 },
+      "E": { "EMP":0, "OBS":0, "ACT":0, "COM":1, "COL":3, "INN":0 },
+      "F": { "EMP":0, "OBS":0, "ACT":0, "COM":0, "COL":0, "INN":3 }
+    },
+    "q3": {
+      "A": { "EMP":3, "OBS":0, "ACT":0, "COM":0, "COL":0, "INN":0 },
+      "B": { "EMP":0, "OBS":0, "ACT":2, "COM":0, "COL":1, "INN":0 },
+      "C": { "EMP":0, "OBS":3, "ACT":0, "COM":0, "COL":0, "INN":0 },
+      "D": { "EMP":0, "OBS":0, "ACT":0, "COM":3, "COL":1, "INN":0 },
+      "E": { "EMP":0, "OBS":0, "ACT":0, "COM":0, "COL":0, "INN":3 },
+      "F": { "EMP":0, "OBS":0, "ACT":0, "COM":1, "COL":3, "INN":0 }
+    },
+    "q4": {
+      "A": { "EMP":3, "OBS":0, "ACT":0, "COM":1, "COL":0, "INN":0 },
+      "B": { "EMP":0, "OBS":3, "ACT":0, "COM":0, "COL":0, "INN":0 },
+      "C": { "EMP":0, "OBS":1, "ACT":3, "COM":0, "COL":0, "INN":0 },
+      "D": { "EMP":0, "OBS":2, "ACT":0, "COM":0, "COL":2, "INN":0 },
+      "E": { "EMP":0, "OBS":2, "ACT":1, "COM":0, "COL":0, "INN":0 },
+      "F": { "EMP":1, "OBS":0, "ACT":0, "COM":3, "COL":0, "INN":0 }
+    },
+    "q5": {
+      "A": { "EMP":3, "OBS":0, "ACT":0, "COM":0, "COL":0, "INN":0 },
+      "B": { "EMP":0, "OBS":0, "ACT":3, "COM":0, "COL":0, "INN":0 },
+      "C": { "EMP":0, "OBS":0, "ACT":0, "COM":3, "COL":0, "INN":0 },
+      "D": { "EMP":1, "OBS":0, "ACT":0, "COM":0, "COL":3, "INN":0 },
+      "E": { "EMP":0, "OBS":0, "ACT":0, "COM":1, "COL":3, "INN":0 },
+      "F": { "EMP":0, "OBS":0, "ACT":0, "COM":0, "COL":0, "INN":3 }
+    }
+  },
+  "pathTieBreaker": ["q5", "q1", "q4"],
+  "strengthTieBreaker": ["q5", "q3", "q2", "q1", "q4"],
+  "pathOrder": ["PED", "MH", "ER", "OA", "MAT", "COMM", "INT", "TECH"]
+}

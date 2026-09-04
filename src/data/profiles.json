@@ -1,0 +1,138 @@
+{
+  "PED": {
+    "HUMAN_CONNECTION": {
+      "superpower": "Gentle Connector",
+      "aiSkill": "Kid-Friendly Education Creator",
+      "impact": "ช่วยทำให้เรื่องที่น่ากังวล กลายเป็นประสบการณ์ที่เด็กและครอบครัวรู้สึกปลอดภัยขึ้น"
+    },
+    "CLINICAL_AWARENESS": {
+      "superpower": "Thoughtful Observer",
+      "aiSkill": "Smart Care Insight Explorer",
+      "impact": "มองเห็นรายละเอียดเล็ก ๆ ที่ช่วยให้การดูแลเด็กตอบโจทย์แต่ละคนมากขึ้น"
+    },
+    "FUTURE_COLLABORATION": {
+      "superpower": "Playful Problem Solver",
+      "aiSkill": "Creative Health Content Maker",
+      "impact": "เปลี่ยนเรื่องสุขภาพที่เข้าใจยาก ให้กลายเป็นสิ่งที่เด็กเรียนรู้ได้อย่างสนุก"
+    }
+  },
+  "MH": {
+    "HUMAN_CONNECTION": {
+      "superpower": "Deep Listener",
+      "aiSkill": "Emotional Support Experience Designer",
+      "impact": "สร้างพื้นที่ปลอดภัยทางอารมณ์ที่ทำให้ผู้คนกล้าบอกเล่าและเริ่มต้นฟื้นฟูตนเอง"
+    },
+    "CLINICAL_AWARENESS": {
+      "superpower": "Emotional Insight",
+      "aiSkill": "Mental Health Pattern Analyzer",
+      "impact": "ตรวจจับสัญญาณที่ซ่อนอยู่และตอบสนองก่อนที่ปัญหาจะบานปลาย"
+    },
+    "FUTURE_COLLABORATION": {
+      "superpower": "Supportive Connector",
+      "aiSkill": "Wellbeing Network Builder",
+      "impact": "สร้างเครือข่ายสนับสนุนที่แข็งแกร่งรอบตัวผู้รับบริการ เพื่อการฟื้นฟูที่ยั่งยืน"
+    }
+  },
+  "ER": {
+    "HUMAN_CONNECTION": {
+      "superpower": "Steady Supporter",
+      "aiSkill": "Crisis Communication Assistant",
+      "impact": "ส่งต่อความมั่นคงและความเข้าใจในทุกวินาทีที่วุ่นวาย ให้ผู้ป่วยและญาติรู้สึกไม่โดดเดี่ยว"
+    },
+    "CLINICAL_AWARENESS": {
+      "superpower": "Calm Under Pressure",
+      "aiSkill": "Clinical Data Analyzer",
+      "impact": "วิเคราะห์สัญญาณวิกฤตได้อย่างแม่นยำและรวดเร็ว ช่วยให้ทีมตัดสินใจเชิงชีวิตได้ทันท่วงที"
+    },
+    "FUTURE_COLLABORATION": {
+      "superpower": "Action Innovator",
+      "aiSkill": "Emergency Response System Designer",
+      "impact": "ออกแบบกระบวนการและเครื่องมือใหม่ ๆ ที่ลดเวลาตอบสนองและเพิ่มความปลอดภัยในห้องฉุกเฉิน"
+    }
+  },
+  "OA": {
+    "HUMAN_CONNECTION": {
+      "superpower": "Patient Companion",
+      "aiSkill": "Holistic Elder Care Planner",
+      "impact": "อยู่เคียงข้างผู้สูงวัยด้วยความเอาใจใส่ ทำให้ทุกวันผ่านไปอย่างมีคุณค่าและศักดิ์ศรี"
+    },
+    "CLINICAL_AWARENESS": {
+      "superpower": "Insightful Observer",
+      "aiSkill": "Smart Aging Monitor",
+      "impact": "สังเกตการเปลี่ยนแปลงของร่างกายและพฤติกรรมล่วงหน้า ลดความเสี่ยงอุบัติเหตุได้ก่อนที่จะเกิดขึ้น"
+    },
+    "FUTURE_COLLABORATION": {
+      "superpower": "Care Connector",
+      "aiSkill": "Active Aging Community Designer",
+      "impact": "เชื่อมผู้สูงวัยกับครอบครัวและชุมชน สร้างระบบดูแลที่ยั่งยืนรอบด้าน"
+    }
+  },
+  "MAT": {
+    "HUMAN_CONNECTION": {
+      "superpower": "Warm Supporter",
+      "aiSkill": "Maternal Wellness Guide Creator",
+      "impact": "มอบความอบอุ่นและความมั่นใจให้คุณแม่และครอบครัวในทุกก้าวของการเดินทางแห่งชีวิตใหม่"
+    },
+    "CLINICAL_AWARENESS": {
+      "superpower": "Gentle Observer",
+      "aiSkill": "Newborn Health Insight Tracker",
+      "impact": "ดูแลสัญญาณสุขภาพของแม่และทารกอย่างละเอียดอ่อน ป้องกันความเสี่ยงก่อนที่จะเกิดขึ้น"
+    },
+    "FUTURE_COLLABORATION": {
+      "superpower": "Family Care Connector",
+      "aiSkill": "Parenting Support Network Builder",
+      "impact": "สร้างระบบสนับสนุนครอบครัวที่เชื่อมโยงทุกคนเข้าหากัน เพื่อการเริ่มต้นชีวิตใหม่ที่มั่นคง"
+    }
+  },
+  "COMM": {
+    "HUMAN_CONNECTION": {
+      "superpower": "Community Listener",
+      "aiSkill": "Community Health Dialogue Designer",
+      "impact": "ฟังเรื่องราวของชุมชนอย่างลึกซึ้ง แล้วแปลงเป็นโปรแกรมสุขภาพที่ตรงกับความต้องการจริง"
+    },
+    "CLINICAL_AWARENESS": {
+      "superpower": "Big Picture Thinker",
+      "aiSkill": "Community Health Risk Analyzer",
+      "impact": "มองภาพรวมปัญหาสุขภาพชุมชนได้กว้างไกล วางแผนป้องกันโรคได้ก่อนที่จะระบาด"
+    },
+    "FUTURE_COLLABORATION": {
+      "superpower": "Community Connector",
+      "aiSkill": "Health Network Ecosystem Builder",
+      "impact": "เชื่อมทุกภาคส่วนในชุมชนให้ร่วมสร้างสุขภาวะที่ดีอย่างยั่งยืนและเท่าเทียม"
+    }
+  },
+  "INT": {
+    "HUMAN_CONNECTION": {
+      "superpower": "Cross-Cultural Communicator",
+      "aiSkill": "Global Health Dialogue Facilitator",
+      "impact": "ทลายกำแพงภาษาและวัฒนธรรม ทำให้ผู้ป่วยจากทุกมุมโลกรู้สึกได้รับการดูแลอย่างเท่าเทียม"
+    },
+    "CLINICAL_AWARENESS": {
+      "superpower": "Global Observer",
+      "aiSkill": "International Health Trend Analyst",
+      "impact": "ติดตามและวิเคราะห์แนวโน้มสุขภาพระดับโลก เพื่อนำ Best Practices มายกระดับการดูแลในท้องถิ่น"
+    },
+    "FUTURE_COLLABORATION": {
+      "superpower": "Global Connector",
+      "aiSkill": "Cross-Border Care Network Builder",
+      "impact": "สร้างเครือข่ายความร่วมมือระหว่างประเทศที่ทำให้การดูแลสุขภาพไร้พรมแดน"
+    }
+  },
+  "TECH": {
+    "HUMAN_CONNECTION": {
+      "superpower": "Human-Centered Creator",
+      "aiSkill": "Empathetic Health UX Designer",
+      "impact": "พัฒนาเทคโนโลยีสุขภาพที่ยังคงไว้ซึ่งความอบอุ่นของมนุษย์ ทำให้ผู้ป่วยรู้สึกว่าถูกดูแล ไม่ใช่แค่ถูกประมวลผล"
+    },
+    "CLINICAL_AWARENESS": {
+      "superpower": "Smart Problem Solver",
+      "aiSkill": "Clinical AI Insight Engineer",
+      "impact": "ใช้ข้อมูลและ AI ตรวจจับความเสี่ยงก่อนที่จะปรากฏ ช่วยให้ทีมพยาบาลตัดสินใจได้แม่นยำและเร็วขึ้น"
+    },
+    "FUTURE_COLLABORATION": {
+      "superpower": "Future Builder",
+      "aiSkill": "Healthcare Innovation Architect",
+      "impact": "ออกแบบระบบและนวัตกรรมที่เปลี่ยนวิธีการดูแลสุขภาพในอนาคต โดยเชื่อมโยงทุกสาขาเข้าด้วยกัน"
+    }
+  }
+}

@@ -1,0 +1,86 @@
+{
+  "defaultSkills": {
+    "PED": {
+      "nameEn": "Patient Education Creator",
+      "nameTh": "นักออกแบบสื่อการสอนสุขภาพเด็กด้วย AI",
+      "desc": "ใช้ Generative AI และภาพอินเทอร์แอคทีฟเพื่ออธิบายขั้นตอนการรักษาให้เด็กและผู้ปกครองเข้าใจง่าย คลายความกลัว"
+    },
+    "MH": {
+      "nameEn": "Mental Health Support Designer",
+      "nameTh": "นักออกแบบระบบสนับสนุนสุขภาพจิตด้วย AI",
+      "desc": "ประยุกต์ใช้ AI ในการประเมินอารมณ์ ออกแบบกิจกรรมผ่อนคลาย และสร้าง safe space ทางดิจิทัลเพื่อการฟื้นฟูจิตใจ"
+    },
+    "EM": {
+      "nameEn": "Clinical Data Analyzer",
+      "nameTh": "นักวิเคราะห์ข้อมูลคลินิกและสัญญาณชีพฉุกเฉินด้วย AI",
+      "desc": "ใช้ AI ตรวจจับสัญญาณเตือนวิกฤต (Early Warning Scores) แบบ Real-time เพื่อสนับสนุนการตัดสินใจกู้ชีพได้อย่างแม่นยำ"
+    },
+    "OA": {
+      "nameEn": "Smart Care Planner",
+      "nameTh": "ผู้วางแผนการดูแลอัจฉริยะสำหรับผู้สูงวัย",
+      "desc": "ใช้ AI และ IoT วางแผนการดูแลเฉพาะบุคคล ติดตามกิจวัตร และป้องกันอุบัติเหตุพลัดตกหกล้มในผู้สูงอายุ"
+    },
+    "MN": {
+      "nameEn": "Maternal Health Education Creator",
+      "nameTh": "ผู้สร้างสรรค์นวัตกรรมความรู้สุขภาพแม่และเด็กแรกเกิด",
+      "desc": "ใช้ AI สร้างคู่มือการดูแลทารกและการให้นมแม่แบบตอบโต้เฉพาะบุคคล เพื่อเสริมสร้างความมั่นใจให้คุณแม่มือใหม่"
+    },
+    "COM": {
+      "nameEn": "Community Health Planner",
+      "nameTh": "นักวางแผนสุขภาพชุมชนเชิงรุกด้วย AI",
+      "desc": "ใช้ AI วิเคราะห์แนวโน้มสุขภาพชุมชน แผนที่ความเสี่ยงสุขภาพ และออกแบบกิจกรรมสร้างเสริมสุขภาวะตรงจุด"
+    },
+    "INT": {
+      "nameEn": "Global Health Communicator",
+      "nameTh": "นักสื่อสารสุขภาพสากลและล่ามการแพทย์อัจฉริยะ",
+      "desc": "ใช้ AI แปลภาษาทางการแพทย์ข้ามวัฒนธรรม เชื่อมประสานการดูแลผู้ป่วยต่างชาติอย่างไร้รอยต่อ"
+    },
+    "TECH": {
+      "nameEn": "Healthcare AI Creator",
+      "nameTh": "ผู้พัฒนานวัตกรรม AI และเทคโนโลยีสุขภาพ",
+      "desc": "ร่วมพัฒนา AI ช่วยคัดกรอง วิจัยระบบบริการสุขภาพดิจิทัล และสร้างโซลูชันลดภาระงานพยาบาลเพื่อความปลอดภัยสูงสุด"
+    }
+  },
+  "superpowerModifications": {
+    "COMMUNICATION": {
+      "prefix": "Interactive",
+      "suffix": "& Communication Specialist",
+      "skillFocusTh": "เน้นการสื่อสารและการอธิบายความรู้ผ่านเทคโนโลยีอัจฉริยะ"
+    },
+    "EMPATHY": {
+      "prefix": "Empathetic",
+      "suffix": "& Emotion AI Specialist",
+      "skillFocusTh": "เน้นการเชื่อมโยงความรู้สึกและสร้างประสบการณ์ที่อบอุ่นด้วย AI"
+    },
+    "QUICK_DECISION": {
+      "prefix": "Real-time",
+      "suffix": "& Rapid Response Specialist",
+      "skillFocusTh": "เน้นการประมวลผลฉับไวเพื่อสนับสนุนการตัดสินใจในภาวะวิกฤต"
+    },
+    "COMPASSION": {
+      "prefix": "Holistic",
+      "suffix": "& Continuous Care Specialist",
+      "skillFocusTh": "เน้นการดูแลอย่างต่อเนื่องและการสนับสนุนทางจิตใจระยะยาว"
+    },
+    "OBSERVATION": {
+      "prefix": "Precision",
+      "suffix": "& Diagnostic Support Specialist",
+      "skillFocusTh": "เน้นการสังเกตเชิงลึกและการตรวจจับแนวโน้มความเสี่ยงล่วงหน้า"
+    },
+    "CONNECTION": {
+      "prefix": "Collaborative",
+      "suffix": "& Health Network Specialist",
+      "skillFocusTh": "เน้นการประสานงานทีมสหสาขาวิชาชีพและเครือข่ายสุขภาพ"
+    },
+    "INNOVATION": {
+      "prefix": "Creative",
+      "suffix": "& Health Innovator",
+      "skillFocusTh": "เน้นการคิดค้นวิธีและเครื่องมือดิจิทัลใหม่เพื่อแก้ปัญหาทางคลินิก"
+    },
+    "ADAPTABILITY": {
+      "prefix": "Adaptive",
+      "suffix": "& Cross-Context Specialist",
+      "skillFocusTh": "เน้นการปรับใช้เทคโนโลยีให้สอดคล้องกับทุกสภาพแวดล้อมและวัฒนธรรม"
+    }
+  }
+}

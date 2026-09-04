@@ -1,0 +1,229 @@
+{
+  "questions": [
+    {
+      "id": "q1",
+      "step": 1,
+      "category": "Multi-Situation Response",
+      "categoryTh": "การรับมือกับหลายสถานการณ์พร้อมกัน",
+      "prompt": "เวลาเจอสถานการณ์ที่หลายอย่างเกิดขึ้นพร้อมกัน คุณมักเริ่มจากอะไร?",
+      "options": [
+        {
+          "key": "A",
+          "title": "ดูก่อนว่าเรื่องไหนควรจัดการก่อน",
+          "icon": "ListOrdered",
+          "color": "from-red-500/20 to-amber-500/20"
+        },
+        {
+          "key": "B",
+          "title": "เช็กว่ามีใครกำลังกังวลหรือไม่สบายใจ",
+          "icon": "HeartHandshake",
+          "color": "from-rose-500/20 to-pink-500/20"
+        },
+        {
+          "key": "C",
+          "title": "สังเกตรายละเอียดเล็ก ๆ ที่คนอื่นอาจมองข้าม",
+          "icon": "Eye",
+          "color": "from-sky-500/20 to-blue-500/20"
+        },
+        {
+          "key": "D",
+          "title": "ชวนทุกคนช่วยกันแบ่งหน้าที่",
+          "icon": "Users",
+          "color": "from-teal-500/20 to-emerald-500/20"
+        },
+        {
+          "key": "E",
+          "title": "หาวิธีหรือเครื่องมือที่จะช่วยให้ง่ายขึ้น",
+          "icon": "Lightbulb",
+          "color": "from-violet-500/20 to-purple-500/20"
+        },
+        {
+          "key": "F",
+          "title": "ถามข้อมูลเพิ่มเพื่อเข้าใจสถานการณ์ให้ครบ",
+          "icon": "MessageSquareQuote",
+          "color": "from-cyan-500/20 to-sky-500/20"
+        }
+      ]
+    },
+    {
+      "id": "q2",
+      "step": 2,
+      "category": "What Friends Trust You For",
+      "categoryTh": "สิ่งที่เพื่อนไว้วางใจคุณ",
+      "prompt": "เพื่อนมักมาหาคุณเมื่อ...",
+      "options": [
+        {
+          "key": "A",
+          "title": "อยากได้คนรับฟัง",
+          "icon": "Ear",
+          "color": "from-rose-500/20 to-pink-500/20"
+        },
+        {
+          "key": "B",
+          "title": "ต้องการคนช่วยคิดหรือตัดสินใจเร็ว ๆ",
+          "icon": "Zap",
+          "color": "from-amber-500/20 to-red-500/20"
+        },
+        {
+          "key": "C",
+          "title": "อยากให้ช่วยอธิบายเรื่องยากให้เข้าใจง่าย",
+          "icon": "MessageSquareQuote",
+          "color": "from-sky-500/20 to-blue-500/20"
+        },
+        {
+          "key": "D",
+          "title": "ต้องการคนใจเย็นค่อย ๆ ช่วยคิด",
+          "icon": "HeartHandshake",
+          "color": "from-emerald-500/20 to-teal-500/20"
+        },
+        {
+          "key": "E",
+          "title": "ต้องประสานหลายคนให้ทำงานร่วมกัน",
+          "icon": "Users",
+          "color": "from-teal-500/20 to-cyan-500/20"
+        },
+        {
+          "key": "F",
+          "title": "อยากลองวิธีใหม่หรือใช้เทคโนโลยีช่วย",
+          "icon": "Lightbulb",
+          "color": "from-violet-500/20 to-purple-500/20"
+        }
+      ]
+    },
+    {
+      "id": "q3",
+      "step": 3,
+      "category": "Team Role",
+      "categoryTh": "บทบาทในทีม",
+      "prompt": "ถ้าได้ทำโปรเจกต์กับเพื่อน คุณอยากรับบทบาทไหนมากที่สุด?",
+      "options": [
+        {
+          "key": "A",
+          "title": "คนคอยดูว่าทุกคนโอเค",
+          "icon": "HeartHandshake",
+          "color": "from-rose-500/20 to-pink-500/20"
+        },
+        {
+          "key": "B",
+          "title": "คนวางแผนและจัดลำดับงาน",
+          "icon": "ListOrdered",
+          "color": "from-amber-500/20 to-red-500/20"
+        },
+        {
+          "key": "C",
+          "title": "คนสังเกตและตรวจรายละเอียด",
+          "icon": "Eye",
+          "color": "from-sky-500/20 to-blue-500/20"
+        },
+        {
+          "key": "D",
+          "title": "คนสื่อสารให้ทุกคนเข้าใจตรงกัน",
+          "icon": "MessageSquareQuote",
+          "color": "from-cyan-500/20 to-sky-500/20"
+        },
+        {
+          "key": "E",
+          "title": "คนคิดไอเดียหรือวิธีใหม่ ๆ",
+          "icon": "Lightbulb",
+          "color": "from-violet-500/20 to-purple-500/20"
+        },
+        {
+          "key": "F",
+          "title": "คนเชื่อมคนที่มีความคิดเห็นแตกต่างกัน",
+          "icon": "Users",
+          "color": "from-teal-500/20 to-emerald-500/20"
+        }
+      ]
+    },
+    {
+      "id": "q4",
+      "step": 4,
+      "category": "Noticing Change",
+      "categoryTh": "เมื่อเห็นความเปลี่ยนแปลง",
+      "prompt": "ถ้ามีคนหนึ่งดูไม่เหมือนเดิม แต่ยังไม่ได้พูดอะไร คุณมักจะ...",
+      "options": [
+        {
+          "key": "A",
+          "title": "เข้าไปถามอย่างเป็นกันเองว่าโอเคไหม",
+          "icon": "HeartHandshake",
+          "color": "from-rose-500/20 to-pink-500/20"
+        },
+        {
+          "key": "B",
+          "title": "สังเกตต่อว่ามีอะไรเปลี่ยนไปบ้าง",
+          "icon": "Eye",
+          "color": "from-sky-500/20 to-blue-500/20"
+        },
+        {
+          "key": "C",
+          "title": "ดูก่อนว่ามีอะไรที่ควรรีบจัดการหรือไม่",
+          "icon": "Zap",
+          "color": "from-amber-500/20 to-red-500/20"
+        },
+        {
+          "key": "D",
+          "title": "มองสิ่งรอบตัวว่าอะไรอาจเกี่ยวข้อง",
+          "icon": "Search",
+          "color": "from-teal-500/20 to-emerald-500/20"
+        },
+        {
+          "key": "E",
+          "title": "หาข้อมูลเพิ่มก่อนที่จะสรุป",
+          "icon": "FileSearch",
+          "color": "from-cyan-500/20 to-sky-500/20"
+        },
+        {
+          "key": "F",
+          "title": "คิดว่าจะช่วยให้เขาบอกความต้องการได้ง่ายขึ้นอย่างไร",
+          "icon": "MessageSquareQuote",
+          "color": "from-violet-500/20 to-purple-500/20"
+        }
+      ]
+    },
+    {
+      "id": "q5",
+      "step": 5,
+      "category": "What You Want to Create",
+      "categoryTh": "สิ่งที่อยากสร้าง",
+      "prompt": "ถ้ามีโอกาสสร้างสิ่งหนึ่งเพื่อช่วยคน คุณอยากสร้างอะไรที่สุด?",
+      "options": [
+        {
+          "key": "A",
+          "title": "สิ่งที่ทำให้คนรู้สึกปลอดภัยและสบายใจ",
+          "icon": "ShieldCheck",
+          "color": "from-rose-500/20 to-pink-500/20"
+        },
+        {
+          "key": "B",
+          "title": "สิ่งที่ช่วยรับมือกับสถานการณ์ที่ต้องแข่งกับเวลา",
+          "icon": "Zap",
+          "color": "from-amber-500/20 to-red-500/20"
+        },
+        {
+          "key": "C",
+          "title": "สิ่งที่ช่วยให้เรื่องสุขภาพเข้าใจง่ายขึ้น",
+          "icon": "MessageSquareQuote",
+          "color": "from-sky-500/20 to-blue-500/20"
+        },
+        {
+          "key": "D",
+          "title": "สิ่งที่ช่วยให้คนดูแลกันได้ดีขึ้นในชีวิตประจำวัน",
+          "icon": "Users",
+          "color": "from-teal-500/20 to-emerald-500/20"
+        },
+        {
+          "key": "E",
+          "title": "สิ่งที่ช่วยเชื่อมผู้คนที่แตกต่างกัน",
+          "icon": "Globe",
+          "color": "from-cyan-500/20 to-sky-500/20"
+        },
+        {
+          "key": "F",
+          "title": "เครื่องมือหรือระบบใหม่ที่ช่วยให้การดูแลดีขึ้น",
+          "icon": "Cpu",
+          "color": "from-violet-500/20 to-purple-500/20"
+        }
+      ]
+    }
+  ]
+}
