@@ -135,7 +135,7 @@ export const WelcomeView: React.FC<WelcomeViewProps> = ({ onStart }) => {
       {/* ── 5. Primary CTA: Start Button Layer ────────────────────────────── */}
       <div
         data-layer="home-cta"
-        className="relative z-20 w-full px-5 sm:px-8 py-1.5 flex justify-center mt-auto"
+        className="relative z-20 w-full px-5 sm:px-8 py-1.5 sm:py-2 flex justify-center mt-auto shrink-0"
       >
         <button
           onClick={handleStartClick}
@@ -159,10 +159,10 @@ export const WelcomeView: React.FC<WelcomeViewProps> = ({ onStart }) => {
         </button>
       </div>
 
-      {/* ── 6. Information Section (3-Step Cards + Mascot) ─────────────────── */}
+      {/* ── 6. Integrated Bottom Section (3-Step Cards + Mascot + Safe Area Footer) ── */}
       <div
-        data-layer="home-step-cards"
-        className="relative z-20 w-full px-4 sm:px-6 pt-1 pb-1 flex flex-col justify-center bg-gradient-to-t from-white/95 via-white/80 to-transparent backdrop-blur-[2px]"
+        data-layer="home-bottom-section"
+        className="relative z-20 w-full px-3.5 sm:px-6 pt-1 pb-[max(0.6rem,env(safe-area-inset-bottom))] flex flex-col justify-center bg-gradient-to-t from-white/95 via-white/85 to-transparent backdrop-blur-[2px] shrink-0"
       >
         {/* Banner Label */}
         <div className="text-center mb-1">
@@ -176,12 +176,12 @@ export const WelcomeView: React.FC<WelcomeViewProps> = ({ onStart }) => {
           {/* Mascot (Clean Transparent with subtle natural bobbing) */}
           <div
             data-layer="home-mascot"
-            className="w-[84px] sm:w-[96px] shrink-0 flex items-end justify-center animate-mascot-bob"
+            className="w-[72px] sm:w-[84px] md:w-[92px] shrink-0 flex items-end justify-center animate-mascot-bob"
           >
             <img
               src={ASSETS.home.mascot}
               alt="Mascot"
-              className="w-full max-w-[96px] h-auto object-contain drop-shadow-md"
+              className="w-full max-w-[92px] h-auto object-contain drop-shadow-md"
               draggable={false}
             />
           </div>
@@ -189,11 +189,11 @@ export const WelcomeView: React.FC<WelcomeViewProps> = ({ onStart }) => {
           {/* 3 Native High-DPI Vector Cards with Connecting Arrows */}
           <div className="flex items-center gap-1 sm:gap-1.5 flex-1 min-w-0">
             {/* Card 1 */}
-            <div className="relative flex-1 rounded-xl sm:rounded-2xl bg-white/95 border border-slate-200/90 shadow-sm p-1.5 sm:p-2 flex flex-col items-center justify-between text-center backdrop-blur-sm min-h-[74px] sm:min-h-[80px]">
+            <div className="relative flex-1 rounded-xl sm:rounded-2xl bg-white/95 border border-slate-200/90 shadow-sm p-1.5 sm:p-2 flex flex-col items-center justify-between text-center backdrop-blur-sm min-h-[68px] sm:min-h-[74px]">
               <div className="absolute -top-1.5 -left-1.5 w-4 h-4 sm:w-5 sm:h-5 rounded-full bg-[#FF4E72] text-white text-[9px] sm:text-[10px] font-bold flex items-center justify-center shadow">
                 1
               </div>
-              <div className="w-6 h-6 sm:w-7 sm:h-7 rounded-lg bg-pink-50 flex items-center justify-center text-xs sm:text-sm mb-0.5">
+              <div className="w-5 h-5 sm:w-6 sm:h-6 rounded-lg bg-pink-50 flex items-center justify-center text-xs sm:text-sm mb-0.5">
                 📋
               </div>
               <p className="text-[10px] sm:text-[11px] font-bold text-slate-800 font-heading leading-tight">
@@ -210,11 +210,11 @@ export const WelcomeView: React.FC<WelcomeViewProps> = ({ onStart }) => {
             </div>
 
             {/* Card 2 */}
-            <div className="relative flex-1 rounded-xl sm:rounded-2xl bg-white/95 border border-slate-200/90 shadow-sm p-1.5 sm:p-2 flex flex-col items-center justify-between text-center backdrop-blur-sm min-h-[74px] sm:min-h-[80px]">
+            <div className="relative flex-1 rounded-xl sm:rounded-2xl bg-white/95 border border-slate-200/90 shadow-sm p-1.5 sm:p-2 flex flex-col items-center justify-between text-center backdrop-blur-sm min-h-[68px] sm:min-h-[74px]">
               <div className="absolute -top-1.5 -left-1.5 w-4 h-4 sm:w-5 sm:h-5 rounded-full bg-[#F59E0B] text-white text-[9px] sm:text-[10px] font-bold flex items-center justify-center shadow">
                 2
               </div>
-              <div className="w-6 h-6 sm:w-7 sm:h-7 rounded-lg bg-amber-50 flex items-center justify-center text-xs sm:text-sm mb-0.5">
+              <div className="w-5 h-5 sm:w-6 sm:h-6 rounded-lg bg-amber-50 flex items-center justify-center text-xs sm:text-sm mb-0.5">
                 🤖
               </div>
               <p className="text-[10px] sm:text-[11px] font-bold text-slate-800 font-heading leading-tight">
@@ -231,11 +231,11 @@ export const WelcomeView: React.FC<WelcomeViewProps> = ({ onStart }) => {
             </div>
 
             {/* Card 3 */}
-            <div className="relative flex-1 rounded-xl sm:rounded-2xl bg-white/95 border border-slate-200/90 shadow-sm p-1.5 sm:p-2 flex flex-col items-center justify-between text-center backdrop-blur-sm min-h-[74px] sm:min-h-[80px]">
+            <div className="relative flex-1 rounded-xl sm:rounded-2xl bg-white/95 border border-slate-200/90 shadow-sm p-1.5 sm:p-2 flex flex-col items-center justify-between text-center backdrop-blur-sm min-h-[68px] sm:min-h-[74px]">
               <div className="absolute -top-1.5 -left-1.5 w-4 h-4 sm:w-5 sm:h-5 rounded-full bg-[#10B981] text-white text-[9px] sm:text-[10px] font-bold flex items-center justify-center shadow">
                 3
               </div>
-              <div className="w-6 h-6 sm:w-7 sm:h-7 rounded-lg bg-emerald-50 flex items-center justify-center text-xs sm:text-sm mb-0.5">
+              <div className="w-5 h-5 sm:w-6 sm:h-6 rounded-lg bg-emerald-50 flex items-center justify-center text-xs sm:text-sm mb-0.5">
                 🪪
               </div>
               <p className="text-[10px] sm:text-[11px] font-bold text-slate-800 font-heading leading-tight">
@@ -247,13 +247,13 @@ export const WelcomeView: React.FC<WelcomeViewProps> = ({ onStart }) => {
             </div>
           </div>
         </div>
-      </div>
 
-      {/* ── 7. Native Vector Footer Typography ─────────────────────────────── */}
-      <div data-layer="home-footer" className="relative z-20 w-full pb-2 pt-0.5 text-center">
-        <p className="text-[11px] sm:text-xs font-bold text-[#002B7F] font-heading drop-shadow-[0_1px_2px_rgba(255,255,255,0.9)]">
-          มาค้นหา Future Nurse ในตัวคุณกันเถอะ! <span className="text-pink-500">💖</span>
-        </p>
+        {/* Integrated Footer with Safe Margin */}
+        <div data-layer="home-footer" className="w-full pt-1.5 pb-0.5 text-center">
+          <p className="text-[10px] sm:text-[11px] font-bold text-[#002B7F] font-heading drop-shadow-[0_1px_2px_rgba(255,255,255,0.9)]">
+            มาค้นหา Future Nurse ในตัวคุณกันเถอะ! <span className="text-pink-500">💖</span>
+          </p>
+        </div>
       </div>
     </div>
   );

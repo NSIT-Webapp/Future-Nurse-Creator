@@ -166,7 +166,7 @@ export function App() {
         )}
 
         {/* Main content area */}
-        <main className="flex-1 flex flex-col justify-center relative z-10">
+        <main className="flex-1 flex flex-col relative z-10 min-h-0 h-full overflow-hidden">
         {screen === 'welcome'      && <WelcomeView onStart={handleStart} />}
         {screen === 'character'    && <CharacterSelectView onSelect={handleSelectCharacter} />}
         {screen === 'quiz' && currentQuestion && (

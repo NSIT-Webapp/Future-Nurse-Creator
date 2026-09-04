@@ -133,11 +133,11 @@ export const QuizView: React.FC<QuizViewProps> = ({
       </div>
 
       {/* ── 4. Main Question Card Container ─────────────────────────────────── */}
-      <div className="relative z-20 flex-1 flex flex-col items-center justify-center px-3.5 sm:px-6 py-2 max-w-2xl mx-auto w-full">
-        <div className="relative w-full rounded-[24px] sm:rounded-[32px] bg-white/95 backdrop-blur-md shadow-[0_12px_35px_rgba(0,43,127,0.14)] border border-white/80 p-4 sm:p-6 flex flex-col justify-between min-h-[480px]">
+      <div className="relative z-20 flex-1 flex flex-col items-center justify-center px-3 sm:px-5 md:px-6 py-1 sm:py-2 max-w-3xl mx-auto w-full">
+        <div className="relative w-full">
 
-          {/* Nurse Character Illustration (Leaning playfully over upper right) */}
-          <div className="absolute -top-12 sm:-top-16 md:-top-20 right-2 sm:right-5 w-28 sm:w-36 md:w-44 pointer-events-none z-30 drop-shadow-[0_10px_20px_rgba(0,43,127,0.22)] select-none">
+          {/* Nurse Character Illustration (Peeking out playfully from BEHIND the question card) */}
+          <div className="absolute -top-14 sm:-top-20 md:-top-24 right-4 sm:right-8 md:right-12 w-32 sm:w-40 md:w-48 pointer-events-none z-0 drop-shadow-[0_12px_25px_rgba(0,43,127,0.22)] select-none">
             <img
               src="/assets/questions/nurse-cutout.png"
               alt="Nurse Character"
@@ -146,116 +146,120 @@ export const QuizView: React.FC<QuizViewProps> = ({
             />
           </div>
 
-          {/* ── Header Inside Card: Step Badge & Prompt ─────────────────────── */}
-          <div className="relative z-10 pr-24 sm:pr-32 mb-2 sm:mb-3">
-            {/* Step Badge */}
-            <div className="inline-flex items-center px-3 py-1 rounded-full bg-gradient-to-r from-[#FF4E72] to-[#FF3366] text-white text-[10px] sm:text-xs font-black uppercase tracking-wider shadow-sm font-heading mb-1.5">
-              QUESTION {currentStep} / {totalSteps}
+          {/* Main Question Card (z-10 covers lower half of nurse character) */}
+          <div className="relative z-10 w-full rounded-[24px] sm:rounded-[32px] bg-white/95 backdrop-blur-md shadow-[0_14px_40px_rgba(0,43,127,0.15)] border border-white/80 p-4 sm:p-6 md:p-7 flex flex-col justify-between min-h-[490px]">
+
+            {/* ── Header Inside Card: Step Badge & Prompt ─────────────────────── */}
+            <div className="relative z-10 mb-2 sm:mb-3">
+              {/* Step Badge */}
+              <div className="inline-flex items-center px-3 py-1 rounded-full bg-gradient-to-r from-[#FF4E72] to-[#FF3366] text-white text-[10px] sm:text-xs font-black uppercase tracking-wider shadow-sm font-heading mb-1.5">
+                QUESTION {currentStep} / {totalSteps}
+              </div>
+
+              {/* Question Category / Short Title */}
+              <h2 className="text-base sm:text-lg md:text-xl font-black text-[#002B7F] font-heading leading-tight mb-1 drop-shadow-xs">
+                {question.categoryTh || 'ค้นหาตัวตนของคุณ'}
+              </h2>
+
+              {/* Full Prompt */}
+              <p className="text-xs sm:text-sm md:text-base font-semibold text-slate-700 leading-snug">
+                {question.prompt}
+              </p>
+
+              {/* Instruction Callout */}
+              <p className="text-[11px] sm:text-xs font-bold text-[#FF3366] mt-1.5 flex items-center gap-1">
+                <span>💖</span> เลือกคำตอบที่เป็น “คุณ” ที่สุด 1 ข้อ
+              </p>
             </div>
 
-            {/* Question Category / Short Title */}
-            <h2 className="text-base sm:text-lg md:text-xl font-black text-[#002B7F] font-heading leading-tight mb-1 drop-shadow-xs">
-              {question.categoryTh || 'ค้นหาตัวตนของคุณ'}
-            </h2>
+            {/* ── Choices List (A through F) ─────────────────────────────────── */}
+            <div className="relative z-10 flex flex-col gap-2 sm:gap-2.5 my-1">
+              {question.options.map((opt) => {
+                const isSelected = selectedOption === opt.key;
+                const theme = OPTION_THEMES[opt.key] || OPTION_THEMES.A;
+                const IconComp = theme.Icon;
 
-            {/* Full Prompt */}
-            <p className="text-xs sm:text-sm font-semibold text-slate-700 leading-snug">
-              {question.prompt}
-            </p>
+                return (
+                  <button
+                    key={opt.key}
+                    type="button"
+                    onClick={() => onSelectOption(opt.key)}
+                    className={`group relative w-full flex items-center justify-between p-2.5 sm:p-3 rounded-2xl border transition-all duration-150 active:scale-[0.99] text-left cursor-pointer select-none ${
+                      isSelected
+                        ? `bg-rose-50/75 ${theme.borderActive} border-2 shadow-md ring-2 ${theme.ringActive}`
+                        : 'bg-white/90 hover:bg-white border-slate-200/90 shadow-xs hover:border-sky-300'
+                    }`}
+                  >
+                    {/* Left: Icon Bubble + Letter + Title */}
+                    <div className="flex items-center gap-2.5 sm:gap-3.5 min-w-0 pr-2">
+                      {/* Icon Bubble */}
+                      <div
+                        className={`w-8 h-8 sm:w-9 sm:h-9 md:w-10 md:h-10 rounded-xl flex items-center justify-center text-white shrink-0 shadow-sm ${theme.bgIcon}`}
+                      >
+                        <IconComp className="w-4 h-4 sm:w-5 sm:h-5 stroke-[2.5]" />
+                      </div>
 
-            {/* Instruction Callout */}
-            <p className="text-[11px] sm:text-xs font-bold text-[#FF3366] mt-1.5 flex items-center gap-1">
-              <span>💖</span> เลือกคำตอบที่เป็น “คุณ” ที่สุด 1 ข้อ
-            </p>
-          </div>
+                      {/* Letter Key */}
+                      <span
+                        className={`text-sm sm:text-base md:text-lg font-black font-heading shrink-0 ${theme.textLetter}`}
+                      >
+                        {opt.key}
+                      </span>
 
-          {/* ── Choices List (A through F) ─────────────────────────────────── */}
-          <div className="relative z-10 flex flex-col gap-2 sm:gap-2.5 my-1">
-            {question.options.map((opt) => {
-              const isSelected = selectedOption === opt.key;
-              const theme = OPTION_THEMES[opt.key] || OPTION_THEMES.A;
-              const IconComp = theme.Icon;
-
-              return (
-                <button
-                  key={opt.key}
-                  type="button"
-                  onClick={() => onSelectOption(opt.key)}
-                  className={`group relative w-full flex items-center justify-between p-2 sm:p-2.5 md:p-3 rounded-2xl border transition-all duration-150 active:scale-[0.99] text-left cursor-pointer select-none ${
-                    isSelected
-                      ? `bg-rose-50/70 ${theme.borderActive} border-2 shadow-md ring-2 ${theme.ringActive}`
-                      : 'bg-white/90 hover:bg-white border-slate-200/90 shadow-xs hover:border-sky-300'
-                  }`}
-                >
-                  {/* Left: Icon Bubble + Letter + Title */}
-                  <div className="flex items-center gap-2.5 sm:gap-3 min-w-0 pr-2">
-                    {/* Icon Bubble */}
-                    <div
-                      className={`w-8 h-8 sm:w-9 sm:h-9 rounded-xl flex items-center justify-center text-white shrink-0 shadow-sm ${theme.bgIcon}`}
-                    >
-                      <IconComp className="w-4 h-4 sm:w-5 sm:h-5 stroke-[2.5]" />
+                      {/* Option Text */}
+                      <span className="text-xs sm:text-sm md:text-base font-bold text-slate-800 font-heading leading-snug">
+                        {opt.title}
+                      </span>
                     </div>
 
-                    {/* Letter Key */}
-                    <span
-                      className={`text-sm sm:text-base font-black font-heading shrink-0 ${theme.textLetter}`}
-                    >
-                      {opt.key}
-                    </span>
-
-                    {/* Option Text */}
-                    <span className="text-xs sm:text-sm font-bold text-slate-800 font-heading leading-snug">
-                      {opt.title}
-                    </span>
-                  </div>
-
-                  {/* Right: Radio Selection Circle */}
-                  <div className="shrink-0 ml-2">
-                    <div
-                      className={`w-5 h-5 sm:w-5.5 sm:h-5.5 rounded-full border-2 flex items-center justify-center transition-all ${
-                        isSelected
-                          ? 'border-[#FF3366] bg-[#FF3366] shadow-xs'
-                          : 'border-slate-300 bg-white group-hover:border-sky-400'
-                      }`}
-                    >
-                      {isSelected && (
-                        <div className="w-2 h-2 sm:w-2.5 sm:h-2.5 rounded-full bg-white animate-scale-in" />
-                      )}
+                    {/* Right: Radio Selection Circle */}
+                    <div className="shrink-0 ml-2">
+                      <div
+                        className={`w-5 h-5 sm:w-6 sm:h-6 rounded-full border-2 flex items-center justify-center transition-all ${
+                          isSelected
+                            ? 'border-[#FF3366] bg-[#FF3366] shadow-xs'
+                            : 'border-slate-300 bg-white group-hover:border-sky-400'
+                        }`}
+                      >
+                        {isSelected && (
+                          <div className="w-2 h-2 sm:w-2.5 sm:h-2.5 rounded-full bg-white animate-scale-in" />
+                        )}
+                      </div>
                     </div>
-                  </div>
-                </button>
-              );
-            })}
+                  </button>
+                );
+              })}
+            </div>
+
+            {/* ── Bottom Navigation Inside Card: Back / Next ─────────────────── */}
+            <div className="relative z-10 flex items-center justify-between pt-3 sm:pt-4 mt-auto border-t border-slate-100">
+              {/* Back Button */}
+              <button
+                type="button"
+                onClick={onBack}
+                className="inline-flex items-center gap-1.5 px-4 sm:px-6 py-2.5 rounded-full border-2 border-[#002B7F] text-[#002B7F] bg-white hover:bg-sky-50 active:scale-95 font-bold text-xs sm:text-sm font-heading transition-all shadow-xs"
+              >
+                <ChevronLeft className="w-4 h-4 stroke-[3]" />
+                <span>ย้อนกลับ</span>
+              </button>
+
+              {/* Next Button */}
+              <button
+                type="button"
+                disabled={!canProceed}
+                onClick={onNext}
+                className={`inline-flex items-center gap-1.5 px-6 sm:px-9 py-2.5 rounded-full font-extrabold text-xs sm:text-sm font-heading transition-all duration-150 shadow-md ${
+                  canProceed
+                    ? 'bg-gradient-to-r from-[#FF4E72] via-[#FF3366] to-[#783BE8] hover:from-[#ff5b7d] hover:to-[#8449f0] active:scale-95 text-white shadow-[0_4px_15px_rgba(255,51,102,0.4)] cursor-pointer'
+                    : 'bg-slate-200 text-slate-400 cursor-not-allowed border border-slate-300/60'
+                }`}
+              >
+                <span>ถัดไป</span>
+                <ChevronRight className="w-4 h-4 stroke-[3]" />
+              </button>
+            </div>
+
           </div>
-
-          {/* ── Bottom Navigation Inside Card: Back / Next ─────────────────── */}
-          <div className="relative z-10 flex items-center justify-between pt-3 sm:pt-4 mt-auto border-t border-slate-100">
-            {/* Back Button */}
-            <button
-              type="button"
-              onClick={onBack}
-              className="inline-flex items-center gap-1 px-4 sm:px-5 py-2 sm:py-2.5 rounded-full border-2 border-[#002B7F] text-[#002B7F] bg-white hover:bg-sky-50 active:scale-95 font-bold text-xs sm:text-sm font-heading transition-all shadow-xs"
-            >
-              <ChevronLeft className="w-4 h-4 stroke-[3]" />
-              <span>ย้อนกลับ</span>
-            </button>
-
-            {/* Next Button */}
-            <button
-              type="button"
-              disabled={!canProceed}
-              onClick={onNext}
-              className={`inline-flex items-center gap-1.5 px-6 sm:px-8 py-2 sm:py-2.5 rounded-full font-extrabold text-xs sm:text-sm font-heading transition-all duration-150 shadow-md ${
-                canProceed
-                  ? 'bg-gradient-to-r from-[#FF4E72] via-[#FF3366] to-[#783BE8] hover:from-[#ff5b7d] hover:to-[#8449f0] active:scale-95 text-white shadow-[0_4px_15px_rgba(255,51,102,0.4)] cursor-pointer'
-                  : 'bg-slate-200 text-slate-400 cursor-not-allowed border border-slate-300/60'
-              }`}
-            >
-              <span>ถัดไป</span>
-              <ChevronRight className="w-4 h-4 stroke-[3]" />
-            </button>
-          </div>
-
         </div>
       </div>
     </div>

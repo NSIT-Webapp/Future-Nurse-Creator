@@ -14,19 +14,25 @@
   }
 }
 
-/* ── Fixed 3:4 Content Canvas ───────────────────────────────────────────────
- * Preserves the exact 3:4 design composition across any display:
- * - On 3:4 native viewports (e.g. iPad 7/8/9 810×1080): fills exactly (0px unused)
- * - On taller portrait viewports (e.g. iPad 10 / Air 820×1180, Pro 11 834×1194):
- *     fits by width, centers vertically, background extends top/bottom
- * - On wider landscape displays (e.g. 1080p, 4K):
- *     fits by height, centers horizontally, background extends left/right
- * Never stretches or distorts the 3:4 design composition.
+/* ── Responsive Content Canvas ──────────────────────────────────────────────
+ * Portrait devices (iPad, iPhone, tablets):
+ * - Fills full viewport width & dynamic height (100dvh) up to max-w-[860px]
+ * - No black letterboxing / pillarboxing bars on iPad screens
+ * Landscape / Desktop displays:
+ * - Centered iPad kiosk stage with 3:4 aspect ratio and soft shadow
  */
 .canvas-3-4 {
-  width: min(100vw, calc(100dvh * 3 / 4), calc(100vh * 3 / 4));
-  height: min(100dvh, min(100vh, calc(100vw * 4 / 3)));
-  aspect-ratio: 3 / 4;
+  width: 100%;
+  height: 100dvh;
+  max-width: 860px;
+}
+
+@media (min-width: 861px) and (orientation: landscape) {
+  .canvas-3-4 {
+    width: min(100vw, calc(100dvh * 3 / 4));
+    height: min(100dvh, calc(100vw * 4 / 3));
+    aspect-ratio: 3 / 4;
+  }
 }
 
 /* Custom animations */
