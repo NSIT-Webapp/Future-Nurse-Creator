@@ -174,7 +174,7 @@ export const CardPreviewView: React.FC<CardPreviewViewProps> = ({
 
                   {/* Pink CARD PREVIEW Pill under step 7 */}
                   {isCurrent && (
-                    <div className="absolute -bottom-4 left-1/2 -translate-x-1/2 px-1.5 sm:px-2 py-0.5 rounded-full bg-[#FF3366] text-white font-black text-[7.5px] sm:text-[8px] tracking-wider uppercase shadow-xs whitespace-nowrap animate-pulse">
+                    <div className="absolute -bottom-5 left-1/2 -translate-x-1/2 px-2.5 sm:px-3 py-0.5 rounded-full bg-[#FF3366] text-white font-black text-xs tracking-wider uppercase shadow-xs whitespace-nowrap animate-pulse">
                       CARD PREVIEW
                     </div>
                   )}
@@ -207,18 +207,18 @@ export const CardPreviewView: React.FC<CardPreviewViewProps> = ({
           {/* ── Top Info Section (Matches user mockup) ── */}
           <div className="text-center shrink-0 pt-0.5">
             {/* Card Preview Pill Badge */}
-            <div className="inline-flex items-center gap-1.5 px-3.5 py-0.5 rounded-full bg-gradient-to-r from-[#FF5E80] to-[#FF3366] text-white text-[9.5px] sm:text-[10.5px] font-black uppercase tracking-widest mb-1 shadow-xs">
+            <div className="inline-flex items-center gap-1.5 px-4 py-1 rounded-full bg-gradient-to-r from-[#FF5E80] to-[#FF3366] text-white text-xs sm:text-sm font-black uppercase tracking-widest mb-1 shadow-xs">
               <span>✦ CARD PREVIEW ✦</span>
             </div>
 
             {/* Headline with Heart accents */}
-            <h2 className="text-lg sm:text-2xl font-black text-slate-800 tracking-tight font-heading leading-tight flex flex-wrap items-center justify-center gap-x-1.5 gap-y-0.5">
+            <h2 className="text-2xl sm:text-3xl md:text-[34px] font-black text-slate-800 tracking-tight font-heading leading-tight flex flex-wrap items-center justify-center gap-x-1.5 gap-y-0.5">
               <span>นี่คือ <span className="text-[#FF3366]">Future Nurse Card</span> ของคุณ!</span>
-              <span className="text-base sm:text-lg text-[#FF3366] animate-pulse">💕</span>
+              <span className="text-xl sm:text-2xl text-[#FF3366] animate-pulse">💕</span>
             </h2>
 
             {/* Sub-caption */}
-            <p className="text-[11px] sm:text-xs font-bold text-slate-500 mt-0.5">
+            <p className="text-base sm:text-lg font-semibold text-slate-600 mt-1">
               ตรวจสอบการ์ดของคุณก่อนบันทึกและแชร์
             </p>
           </div>
@@ -290,42 +290,42 @@ export const CardPreviewView: React.FC<CardPreviewViewProps> = ({
 
             {/* Floating Cloud Speech Bubble on Right: "เส้นทางที่ใช่สำหรับคุณ! 💕" */}
             <div className="hidden xs:flex absolute -right-2 sm:right-1 md:right-3 top-1/2 -translate-y-1/2 flex-col items-center z-30 pointer-events-none animate-float-subtle">
-              <div className="relative bg-white/95 backdrop-blur-md px-2.5 sm:px-3 py-1.5 sm:py-2 rounded-2xl shadow-lg border border-white/90 text-center">
-                <p className="text-[10px] sm:text-[11px] font-black text-slate-800 leading-tight">
+              <div className="relative bg-white/95 backdrop-blur-md px-3.5 sm:px-4 py-2 sm:py-2.5 rounded-2xl shadow-lg border border-white/90 text-center">
+                <p className="text-xs sm:text-sm font-black text-slate-800 leading-tight">
                   เส้นทางที่ใช่
                 </p>
-                <p className="text-[10px] sm:text-[11px] font-black text-[#FF3366] leading-tight">
+                <p className="text-xs sm:text-sm font-black text-[#FF3366] leading-tight">
                   สำหรับคุณ! 💕
                 </p>
                 {/* Cloud speech tail */}
-                <div className="absolute left-0 top-1/2 -translate-x-1/2 -translate-y-1/2 w-2 h-2 bg-white rotate-45 border-l border-b border-white/80" />
+                <div className="absolute left-0 top-1/2 -translate-x-1/2 -translate-y-1/2 w-2.5 h-2.5 bg-white rotate-45 border-l border-b border-white/80" />
               </div>
             </div>
           </div>
 
           {/* ── Pagination Indicator: ● 1 / 1 (Clean, no flip controls) ── */}
-          <div className="shrink-0 flex items-center justify-center gap-1.5 text-[11px] sm:text-xs font-bold text-slate-600 mb-1">
-            <span className="w-2 h-2 rounded-full bg-blue-600 inline-block shadow-xs" />
+          <div className="shrink-0 flex items-center justify-center gap-2 text-sm sm:text-base font-bold text-slate-600 mb-1">
+            <span className="w-2.5 h-2.5 rounded-full bg-blue-600 inline-block shadow-xs" />
             <span>1 / 1</span>
           </div>
 
           {/* ── Tip Box: "💡 พร้อมแล้ว? ไปบันทึกและแชร์การ์ดของคุณได้เลย ✨" ── */}
-          <div className="shrink-0 w-full max-w-sm mx-auto mb-1">
-            <div className="bg-[#EBF5FF] border border-[#BFDBFE] rounded-full py-1.5 px-3 sm:px-4 shadow-xs flex items-center justify-center gap-1.5 text-[10.5px] sm:text-xs font-bold text-[#002B7F] text-center">
+          <div className="shrink-0 w-full max-w-md mx-auto mb-1">
+            <div className="bg-[#EBF5FF] border border-[#BFDBFE] rounded-full py-2 px-4 sm:px-5 shadow-xs flex items-center justify-center gap-2 text-base sm:text-lg font-semibold text-[#002B7F] text-center">
               <span>💡</span>
               <span>พร้อมแล้ว? ไปบันทึกและแชร์การ์ดของคุณได้เลย ✨</span>
             </div>
           </div>
 
           {/* ── Bottom Action Buttons: "ย้อนกลับ" and "บันทึกและแชร์" ── */}
-          <div className="shrink-0 w-full max-w-md mx-auto flex items-center justify-between gap-3 pt-1">
+          <div className="shrink-0 w-full max-w-lg mx-auto flex items-center justify-between gap-3 pt-1">
             {/* Back Button */}
             {onBack ? (
               <button
                 onClick={onBack}
-                className="flex-1 py-2.5 sm:py-3 px-4 rounded-full bg-white hover:bg-slate-50 text-[#002B7F] font-bold text-xs sm:text-sm border border-slate-200 shadow-sm flex items-center justify-center gap-1.5 active:scale-95 transition-all"
+                className="flex-1 min-h-[56px] py-3.5 px-6 rounded-full bg-white hover:bg-slate-50 text-[#002B7F] font-bold text-lg sm:text-xl border-2 border-slate-200 shadow-sm flex items-center justify-center gap-2 active:scale-95 transition-all"
               >
-                <ChevronLeft className="w-4 h-4 text-[#002B7F]" />
+                <ChevronLeft className="w-5 h-5 text-[#002B7F] stroke-[2.5]" />
                 <span>ย้อนกลับ</span>
               </button>
             ) : (
@@ -336,10 +336,10 @@ export const CardPreviewView: React.FC<CardPreviewViewProps> = ({
             <button
               onClick={onNext}
               disabled={generating}
-              className="flex-1 py-2.5 sm:py-3 px-4 rounded-full bg-gradient-to-r from-[#FF5E80] to-[#FF3366] hover:brightness-105 active:scale-95 text-white font-extrabold text-xs sm:text-sm shadow-md shadow-rose-400/30 flex items-center justify-center gap-1.5 transition-all disabled:opacity-50 disabled:cursor-wait"
+              className="flex-1 min-h-[56px] py-3.5 px-6 rounded-full bg-gradient-to-r from-[#FF5E80] to-[#FF3366] hover:brightness-105 active:scale-95 text-white font-black text-xl sm:text-2xl shadow-lg shadow-rose-400/35 flex items-center justify-center gap-2 transition-all disabled:opacity-50 disabled:cursor-wait"
             >
               <span>บันทึกและแชร์</span>
-              <ChevronRight className="w-4 h-4 text-white" />
+              <ChevronRight className="w-6 h-6 text-white stroke-[3]" />
             </button>
           </div>
 

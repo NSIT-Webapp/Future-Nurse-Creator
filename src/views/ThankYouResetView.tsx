@@ -219,25 +219,25 @@ export const ThankYouResetView: React.FC<ThankYouResetViewProps> = ({
       </header>
 
       {/* ── Stepper (8 Steps) ────────────────────────────────────────────────── */}
-      <div className="px-2 sm:px-6 py-1.5 shrink-0">
-        <div className="flex items-center justify-between max-w-xl mx-auto relative">
+      <div className="px-2 sm:px-6 py-2 shrink-0">
+        <div className="flex items-center justify-between max-w-2xl mx-auto relative">
           {/* Connecting Line */}
-          <div className="absolute top-2.5 sm:top-3 left-2 right-2 h-0.5 bg-sky-200 -z-0" />
+          <div className="absolute top-3.5 sm:top-4 left-2 right-2 h-0.5 bg-sky-200 -z-0" />
           {STEPS.map(s => {
             const isFinish = s.id === 8;
             return (
               <div key={s.id} className="flex flex-col items-center relative z-10">
                 <div
-                  className={`w-5 h-5 sm:w-6 sm:h-6 rounded-full flex items-center justify-center text-[9px] sm:text-[10px] font-bold shadow-sm transition-all ${
+                  className={`w-7 h-7 sm:w-8 sm:h-8 rounded-full flex items-center justify-center text-xs sm:text-sm font-bold shadow-sm transition-all ${
                     isFinish
-                      ? 'bg-rose-500 text-white ring-3 ring-rose-200 scale-110'
+                      ? 'bg-rose-500 text-white ring-4 ring-rose-200 scale-110'
                       : 'bg-white text-sky-600 border border-sky-300'
                   }`}
                 >
                   {s.id}
                 </div>
                 <span
-                  className={`text-[7px] sm:text-[9px] mt-0.5 font-medium tracking-tight whitespace-nowrap hidden sm:block ${
+                  className={`text-xs mt-1 font-semibold tracking-tight whitespace-nowrap hidden sm:block ${
                     isFinish ? 'text-rose-600 font-bold' : 'text-slate-500'
                   }`}
                 >
@@ -253,17 +253,17 @@ export const ThankYouResetView: React.FC<ThankYouResetViewProps> = ({
       <div className="flex-1 flex flex-col justify-between px-3 sm:px-6 py-1.5 max-w-2xl md:max-w-3xl mx-auto w-full space-y-2.5 sm:space-y-3">
         {/* ── Title Banner ──────────────────────────────────────────────────── */}
         <div className="text-center pt-0.5 shrink-0">
-          <div className="inline-flex items-center gap-1 px-3 py-0.5 rounded-full bg-gradient-to-r from-sky-500 to-blue-600 text-white text-[10px] sm:text-xs font-bold shadow-sm mb-1">
-            <Sparkles className="w-3 h-3 text-amber-300" />
+          <div className="inline-flex items-center gap-1.5 px-4 py-1 rounded-full bg-gradient-to-r from-sky-500 to-blue-600 text-white text-xs sm:text-sm font-bold shadow-sm mb-1">
+            <Sparkles className="w-3.5 h-3.5 text-amber-300" />
             <span>FINISH</span>
-            <Sparkles className="w-3 h-3 text-amber-300" />
+            <Sparkles className="w-3.5 h-3.5 text-amber-300" />
           </div>
 
-          <h1 className="text-xl sm:text-2xl md:text-3xl font-extrabold text-mahidol-blue font-heading tracking-tight flex items-center justify-center gap-1.5">
+          <h1 className="text-2xl sm:text-3xl md:text-4xl font-extrabold text-mahidol-blue font-heading tracking-tight flex items-center justify-center gap-2">
             <span>ขอบคุณที่ค้นพบเส้นทางพยาบาลของคุณ!</span>
-            <Heart className="w-5 h-5 text-rose-500 fill-rose-500 inline-block animate-pulse shrink-0" />
+            <Heart className="w-6 h-6 text-rose-500 fill-rose-500 inline-block animate-pulse shrink-0" />
           </h1>
-          <p className="text-[11px] sm:text-xs md:text-sm text-slate-600 font-medium mt-0.5">
+          <p className="text-base sm:text-lg text-slate-600 font-semibold mt-1">
             ขอให้คุณก้าวไปเป็นพยาบาลที่สร้างการเปลี่ยนแปลงให้สังคม 💙
           </p>
         </div>
@@ -288,7 +288,7 @@ export const ThankYouResetView: React.FC<ThankYouResetViewProps> = ({
 
             {/* Speech Bubble Above Nurses */}
             {showSpeechBubble && quoteIndex !== null && (
-              <div className="absolute top-2 sm:top-4 left-1/2 -translate-x-1/2 z-30 px-3.5 py-1.5 sm:px-4 sm:py-2 rounded-2xl bg-white/95 text-slate-800 text-xs sm:text-sm font-bold shadow-xl border-2 border-sky-200 animate-scale-up text-center max-w-[85%] sm:max-w-[280px]">
+              <div className="absolute top-2 sm:top-4 left-1/2 -translate-x-1/2 z-30 px-4 sm:px-5 py-2 sm:py-2.5 rounded-2xl bg-white/95 text-slate-800 text-base sm:text-lg font-bold shadow-xl border-2 border-sky-200 animate-scale-up text-center max-w-[85%] sm:max-w-[320px]">
                 <span>{ENCOURAGING_QUOTES[quoteIndex]}</span>
                 {/* Bubble Tail */}
                 <div className="absolute -bottom-2 left-1/2 -translate-x-1/2 w-0 h-0 border-x-[6px] border-x-transparent border-t-[8px] border-t-white/95 filter drop-shadow-sm" />
@@ -297,9 +297,9 @@ export const ThankYouResetView: React.FC<ThankYouResetViewProps> = ({
 
             {/* Tap Hint Badge when not open */}
             {!showSpeechBubble && (
-              <div className="absolute top-2 left-2 sm:left-3 z-20 inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full bg-white/85 backdrop-blur-md border border-sky-200/90 text-[10px] font-semibold text-sky-700 shadow-sm animate-pulse">
+              <div className="absolute top-2 left-2 sm:left-3 z-20 inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-white/85 backdrop-blur-md border border-sky-200/90 text-xs sm:text-sm font-semibold text-sky-700 shadow-sm animate-pulse">
                 <span>แตะที่ตัวพี่พยาบาลสิ!</span>
-                <Sparkles className="w-3 h-3 text-amber-500" />
+                <Sparkles className="w-3.5 h-3.5 text-amber-500" />
               </div>
             )}
 
@@ -321,15 +321,15 @@ export const ThankYouResetView: React.FC<ThankYouResetViewProps> = ({
             {/* Floating Hashtag Card (Bottom-Right overlay) */}
             <div
               onClick={(e) => e.stopPropagation()}
-              className="absolute bottom-2 right-2 sm:bottom-3 sm:right-3 z-20 bg-white/90 backdrop-blur-md rounded-xl p-2 sm:p-2.5 shadow-md border border-sky-100 max-w-[140px] xs:max-w-[170px] sm:max-w-[210px] text-left"
+              className="absolute bottom-2 right-2 sm:bottom-3 sm:right-3 z-20 bg-white/90 backdrop-blur-md rounded-xl p-2.5 sm:p-3 shadow-md border border-sky-100 max-w-[160px] xs:max-w-[190px] sm:max-w-[230px] text-left"
             >
-              <div className="flex items-center justify-between gap-1 mb-1">
-                <div className="flex items-center gap-1 text-[9px] sm:text-[11px] font-bold text-sky-800 leading-none">
-                  <Camera className="w-3 h-3 text-rose-500 shrink-0" />
+              <div className="flex items-center justify-between gap-1 mb-1.5">
+                <div className="flex items-center gap-1.5 text-xs sm:text-sm font-bold text-sky-800 leading-none">
+                  <Camera className="w-3.5 h-3.5 text-rose-500 shrink-0" />
                   <span className="truncate">อย่าลืมติดแฮชแท็กนะ! ✧</span>
                 </div>
               </div>
-              <div className="flex flex-col gap-0.5 text-[8px] sm:text-[10px] text-sky-600 font-semibold font-mono leading-tight">
+              <div className="flex flex-col gap-0.5 text-xs sm:text-sm text-sky-600 font-semibold font-mono leading-tight">
                 {HASHTAGS.slice(0, 4).map((tag) => (
                   <span key={tag} className="truncate hover:text-blue-700">
                     {tag}
@@ -338,16 +338,16 @@ export const ThankYouResetView: React.FC<ThankYouResetViewProps> = ({
               </div>
               <button
                 onClick={handleCopyHashtags}
-                className="w-full mt-1.5 py-1 px-1.5 rounded-lg bg-sky-50 hover:bg-sky-100 active:scale-95 text-sky-700 border border-sky-200 text-[9px] sm:text-[10px] font-bold flex items-center justify-center gap-1 transition-all"
+                className="w-full mt-2 py-1.5 px-2 rounded-lg bg-sky-50 hover:bg-sky-100 active:scale-95 text-sky-700 border border-sky-200 text-xs sm:text-sm font-bold flex items-center justify-center gap-1.5 transition-all"
               >
                 {copiedTags ? (
                   <>
-                    <Check className="w-3 h-3 text-emerald-600" />
+                    <Check className="w-3.5 h-3.5 text-emerald-600" />
                     <span className="text-emerald-700">คัดลอกแล้ว!</span>
                   </>
                 ) : (
                   <>
-                    <Copy className="w-3 h-3" />
+                    <Copy className="w-3.5 h-3.5" />
                     <span>คัดลอกแท็ก</span>
                   </>
                 )}
@@ -357,12 +357,12 @@ export const ThankYouResetView: React.FC<ThankYouResetViewProps> = ({
         </div>
 
         {/* ── Admissions & Social Media Announcement Box ─────────────────────── */}
-        <div className="bg-gradient-to-r from-blue-900/95 via-mahidol-blue to-blue-900/95 text-white rounded-2xl p-3 sm:p-3.5 shadow-md border border-blue-400/30 flex flex-col sm:flex-row items-center justify-between gap-2.5 shrink-0">
-          <div className="flex items-center gap-2.5 text-left w-full sm:w-auto">
-            <div className="w-8 h-8 sm:w-9 sm:h-9 rounded-xl bg-white/10 border border-white/20 flex items-center justify-center shrink-0">
-              <GraduationCap className="w-4 h-4 sm:w-5 sm:h-5 text-mahidol-gold" />
+        <div className="bg-gradient-to-r from-blue-900/95 via-mahidol-blue to-blue-900/95 text-white rounded-2xl p-3 sm:p-4 shadow-md border border-blue-400/30 flex flex-col sm:flex-row items-center justify-between gap-3 shrink-0">
+          <div className="flex items-center gap-3 text-left w-full sm:w-auto">
+            <div className="w-9 h-9 sm:w-10 sm:h-10 rounded-xl bg-white/10 border border-white/20 flex items-center justify-center shrink-0">
+              <GraduationCap className="w-5 h-5 sm:w-6 sm:h-6 text-mahidol-gold" />
             </div>
-            <div className="text-[11px] sm:text-xs leading-snug text-blue-50">
+            <div className="text-sm sm:text-base leading-snug text-blue-50 font-medium">
               สามารถติดตามข่าวการรับสมัครนักศึกษาของคณะพยาบาลศาสตร์ได้ที่{' '}
               <a
                 href="https://ns.mahidol.ac.th"
@@ -372,7 +372,7 @@ export const ThankYouResetView: React.FC<ThankYouResetViewProps> = ({
                 className="underline font-bold text-amber-300 hover:text-amber-200 inline-flex items-center gap-0.5 ml-0.5"
               >
                 <span>https://ns.mahidol.ac.th</span>
-                <ExternalLink className="w-2.5 h-2.5 inline" />
+                <ExternalLink className="w-3 h-3 inline" />
               </a>{' '}
               และ Social Media Faculty of Nursing, Mahidol University ทุกช่องทาง
             </div>
@@ -383,56 +383,56 @@ export const ThankYouResetView: React.FC<ThankYouResetViewProps> = ({
             target="_blank"
             rel="noopener noreferrer"
             onClick={(e) => e.stopPropagation()}
-            className="w-full sm:w-auto shrink-0 px-3.5 py-1.5 rounded-xl bg-mahidol-gold hover:bg-amber-400 text-slate-950 font-bold text-[11px] sm:text-xs flex items-center justify-center gap-1 shadow-md transition-all active:scale-95"
+            className="w-full sm:w-auto shrink-0 min-h-[44px] px-4 py-2 rounded-xl bg-mahidol-gold hover:bg-amber-400 text-slate-950 font-bold text-sm sm:text-base flex items-center justify-center gap-1.5 shadow-md transition-all active:scale-95"
           >
             <span>ข้อมูลหลักสูตร & TCAS</span>
-            <ExternalLink className="w-3 h-3" />
+            <ExternalLink className="w-4 h-4" />
           </a>
         </div>
 
         {/* ── Action Section ("เริ่มใหม่อีกครั้ง") ────────────────────────────── */}
-        <div className="shrink-0 max-w-md mx-auto w-full">
+        <div className="shrink-0 max-w-lg mx-auto w-full">
           {/* Try Again / Reset for Next Player */}
           <button
             onClick={(e) => {
               e.stopPropagation();
               onReset();
             }}
-            className="w-full bg-gradient-to-r from-emerald-500 via-teal-500 to-emerald-600 hover:from-emerald-600 hover:to-teal-700 active:scale-[0.98] text-white rounded-2xl p-2.5 sm:p-3.5 flex items-center justify-between shadow-md transition-all group"
+            className="w-full min-h-[64px] bg-gradient-to-r from-emerald-500 via-teal-500 to-emerald-600 hover:from-emerald-600 hover:to-teal-700 active:scale-[0.98] text-white rounded-2xl p-3 sm:p-4 flex items-center justify-between shadow-md transition-all group"
           >
-            <div className="flex items-center gap-2.5 sm:gap-3 text-left">
-              <div className="w-8 h-8 sm:w-9 sm:h-9 rounded-xl bg-white/20 flex items-center justify-center shrink-0 group-hover:rotate-45 transition-transform">
-                <RotateCcw className="w-4 h-4 sm:w-5 sm:h-5 text-white" />
+            <div className="flex items-center gap-3 sm:gap-4 text-left">
+              <div className="w-10 h-10 sm:w-12 sm:h-12 rounded-xl bg-white/20 flex items-center justify-center shrink-0 group-hover:rotate-45 transition-transform">
+                <RotateCcw className="w-5 h-5 sm:w-6 sm:h-6 text-white" />
               </div>
               <div>
-                <div className="text-xs sm:text-sm font-bold text-white font-heading">
+                <div className="text-xl sm:text-2xl font-black text-white font-heading">
                   เริ่มใหม่อีกครั้ง
                 </div>
-                <div className="text-[10px] sm:text-[11px] text-emerald-100">
+                <div className="text-sm sm:text-base text-emerald-100 font-medium">
                   ทำแบบประเมินใหม่ / สำรวจเส้นทางอื่น
                 </div>
               </div>
             </div>
-            <div className="w-7 h-7 sm:w-8 sm:h-8 rounded-full bg-white/20 flex items-center justify-center text-white group-hover:translate-x-1 transition-transform">
-              <ChevronRight className="w-3.5 h-3.5 sm:w-4 sm:h-4" />
+            <div className="w-8 h-8 sm:w-10 sm:h-10 rounded-full bg-white/20 flex items-center justify-center text-white group-hover:translate-x-1 transition-transform">
+              <ChevronRight className="w-4 h-4 sm:w-5 sm:h-5 stroke-[2.5]" />
             </div>
           </button>
         </div>
 
         {/* ── 60-second Auto-reset Countdown Bar ──────────────────────────────── */}
-        <div className="bg-white/80 backdrop-blur-md rounded-2xl p-2 sm:p-2.5 shadow-sm border border-sky-100 flex items-center justify-between gap-2.5 max-w-xl mx-auto w-full shrink-0">
-          <div className="flex items-center gap-1.5 shrink-0">
-            <Clock className="w-3.5 h-3.5 text-sky-600" />
-            <span className="text-[11px] sm:text-xs text-slate-600 font-medium hidden xs:inline">
+        <div className="bg-white/80 backdrop-blur-md rounded-2xl p-2.5 sm:p-3 shadow-sm border border-sky-100 flex items-center justify-between gap-3 max-w-2xl mx-auto w-full shrink-0">
+          <div className="flex items-center gap-2 shrink-0">
+            <Clock className="w-4 h-4 text-sky-600" />
+            <span className="text-sm sm:text-base text-slate-600 font-semibold hidden xs:inline">
               ระบบจะเริ่มใหม่โดยอัตโนมัติ หากไม่มีการใช้งานภายใน 60 วินาที
             </span>
-            <span className="text-[11px] text-slate-600 font-medium xs:hidden">
+            <span className="text-sm text-slate-600 font-semibold xs:hidden">
               เริ่มใหม่ใน
             </span>
           </div>
 
           {/* Progress bar */}
-          <div className="flex-1 h-1.5 sm:h-2 bg-sky-100 rounded-full overflow-hidden">
+          <div className="flex-1 h-2 sm:h-2.5 bg-sky-100 rounded-full overflow-hidden">
             <div
               className="h-full bg-gradient-to-r from-sky-400 to-blue-600 transition-all duration-1000 ease-linear rounded-full"
               style={{ width: `${progressPercent}%` }}
@@ -440,16 +440,16 @@ export const ThankYouResetView: React.FC<ThankYouResetViewProps> = ({
           </div>
 
           {/* Seconds badge */}
-          <div className="shrink-0 px-2 py-0.5 rounded-full bg-sky-100 border border-sky-200 text-sky-800 text-[10px] sm:text-xs font-bold font-mono">
+          <div className="shrink-0 px-3 py-1 rounded-full bg-sky-100 border border-sky-200 text-sky-800 text-sm sm:text-base font-bold font-mono">
             {timeLeft} วินาที
           </div>
         </div>
       </div>
 
       {/* ── Footer ──────────────────────────────────────────────────────────── */}
-      <footer className="py-1.5 px-3 sm:px-4 text-center text-[9px] sm:text-[10px] text-slate-500 border-t border-sky-200/60 bg-white/40 backdrop-blur-sm shrink-0 flex items-center justify-between">
+      <footer className="py-2 px-4 sm:px-6 text-center text-xs sm:text-sm text-slate-500 border-t border-sky-200/60 bg-white/40 backdrop-blur-sm shrink-0 flex items-center justify-between">
         <span>Thank you for being part of our future of nursing. 💙</span>
-        <span className="font-semibold text-mahidol-blue">
+        <span className="font-bold text-mahidol-blue">
           FACULTY OF NURSING, MAHIDOL UNIVERSITY
         </span>
       </footer>

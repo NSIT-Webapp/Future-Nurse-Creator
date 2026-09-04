@@ -1,6 +1,5 @@
 import { ResultPayload, StrengthFamily } from '../types';
 import { getCardCharacterUrl, getCardTemplateUrl } from '../assets/registry';
-import { getCardIdentity } from '../data/cardIdentity';
 
 const FAMILY_EMOJI: Record<StrengthFamily, string> = {
   HUMAN_CONNECTION:     '❤️',
@@ -77,6 +76,17 @@ function wrapThaiText(ctx: CanvasRenderingContext2D, text: string, maxWidth: num
   return lines;
 }
 
+const PATH_THEME: Record<string, { primary: string; lightBg: string; border: string; descColor: string }> = {
+  PED:  { primary: '#C2185B', lightBg: '#FFF5F7', border: '#F472B6', descColor: '#3F3939' },
+  MH:   { primary: '#7C3AED', lightBg: '#FAF5FF', border: '#C084FC', descColor: '#3F3939' },
+  ER:   { primary: '#DC2626', lightBg: '#FFF5F5', border: '#F87171', descColor: '#3F3939' },
+  OA:   { primary: '#D97706', lightBg: '#FFFBEB', border: '#FBBF24', descColor: '#3F3939' },
+  MAT:  { primary: '#E11D48', lightBg: '#FFF1F2', border: '#FDA4AF', descColor: '#3F3939' },
+  COMM: { primary: '#059669', lightBg: '#F0FDF4', border: '#34D399', descColor: '#3F3939' },
+  INT:  { primary: '#0284C7', lightBg: '#F0F9FF', border: '#38BDF8', descColor: '#3F3939' },
+  TECH: { primary: '#4F46E5', lightBg: '#EEF2FF', border: '#818CF8', descColor: '#3F3939' },
+};
+
 async function renderTemplateCard(
   ctx: CanvasRenderingContext2D,
   result: ResultPayload,
@@ -95,47 +105,52 @@ async function renderTemplateCard(
 
   const sourceWidth = img.naturalWidth || img.width || width;
   const sourceHeight = img.naturalHeight || img.height || height;
-  const scaleX = sourceWidth / width;
-  const scaleY = sourceHeight / height;
 
-  if (ctx.canvas.width !== sourceWidth || ctx.canvas.height !== sourceHeight) {
-    ctx.canvas.width = sourceWidth;
-    ctx.canvas.height = sourceHeight;
-    ctx.imageSmoothingEnabled = true;
-    ctx.imageSmoothingQuality = 'high';
-  }
+  // Scale canvas to high-DPI standard (height = 1920) preserving exact native aspect ratio
+  const targetHeight = 1920;
+  const scale = targetHeight / sourceHeight;
+  const targetWidth = Math.round(sourceWidth * scale);
 
-  // 1. Draw base template image without changing its native aspect ratio
-  ctx.drawImage(img, 0, 0, sourceWidth, sourceHeight);
+  ctx.canvas.width = targetWidth;
+  ctx.canvas.height = targetHeight;
+  ctx.imageSmoothingEnabled = true;
+  ctx.imageSmoothingQuality = 'high';
 
-  // 2. Smart Dynamic Text Overlay for Pediatric Nursing (with dashed bracket placeholders)
+  // 1. Draw base template image cleanly
+  ctx.drawImage(img, 0, 0, targetWidth, targetHeight);
+
+  const theme = PATH_THEME[result.pathId] || {
+    primary: result.path.color || '#2563EB',
+    lightBg: '#F8FAFC',
+    border: result.path.color || '#3B82F6',
+    descColor: '#334155',
+  };
+
   const isPedFemale = result.pathId === 'PED' && result.characterType === 'female_student';
 
   if (isPedFemale) {
-    ctx.save();
-    ctx.scale(scaleX, scaleY);
-
+    // ── Case 1: PED Female Template with Pre-drawn Dashed Box Layout ────────
     // A. Your Superpower:
     // Cover [Strength Name]
-    ctx.fillStyle = '#FFF2F4';
-    roundRect(ctx, 195, 652, 280, 48, 8);
+    ctx.fillStyle = theme.lightBg;
+    roundRect(ctx, 195, 650, 310, 50, 10);
     ctx.fill();
 
     // Draw Strength Name
     ctx.save();
-    ctx.fillStyle = '#C2185B';
-    ctx.font = `bold 30px ${CARD_FONT}`;
+    ctx.fillStyle = theme.primary;
+    ctx.font = `bold 28px ${CARD_FONT}`;
     ctx.textAlign = 'left';
     ctx.textBaseline = 'middle';
-    ctx.fillText(result.superpower, 202, 676);
+    ctx.fillText(result.superpower, 204, 675);
     ctx.restore();
 
     // Redraw [Strength Description] dashed box & fill
     ctx.save();
-    roundRect(ctx, 75, 726, 436, 164, 18);
-    ctx.fillStyle = '#FFF8F8';
+    roundRect(ctx, 75, 724, 436, 166, 18);
+    ctx.fillStyle = '#FFFFFF';
     ctx.fill();
-    ctx.strokeStyle = '#F472B6';
+    ctx.strokeStyle = theme.border;
     ctx.lineWidth = 2.5;
     ctx.setLineDash([8, 6]);
     ctx.stroke();
@@ -143,13 +158,13 @@ async function renderTemplateCard(
 
     // Draw Thai strength description
     ctx.save();
-    ctx.fillStyle = '#4A3E3D';
+    ctx.fillStyle = theme.descColor;
     ctx.font = `600 23px ${CARD_FONT}`;
     ctx.textAlign = 'center';
     ctx.textBaseline = 'middle';
     const strengthDesc = getSuperpowerDesc(result);
     const sLines = wrapThaiText(ctx, strengthDesc, 390);
-    const startSY = 808 - ((sLines.length - 1) * 32) / 2;
+    const startSY = 807 - ((sLines.length - 1) * 32) / 2;
     sLines.forEach((line, i) => {
       ctx.fillText(line, 75 + 436 / 2, startSY + i * 32);
     });
@@ -157,37 +172,37 @@ async function renderTemplateCard(
 
     // B. Your AI Skill:
     // Cover [AI Skill Name]
-    ctx.fillStyle = '#FFF2F4';
-    roundRect(ctx, 195, 1008, 280, 48, 8);
+    ctx.fillStyle = theme.lightBg;
+    roundRect(ctx, 195, 1006, 310, 50, 10);
     ctx.fill();
 
     ctx.save();
-    ctx.fillStyle = '#C2185B';
+    ctx.fillStyle = theme.primary;
     ctx.font = `bold 28px ${CARD_FONT}`;
     ctx.textAlign = 'left';
     ctx.textBaseline = 'middle';
-    ctx.fillText(result.aiSkill, 202, 1032);
+    ctx.fillText(result.aiSkill, 204, 1031);
     ctx.restore();
 
     // Redraw [AI Skill Description] dashed box & fill
     ctx.save();
-    roundRect(ctx, 75, 1082, 436, 164, 18);
-    ctx.fillStyle = '#FFF8F8';
+    roundRect(ctx, 75, 1080, 436, 166, 18);
+    ctx.fillStyle = '#FFFFFF';
     ctx.fill();
-    ctx.strokeStyle = '#F472B6';
+    ctx.strokeStyle = theme.border;
     ctx.lineWidth = 2.5;
     ctx.setLineDash([8, 6]);
     ctx.stroke();
     ctx.restore();
 
     ctx.save();
-    ctx.fillStyle = '#4A3E3D';
+    ctx.fillStyle = theme.descColor;
     ctx.font = `600 23px ${CARD_FONT}`;
     ctx.textAlign = 'center';
     ctx.textBaseline = 'middle';
     const aiDesc = getAiSkillDesc(result);
     const aiLines = wrapThaiText(ctx, aiDesc, 390);
-    const startAiY = 1164 - ((aiLines.length - 1) * 32) / 2;
+    const startAiY = 1163 - ((aiLines.length - 1) * 32) / 2;
     aiLines.forEach((line, i) => {
       ctx.fillText(line, 75 + 436 / 2, startAiY + i * 32);
     });
@@ -195,31 +210,31 @@ async function renderTemplateCard(
 
     // C. Your Impact:
     // Cover [Impact Title]
-    ctx.fillStyle = '#FFF2F4';
-    roundRect(ctx, 195, 1515, 280, 48, 8);
+    ctx.fillStyle = theme.lightBg;
+    roundRect(ctx, 195, 1513, 310, 50, 10);
     ctx.fill();
 
     ctx.save();
-    ctx.fillStyle = '#C2185B';
+    ctx.fillStyle = theme.primary;
     ctx.font = `bold 28px ${CARD_FONT}`;
     ctx.textAlign = 'left';
     ctx.textBaseline = 'middle';
-    ctx.fillText(result.path.badge || 'Child Care Champion', 202, 1539);
+    ctx.fillText(result.path.badge || 'Child Care Champion', 204, 1538);
     ctx.restore();
 
     // Redraw [Impact Description] dashed box & fill
     ctx.save();
-    roundRect(ctx, 75, 1582, 436, 110, 18);
-    ctx.fillStyle = '#FFF8F8';
+    roundRect(ctx, 75, 1580, 436, 114, 18);
+    ctx.fillStyle = '#FFFFFF';
     ctx.fill();
-    ctx.strokeStyle = '#F472B6';
+    ctx.strokeStyle = theme.border;
     ctx.lineWidth = 2.5;
     ctx.setLineDash([8, 6]);
     ctx.stroke();
     ctx.restore();
 
     ctx.save();
-    ctx.fillStyle = '#4A3E3D';
+    ctx.fillStyle = theme.descColor;
     ctx.font = `600 22px ${CARD_FONT}`;
     ctx.textAlign = 'center';
     ctx.textBaseline = 'middle';
@@ -229,12 +244,141 @@ async function renderTemplateCard(
       ctx.fillText(line, 75 + 436 / 2, startImpY + i * 30);
     });
     ctx.restore();
+  } else {
+    // ── Case 2: All Other Cards (ช่องสำหรับพิมพ์ dynamic text) ────────────────
+    // Determine slot X & Width based on card template ratio
+    const isNarrow = targetWidth <= 1150; // COMM, TECH (576 width)
+    const slotX = isNarrow ? 195 : 222;
+    const slotW = isNarrow ? 315 : 420;
 
+    // 1. Slot: Your Superpower
+    const spY = 696;
+    const spH = 212;
+    ctx.save();
+    ctx.shadowColor = 'rgba(0, 30, 80, 0.08)';
+    ctx.shadowBlur = 10;
+    ctx.shadowOffsetY = 3;
+    ctx.fillStyle = '#FFFFFF';
+    roundRect(ctx, slotX, spY, slotW, spH, 16);
+    ctx.fill();
+    ctx.shadowColor = 'transparent';
+    ctx.strokeStyle = theme.border;
+    ctx.lineWidth = 2;
+    ctx.setLineDash([8, 6]);
+    ctx.stroke();
+    ctx.setLineDash([]);
+
+    // Superpower Title
+    ctx.fillStyle = theme.primary;
+    ctx.font = `bold 23px ${CARD_FONT}`;
+    ctx.textAlign = 'left';
+    ctx.textBaseline = 'middle';
+    ctx.fillText(result.superpower, slotX + 16, spY + 28);
+
+    // Separator line
+    ctx.strokeStyle = theme.border + '50';
+    ctx.lineWidth = 1;
+    ctx.beginPath();
+    ctx.moveTo(slotX + 16, spY + 48);
+    ctx.lineTo(slotX + slotW - 16, spY + 48);
+    ctx.stroke();
+
+    // Superpower Thai Description
+    ctx.fillStyle = theme.descColor;
+    ctx.font = `600 19px ${CARD_FONT}`;
+    ctx.textBaseline = 'top';
+    const sLines = wrapThaiText(ctx, getSuperpowerDesc(result), slotW - 32);
+    sLines.slice(0, 4).forEach((line, i) => {
+      ctx.fillText(line, slotX + 16, spY + 62 + i * 27);
+    });
+    ctx.restore();
+
+    // 2. Slot: Your AI Skill
+    const aiY = 998;
+    const aiH = 212;
+    ctx.save();
+    ctx.shadowColor = 'rgba(0, 30, 80, 0.08)';
+    ctx.shadowBlur = 10;
+    ctx.shadowOffsetY = 3;
+    ctx.fillStyle = '#FFFFFF';
+    roundRect(ctx, slotX, aiY, slotW, aiH, 16);
+    ctx.fill();
+    ctx.shadowColor = 'transparent';
+    ctx.strokeStyle = theme.border;
+    ctx.lineWidth = 2;
+    ctx.setLineDash([8, 6]);
+    ctx.stroke();
+    ctx.setLineDash([]);
+
+    // AI Skill Title
+    ctx.fillStyle = theme.primary;
+    ctx.font = `bold 23px ${CARD_FONT}`;
+    ctx.textAlign = 'left';
+    ctx.textBaseline = 'middle';
+    ctx.fillText(result.aiSkill, slotX + 16, aiY + 28);
+
+    // Separator line
+    ctx.strokeStyle = theme.border + '50';
+    ctx.lineWidth = 1;
+    ctx.beginPath();
+    ctx.moveTo(slotX + 16, aiY + 48);
+    ctx.lineTo(slotX + slotW - 16, aiY + 48);
+    ctx.stroke();
+
+    // AI Skill Thai Description
+    ctx.fillStyle = theme.descColor;
+    ctx.font = `600 19px ${CARD_FONT}`;
+    ctx.textBaseline = 'top';
+    const aiLines = wrapThaiText(ctx, getAiSkillDesc(result), slotW - 32);
+    aiLines.slice(0, 4).forEach((line, i) => {
+      ctx.fillText(line, slotX + 16, aiY + 62 + i * 27);
+    });
+    ctx.restore();
+
+    // 3. Mood & Tone: Keep 100% untouched!
+
+    // 4. Slot: Your Impact
+    const impY = 1478;
+    const impH = 200;
+    ctx.save();
+    ctx.shadowColor = 'rgba(0, 30, 80, 0.08)';
+    ctx.shadowBlur = 10;
+    ctx.shadowOffsetY = 3;
+    ctx.fillStyle = '#FFFFFF';
+    roundRect(ctx, slotX, impY, slotW, impH, 16);
+    ctx.fill();
+    ctx.shadowColor = 'transparent';
+    ctx.strokeStyle = theme.border;
+    ctx.lineWidth = 2;
+    ctx.setLineDash([8, 6]);
+    ctx.stroke();
+    ctx.setLineDash([]);
+
+    // Impact Badge / Role
+    ctx.fillStyle = theme.primary;
+    ctx.font = `bold 22px ${CARD_FONT}`;
+    ctx.textAlign = 'left';
+    ctx.textBaseline = 'middle';
+    ctx.fillText(result.path.badge || result.path.nameEn, slotX + 16, impY + 28);
+
+    // Separator line
+    ctx.strokeStyle = theme.border + '50';
+    ctx.lineWidth = 1;
+    ctx.beginPath();
+    ctx.moveTo(slotX + 16, impY + 48);
+    ctx.lineTo(slotX + slotW - 16, impY + 48);
+    ctx.stroke();
+
+    // Impact Thai Description
+    ctx.fillStyle = theme.descColor;
+    ctx.font = `600 19px ${CARD_FONT}`;
+    ctx.textBaseline = 'top';
+    const impLines = wrapThaiText(ctx, result.profileImpact, slotW - 32);
+    impLines.slice(0, 4).forEach((line, i) => {
+      ctx.fillText(line, slotX + 16, impY + 60 + i * 27);
+    });
     ctx.restore();
   }
-
-  drawDynamicTemplateText(ctx, result, sourceWidth, sourceHeight, scaleX, scaleY);
-  drawCollectibleFinish(ctx, result, scaleX, scaleY);
 }
 
 export async function renderFutureNurseCard(
@@ -569,256 +713,6 @@ function drawBadge(ctx: CanvasRenderingContext2D, rightX: number, topY: number, 
   ctx.restore();
 }
 
-function drawCollectibleFinish(
-  ctx: CanvasRenderingContext2D,
-  result: ResultPayload,
-  scaleX = 1,
-  scaleY = 1
-) {
-  const identity = getCardIdentity(result);
-  const themeColor = result.path.color || '#2563EB';
-
-  ctx.save();
-  ctx.scale(scaleX, scaleY);
-
-  // Trading-card depth frame: subtle enough to preserve the supplied artwork.
-  const frameGradient = ctx.createLinearGradient(30, 30, 1050, 1890);
-  frameGradient.addColorStop(0, 'rgba(255, 255, 255, 0.72)');
-  frameGradient.addColorStop(0.28, hexToRgba(themeColor, 0.16));
-  frameGradient.addColorStop(0.5, 'rgba(255, 255, 255, 0.45)');
-  frameGradient.addColorStop(0.74, hexToRgba(themeColor, 0.12));
-  frameGradient.addColorStop(1, 'rgba(255, 255, 255, 0.66)');
-  ctx.strokeStyle = frameGradient;
-  ctx.lineWidth = 5;
-  roundRect(ctx, 30, 30, 1020, 1860, 32);
-  ctx.stroke();
-
-  const innerFrame = ctx.createLinearGradient(42, 42, 1038, 1878);
-  innerFrame.addColorStop(0, 'rgba(255, 255, 255, 0.42)');
-  innerFrame.addColorStop(0.5, 'rgba(255, 255, 255, 0.08)');
-  innerFrame.addColorStop(1, hexToRgba(themeColor, 0.12));
-  ctx.strokeStyle = innerFrame;
-  ctx.lineWidth = 1.5;
-  roundRect(ctx, 42, 42, 996, 1836, 26);
-  ctx.stroke();
-
-  // Soft diagonal foil pass that makes the exported PNG feel less flat.
-  const sheen = ctx.createLinearGradient(90, 1680, 980, 250);
-  sheen.addColorStop(0, 'rgba(255, 255, 255, 0)');
-  sheen.addColorStop(0.43, 'rgba(255, 255, 255, 0)');
-  sheen.addColorStop(0.5, 'rgba(255, 255, 255, 0.2)');
-  sheen.addColorStop(0.56, 'rgba(255, 255, 255, 0)');
-  sheen.addColorStop(1, 'rgba(255, 255, 255, 0)');
-  ctx.fillStyle = sheen;
-  ctx.fillRect(0, 0, 1080, 1920);
-
-  // Official event stamp, placed below the existing event badge.
-  const stampX = 724;
-  const stampY = 274;
-  ctx.shadowColor = hexToRgba(themeColor, 0.24);
-  ctx.shadowBlur = 18;
-  ctx.shadowOffsetY = 8;
-  ctx.fillStyle = 'rgba(255, 255, 255, 0.86)';
-  roundRect(ctx, stampX, stampY, 282, 74, 18);
-  ctx.fill();
-  ctx.shadowColor = 'transparent';
-  ctx.strokeStyle = hexToRgba(themeColor, 0.34);
-  ctx.lineWidth = 1.5;
-  ctx.setLineDash([7, 7]);
-  roundRect(ctx, stampX + 8, stampY + 8, 266, 58, 14);
-  ctx.stroke();
-  ctx.setLineDash([]);
-
-  ctx.textAlign = 'center';
-  ctx.textBaseline = 'middle';
-  ctx.fillStyle = themeColor;
-  ctx.font = `800 18px ${CARD_FONT}`;
-  ctx.fillText('OFFICIAL RESULT CARD', stampX + 141, stampY + 28);
-  ctx.fillStyle = '#002B7F';
-  ctx.font = `800 17px ${CARD_FONT}`;
-  ctx.fillText(identity.cardId, stampX + 141, stampY + 52);
-
-  // Archetype ribbon: the shareable identity produced from path + strength family.
-  const ribbonY = 1688;
-  const ribbonX = 132;
-  const ribbonW = 816;
-  const ribbonH = 72;
-  const ribbonGradient = ctx.createLinearGradient(ribbonX, ribbonY, ribbonX + ribbonW, ribbonY);
-  ribbonGradient.addColorStop(0, 'rgba(255, 255, 255, 0.78)');
-  ribbonGradient.addColorStop(0.5, 'rgba(255, 255, 255, 0.94)');
-  ribbonGradient.addColorStop(1, hexToRgba(themeColor, 0.14));
-  ctx.shadowColor = 'rgba(0, 43, 127, 0.13)';
-  ctx.shadowBlur = 18;
-  ctx.shadowOffsetY = 7;
-  ctx.fillStyle = ribbonGradient;
-  roundRect(ctx, ribbonX, ribbonY, ribbonW, ribbonH, 24);
-  ctx.fill();
-  ctx.shadowColor = 'transparent';
-  ctx.strokeStyle = 'rgba(255, 255, 255, 0.62)';
-  ctx.lineWidth = 1.5;
-  roundRect(ctx, ribbonX, ribbonY, ribbonW, ribbonH, 24);
-  ctx.stroke();
-
-  ctx.fillStyle = themeColor;
-  ctx.font = `900 29px ${CARD_FONT}`;
-  fitText(ctx, identity.archetype.toUpperCase(), ribbonX + ribbonW / 2, ribbonY + 27, ribbonW - 96, 29);
-  ctx.fillStyle = '#002B7F';
-  ctx.font = `700 21px ${CARD_FONT}`;
-  fitText(ctx, identity.thName, ribbonX + ribbonW / 2, ribbonY + 52, ribbonW - 112, 21);
-
-  ctx.restore();
-}
-
-function drawDynamicTemplateText(
-  ctx: CanvasRenderingContext2D,
-  result: ResultPayload,
-  sourceWidth: number,
-  sourceHeight: number,
-  scaleX = 1,
-  scaleY = 1
-) {
-  const themeColor = result.path.color || '#2563EB';
-  const identity = getCardIdentity(result);
-  const sourceRatio = sourceWidth / sourceHeight;
-  const isNarrowCard = sourceRatio < 0.62;
-  const isPedFemale = result.pathId === 'PED' && result.characterType === 'female_student';
-
-  const layout = isPedFemale || isNarrowCard
-    ? {
-        x: 186,
-        w: 318,
-        rows: [
-          { y: 642, h: 238, label: 'Your Superpower', title: result.superpower, desc: getSuperpowerDesc(result), titleSize: 27, descSize: 21, titleLines: 1, descLines: 3 },
-          { y: 996, h: 238, label: 'Your AI Skill', title: result.aiSkill, desc: getAiSkillDesc(result), titleSize: 25, descSize: 20, titleLines: 2, descLines: 3 },
-          { y: 1320, h: 116, label: 'Mood & Tone', title: FAMILY_LABEL[result.strengthFamily], desc: result.path.moodTone, titleSize: 22, descSize: 18, titleLines: 1, descLines: 2 },
-          { y: 1510, h: 150, label: 'Your Impact', title: identity.archetype, desc: result.profileImpact, titleSize: 22, descSize: 18, titleLines: 1, descLines: 3 },
-        ],
-      }
-    : {
-        x: 190,
-        w: 330,
-        rows: [
-          { y: 664, h: 170, label: 'Your Superpower', title: result.superpower, desc: getSuperpowerDesc(result), titleSize: 26, descSize: 19, titleLines: 2, descLines: 2 },
-          { y: 960, h: 176, label: 'Your AI Skill', title: result.aiSkill, desc: getAiSkillDesc(result), titleSize: 24, descSize: 18, titleLines: 2, descLines: 3 },
-          { y: 1238, h: 118, label: 'Mood & Tone', title: FAMILY_LABEL[result.strengthFamily], desc: result.path.moodTone, titleSize: 21, descSize: 17, titleLines: 1, descLines: 2 },
-          { y: 1470, h: 142, label: 'Your Impact', title: identity.archetype, desc: result.profileImpact, titleSize: 21, descSize: 17, titleLines: 1, descLines: 3 },
-        ],
-      };
-
-  ctx.save();
-  ctx.scale(scaleX, scaleY);
-  ctx.textAlign = 'left';
-  ctx.textBaseline = 'top';
-
-  layout.rows.forEach((row) => {
-    drawDynamicTextPatch(ctx, {
-      x: layout.x,
-      y: row.y,
-      w: layout.w,
-      h: row.h,
-      label: row.label,
-      title: row.title,
-      desc: row.desc,
-      titleSize: row.titleSize,
-      descSize: row.descSize,
-      titleLines: row.titleLines,
-      descLines: row.descLines,
-      color: themeColor,
-    });
-  });
-
-  ctx.restore();
-}
-
-function drawDynamicTextPatch(
-  ctx: CanvasRenderingContext2D,
-  options: {
-    x: number;
-    y: number;
-    w: number;
-    h: number;
-    label: string;
-    title: string;
-    desc: string;
-    titleSize: number;
-    descSize: number;
-    titleLines: number;
-    descLines: number;
-    color: string;
-  }
-) {
-  const { x, y, w, h, label, title, desc, titleSize, descSize, titleLines, descLines, color } = options;
-
-  ctx.save();
-  ctx.shadowColor = 'rgba(0, 43, 127, 0.08)';
-  ctx.shadowBlur = 12;
-  ctx.shadowOffsetY = 4;
-  ctx.fillStyle = 'rgba(255, 255, 255, 0.82)';
-  roundRect(ctx, x - 10, y - 8, w + 20, h + 16, 16);
-  ctx.fill();
-  ctx.shadowColor = 'transparent';
-  ctx.strokeStyle = hexToRgba(color, 0.18);
-  ctx.lineWidth = 1.2;
-  roundRect(ctx, x - 10, y - 8, w + 20, h + 16, 16);
-  ctx.stroke();
-
-  ctx.fillStyle = color;
-  ctx.font = `800 18px ${CARD_FONT}`;
-  ctx.fillText(label, x, y);
-
-  ctx.fillStyle = color;
-  ctx.font = `900 ${titleSize}px ${CARD_FONT}`;
-  const renderedTitle = fitWrappedText(ctx, title, x, y + 26, w, titleSize + 5, titleLines);
-
-  ctx.fillStyle = '#002B7F';
-  ctx.font = `700 ${descSize}px ${CARD_FONT}`;
-  const descY = y + 34 + renderedTitle * (titleSize + 5) + 8;
-  fitWrappedText(ctx, desc, x, descY, w, descSize + 7, descLines);
-  ctx.restore();
-}
-
-function fitWrappedText(
-  ctx: CanvasRenderingContext2D,
-  text: string,
-  x: number,
-  y: number,
-  maxWidth: number,
-  lineHeight: number,
-  maxLines: number
-) {
-  const lines = wrapThaiText(ctx, text, maxWidth);
-  const visibleLines = lines.slice(0, maxLines);
-  if (lines.length > maxLines && visibleLines.length) {
-    let last = visibleLines[visibleLines.length - 1];
-    while (last.length > 0 && ctx.measureText(`${last}...`).width > maxWidth) {
-      last = last.slice(0, -1);
-    }
-    visibleLines[visibleLines.length - 1] = `${last.trim()}...`;
-  }
-
-  visibleLines.forEach((line, index) => {
-    ctx.fillText(line, x, y + index * lineHeight);
-  });
-
-  return Math.max(visibleLines.length, 1);
-}
-
-function fitText(
-  ctx: CanvasRenderingContext2D,
-  text: string,
-  x: number,
-  y: number,
-  maxWidth: number,
-  startSize: number
-) {
-  let fontSize = startSize;
-  const fontTemplate = ctx.font;
-  while (fontSize > 16 && ctx.measureText(text).width > maxWidth) {
-    fontSize -= 1;
-    ctx.font = fontTemplate.replace(/\d+px/, `${fontSize}px`);
-  }
-  ctx.fillText(text, x, y);
-}
 
 function drawSectionBox(
   ctx: CanvasRenderingContext2D,

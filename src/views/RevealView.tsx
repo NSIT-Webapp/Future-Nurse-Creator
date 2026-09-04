@@ -170,14 +170,14 @@ export const RevealView: React.FC<RevealViewProps> = ({ result, onNext, onBack }
           filter: drop-shadow(0 2px 6px rgba(0,0,0,0.16)) drop-shadow(0 0 16px rgba(255,255,255,0.45));
         }
 
-        /* ── Character rise-in from bottom ── */
-        @keyframes char-rise-in {
-          0%   { transform: translateY(50px) scale(0.88); opacity: 0; }
-          65%  { transform: translateY(0px) scale(1.01); opacity: 1; }
-          100% { transform: translateY(0px) scale(1); opacity: 1; }
+        /* ── Half-body character rise-in from bottom ── */
+        @keyframes char-bust-rise {
+          0%   { transform: translateY(40px) scale(1.18); opacity: 0; }
+          65%  { transform: translateY(0px) scale(1.28); opacity: 1; }
+          100% { transform: translateY(0px) scale(1.25); opacity: 1; }
         }
-        .char-rise-in {
-          animation: char-rise-in 0.7s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+        .char-bust-rise {
+          animation: char-bust-rise 0.7s cubic-bezier(0.16, 1, 0.3, 1) forwards;
           animation-delay: 0.12s;
           opacity: 0;
         }
@@ -252,7 +252,7 @@ export const RevealView: React.FC<RevealViewProps> = ({ result, onNext, onBack }
       </div>
 
       {/* ── 2. Stepper: 1..8 with Step 6 Highlight ──────────────────────────── */}
-      <div className="relative z-30 shrink-0 px-3 sm:px-6 pt-1 pb-2.5 sm:pb-3.5 max-w-[720px] mx-auto w-full">
+      <div className="relative z-30 shrink-0 px-3 sm:px-6 pt-1 pb-2 sm:pb-3 max-w-[720px] mx-auto w-full">
         <div className="flex items-center justify-between w-full">
           {stepperSteps.map((stepNum, idx) => {
             const isCompleted = stepNum < 6;
@@ -274,7 +274,7 @@ export const RevealView: React.FC<RevealViewProps> = ({ result, onNext, onBack }
                     {stepNum}
                   </div>
                   {isCurrent && (
-                    <div className="absolute -bottom-4 sm:-bottom-4.5 left-1/2 -translate-x-1/2 px-1.5 sm:px-2 py-0.5 rounded-full bg-[#FF3366] text-white font-black text-[7.5px] sm:text-[8.5px] tracking-wider uppercase shadow-xs whitespace-nowrap animate-pulse">
+                    <div className="absolute -bottom-5 left-1/2 -translate-x-1/2 px-2.5 sm:px-3 py-0.5 rounded-full bg-[#FF3366] text-white font-black text-xs tracking-wider uppercase shadow-xs whitespace-nowrap animate-pulse">
                       REVEAL
                     </div>
                   )}
@@ -295,25 +295,25 @@ export const RevealView: React.FC<RevealViewProps> = ({ result, onNext, onBack }
       </div>
 
       {/* ── 3. Main Body: Adaptive Flex-1 Area ───────────────────────────────── */}
-      <div className="relative z-20 flex-1 flex flex-col justify-between min-h-0 w-full max-w-[680px] mx-auto px-2.5 sm:px-4 py-1">
+      <div className="relative z-20 flex-1 flex flex-col justify-between min-h-0 w-full max-w-[680px] mx-auto px-2.5 sm:px-4 py-0.5 sm:py-1">
 
         {/* ── Header Titles ── */}
         <div className="text-center shrink-0">
           {/* REVEAL Badge Pill */}
-          <div className="inline-flex items-center gap-1.5 px-3.5 sm:px-4 py-0.5 rounded-full bg-white/95 border border-rose-200/80 text-[#FF3366] text-[9.5px] sm:text-[11px] font-black uppercase tracking-widest mb-1 shadow-xs">
-            <Sparkles className="w-2.5 h-2.5 sm:w-3 sm:h-3 animate-pulse" />
+          <div className="inline-flex items-center gap-1.5 px-4 sm:px-5 py-1 rounded-full bg-white/95 border border-rose-200/80 text-[#FF3366] text-xs sm:text-sm font-black uppercase tracking-widest mb-1 shadow-xs">
+            <Sparkles className="w-3 h-3 sm:w-3.5 sm:h-3.5 animate-pulse" />
             <span>✦ REVEAL ✦</span>
-            <span className="text-[10px]">💕</span>
+            <span className="text-xs">💕</span>
           </div>
 
           {/* AI Headline */}
-          <h3 className="text-sm sm:text-base md:text-lg font-black text-slate-800 tracking-tight leading-snug drop-shadow-[0_1px_3px_rgba(255,255,255,0.95)]">
+          <h3 className="text-lg sm:text-xl md:text-2xl font-black text-slate-800 tracking-tight leading-snug drop-shadow-[0_1px_3px_rgba(255,255,255,0.95)]">
             <span className="text-[#FF2D55] font-black">AI </span>
             พบเส้นทางพยาบาลที่ใช่สำหรับคุณแล้ว!
           </h3>
 
           {/* 5 Questions Subtitle */}
-          <p className="text-[10px] sm:text-[11.5px] md:text-xs font-bold text-rose-500 mt-0.5 flex items-center justify-center gap-1.5 drop-shadow-[0_1px_2px_rgba(255,255,255,0.9)]">
+          <p className="text-sm sm:text-base font-bold text-rose-500 mt-1 flex items-center justify-center gap-1.5 drop-shadow-[0_1px_2px_rgba(255,255,255,0.9)]">
             <span>💕</span>
             <span>จากคำตอบทั้ง 5 ข้อของคุณ</span>
             <span>💕</span>
@@ -321,35 +321,35 @@ export const RevealView: React.FC<RevealViewProps> = ({ result, onNext, onBack }
 
           {/* Path Title EN (Fluid responsive typography) */}
           <h2
-            className="text-[clamp(1.4rem,4.5vw,2.4rem)] font-black uppercase leading-tight font-heading mt-1 sm:mt-1.5 title-shimmer px-1"
+            className="text-[clamp(1.75rem,5.5vw,2.85rem)] font-black uppercase leading-tight font-heading mt-1 sm:mt-1.5 title-shimmer px-1"
             style={{ '--title-color': bubbleTextColor } as React.CSSProperties}
           >
             {displayTitleEn}
           </h2>
 
           {/* Thai Ribbon Pill */}
-          <div className="inline-flex items-center justify-center mt-1 mb-0.5">
+          <div className="inline-flex items-center justify-center mt-1.5 mb-0.5">
             <div
-              className="px-4 sm:px-5.5 py-0.5 sm:py-1 rounded-full text-white text-[11px] sm:text-xs md:text-sm font-extrabold shadow-md tracking-wide flex items-center gap-1.5 sm:gap-2"
+              className="px-5 sm:px-7 py-1 sm:py-1.5 rounded-full text-white text-base sm:text-lg md:text-xl font-extrabold shadow-md tracking-wide flex items-center gap-2"
               style={{ backgroundColor: ribbonColor }}
             >
-              <span className="opacity-90 text-[9px] sm:text-xs">♥</span>
+              <span className="opacity-90 text-xs sm:text-sm">♥</span>
               <span>{displayRibbonTh}</span>
-              <span className="opacity-90 text-[9px] sm:text-xs">♥</span>
+              <span className="opacity-90 text-xs sm:text-sm">♥</span>
             </div>
           </div>
         </div>
 
-        {/* ── Center Stage: Large Magical Aura Glow Portal, Character & 3D Stickers ── */}
-        <div className="flex-1 relative flex items-end justify-center min-h-[180px] sm:min-h-[240px] md:min-h-[300px] overflow-visible my-auto">
+        {/* ── Center Stage: Half-body Character Framing inside Large Aura Portal ── */}
+        <div className="flex-1 relative flex items-end justify-center min-h-[170px] sm:min-h-[230px] md:min-h-[290px] overflow-hidden my-auto">
           
           {/* ════════════════════════════════════════════════════════════════════
-              MAGICAL AURA PORTAL SYSTEM (Enlarged + Rich Interactive Lighting)
+              MAGICAL AURA PORTAL SYSTEM (Enlarged + Half-body framing)
              ════════════════════════════════════════════════════════════════════ */}
 
           {/* 1. Rotating Celestial Sunray Beams */}
           <div
-            className="absolute left-1/2 top-[52%] w-[min(98vw,480px)] h-[min(98vw,480px)] rounded-full pointer-events-none opacity-40"
+            className="absolute left-1/2 top-[50%] w-[min(98vw,480px)] h-[min(98vw,480px)] rounded-full pointer-events-none opacity-40"
             style={{
               background: `conic-gradient(from 0deg, transparent 0deg, ${themeColor}60 30deg, transparent 60deg, #FF658450 90deg, transparent 120deg, ${themeColor}60 180deg, transparent 210deg, #FFD70050 270deg, transparent 300deg, ${themeColor}60 360deg)`,
               animation: 'aura-spin-rays 22s linear infinite',
@@ -358,7 +358,7 @@ export const RevealView: React.FC<RevealViewProps> = ({ result, onNext, onBack }
 
           {/* 2. Expanding Divine Ripple Wave */}
           <div
-            className="absolute left-1/2 top-[52%] w-[min(84vw,410px)] h-[min(84vw,410px)] rounded-full pointer-events-none border-2 border-white/60"
+            className="absolute left-1/2 top-[50%] w-[min(84vw,410px)] h-[min(84vw,410px)] rounded-full pointer-events-none border-2 border-white/60"
             style={{
               boxShadow: `0 0 30px ${themeColor}80, inset 0 0 20px rgba(255,255,255,0.8)`,
               animation: 'aura-ripple-expand 3.8s ease-out infinite',
@@ -367,7 +367,7 @@ export const RevealView: React.FC<RevealViewProps> = ({ result, onNext, onBack }
 
           {/* 3. Outermost Radial Ambient Aura Glow */}
           <div
-            className="absolute left-1/2 top-[52%] w-[min(94vw,460px)] h-[min(94vw,460px)] rounded-full pointer-events-none"
+            className="absolute left-1/2 top-[50%] w-[min(94vw,460px)] h-[min(94vw,460px)] rounded-full pointer-events-none"
             style={{
               background: `radial-gradient(circle, ${themeColor}65 0%, #FF658428 44%, ${themeColor}15 62%, transparent 75%)`,
               animation: 'aura-pulse 4.5s ease-in-out infinite',
@@ -376,32 +376,28 @@ export const RevealView: React.FC<RevealViewProps> = ({ result, onNext, onBack }
 
           {/* 4. Concentric Glowing Celestial White Ring */}
           <div
-            className="absolute left-1/2 top-[52%] -translate-x-1/2 -translate-y-1/2 w-[min(82vw,390px)] h-[min(82vw,390px)] rounded-full border-2 border-white/90 shadow-[0_0_36px_rgba(255,255,255,0.95),0_0_15px_rgba(255,255,255,0.8)] pointer-events-none"
+            className="absolute left-1/2 top-[50%] -translate-x-1/2 -translate-y-1/2 w-[min(82vw,390px)] h-[min(82vw,390px)] rounded-full border-2 border-white/90 shadow-[0_0_36px_rgba(255,255,255,0.95),0_0_15px_rgba(255,255,255,0.8)] pointer-events-none"
           />
 
           {/* 5. Inner Delicate Prismatic Ring */}
           <div
-            className="absolute left-1/2 top-[52%] -translate-x-1/2 -translate-y-1/2 w-[min(68vw,320px)] h-[min(68vw,320px)] rounded-full border border-white/50 shadow-[inset_0_0_24px_rgba(255,255,255,0.7)] pointer-events-none"
+            className="absolute left-1/2 top-[50%] -translate-x-1/2 -translate-y-1/2 w-[min(68vw,320px)] h-[min(68vw,320px)] rounded-full border border-white/50 shadow-[inset_0_0_24px_rgba(255,255,255,0.7)] pointer-events-none"
           />
 
           {/* 6. Orbiting Stardust Stars around the Celestial Ring */}
           <div
-            className="absolute left-1/2 top-[52%] -translate-x-1/2 -translate-y-1/2 w-[min(82vw,390px)] h-[min(82vw,390px)] rounded-full pointer-events-none"
+            className="absolute left-1/2 top-[50%] -translate-x-1/2 -translate-y-1/2 w-[min(82vw,390px)] h-[min(82vw,390px)] rounded-full pointer-events-none"
             style={{ animation: 'aura-orbit-spin 16s linear infinite' }}
           >
-            {/* Top Star */}
             <div className="absolute top-0 left-1/2 -translate-x-1/2 -translate-y-1/2 w-4 h-4 text-amber-200 flex items-center justify-center" style={{ animation: 'star-twinkle 2.2s ease-in-out infinite' }}>
               ✦
             </div>
-            {/* Right Star */}
             <div className="absolute top-1/2 right-0 translate-x-1/2 -translate-y-1/2 w-3.5 h-3.5 text-white flex items-center justify-center" style={{ animation: 'star-twinkle 2.5s ease-in-out 0.6s infinite' }}>
               ✦
             </div>
-            {/* Bottom Star */}
             <div className="absolute bottom-0 left-1/2 -translate-x-1/2 translate-y-1/2 w-4 h-4 text-rose-200 flex items-center justify-center" style={{ animation: 'star-twinkle 2.8s ease-in-out 1.2s infinite' }}>
               ✦
             </div>
-            {/* Left Star */}
             <div className="absolute top-1/2 left-0 -translate-x-1/2 -translate-y-1/2 w-3.5 h-3.5 text-cyan-200 flex items-center justify-center" style={{ animation: 'star-twinkle 2.4s ease-in-out 1.8s infinite' }}>
               ✦
             </div>
@@ -426,7 +422,7 @@ export const RevealView: React.FC<RevealViewProps> = ({ result, onNext, onBack }
                     src={sticker.src}
                     alt={sticker.name}
                     style={{
-                      width: `clamp(44px, calc(${sticker.size} * 0.88px), ${sticker.size}px)`,
+                      width: `clamp(46px, calc(${sticker.size} * 0.92px), ${sticker.size}px)`,
                       height: 'auto',
                       transform: sticker.rotate ? `rotate(${sticker.rotate})` : undefined,
                     }}
@@ -439,60 +435,60 @@ export const RevealView: React.FC<RevealViewProps> = ({ result, onNext, onBack }
             })}
           </div>
 
-          {/* Character Cutout (Both Male & Female Support) */}
-          <div className="relative z-10 flex items-end justify-center w-full h-full max-h-[clamp(180px,36vh,420px)]">
+          {/* ── Half-Body Bust Character (Scaled & Centered majestically) ── */}
+          <div className="relative z-10 flex items-end justify-center w-full h-full max-h-[clamp(190px,38vh,440px)] origin-bottom">
             <img
               src={characterImgUrl}
               alt={`${displayTitleEn} - ${isFemale ? 'Female' : 'Male'}`}
-              className="h-full w-auto max-w-full object-contain drop-shadow-[0_14px_36px_rgba(0,43,127,0.3)] select-none char-rise-in"
+              className="h-full w-auto max-w-full object-contain object-top drop-shadow-[0_16px_40px_rgba(0,43,127,0.32)] select-none char-bust-rise scale-[1.28] sm:scale-[1.36] origin-top translate-y-[2%] sm:translate-y-[4%]"
               loading="eager"
               decoding="sync"
             />
           </div>
         </div>
 
-        {/* ── Bottom Information Capsules ── */}
-        <div className="shrink-0 space-y-1.5 sm:space-y-2 pt-1 pb-1">
-          {/* 2-Column Grid: Superpower & AI Skill */}
-          <div className="grid grid-cols-2 gap-1.5 sm:gap-2.5">
-            {/* Superpower */}
-            <div className="bg-white/95 border border-rose-100/90 rounded-xl sm:rounded-2xl p-2 sm:p-2.5 flex items-center gap-2 shadow-sm min-h-[52px] sm:min-h-[64px] box-slide-up-1">
-              <div className="w-8 h-8 sm:w-10 sm:h-10 rounded-lg sm:rounded-xl bg-rose-50 flex items-center justify-center shrink-0 overflow-hidden p-1 border border-rose-100">
+        {/* ── Bottom Information Capsules (ENLARGED CARD BOXES & TYPOGRAPHY) ── */}
+        <div className="shrink-0 space-y-2 sm:space-y-2.5 pt-1.5 pb-1">
+          {/* 2-Column Grid: Superpower & AI Skill (Larger Boxes) */}
+          <div className="grid grid-cols-2 gap-2 sm:gap-3">
+            {/* Superpower Card */}
+            <div className="bg-white/95 border-2 border-rose-100/90 rounded-2xl sm:rounded-3xl p-2.5 sm:p-3.5 flex items-center gap-2.5 sm:gap-3 shadow-md min-h-[64px] sm:min-h-[76px] md:min-h-[82px] box-slide-up-1">
+              <div className="w-10 h-10 sm:w-13 sm:h-13 rounded-xl sm:rounded-2xl bg-rose-50 flex items-center justify-center shrink-0 overflow-hidden p-1.5 border border-rose-100 shadow-2xs">
                 <img src="/assets/reveal/stickers/COMM/heart-pink.png" alt="Superpower" className="w-full h-full object-contain" />
               </div>
               <div className="min-w-0 flex-1">
-                <span className="text-[8.5px] sm:text-[10px] font-bold uppercase tracking-wider text-rose-400 block leading-tight">
+                <span className="text-[9.5px] sm:text-xs font-black uppercase tracking-wider text-rose-500 block leading-tight">
                   Your Superpower
                 </span>
-                <span className="text-[10.5px] sm:text-[12.5px] font-black text-rose-600 block leading-tight mt-0.5 line-clamp-2">
+                <span className="text-xs sm:text-sm md:text-[15px] font-black text-rose-700 block leading-tight mt-0.5 line-clamp-2">
                   {superpower}
                 </span>
               </div>
             </div>
 
-            {/* AI Skill */}
-            <div className="bg-white/95 border border-sky-100/90 rounded-xl sm:rounded-2xl p-2 sm:p-2.5 flex items-center gap-2 shadow-sm min-h-[52px] sm:min-h-[64px] box-slide-up-2">
-              <div className="w-8 h-8 sm:w-10 sm:h-10 rounded-lg sm:rounded-xl bg-sky-50 flex items-center justify-center shrink-0 overflow-hidden p-1 border border-sky-100">
+            {/* AI Skill Card */}
+            <div className="bg-white/95 border-2 border-sky-100/90 rounded-2xl sm:rounded-3xl p-2.5 sm:p-3.5 flex items-center gap-2.5 sm:gap-3 shadow-md min-h-[64px] sm:min-h-[76px] md:min-h-[82px] box-slide-up-2">
+              <div className="w-10 h-10 sm:w-13 sm:h-13 rounded-xl sm:rounded-2xl bg-sky-50 flex items-center justify-center shrink-0 overflow-hidden p-1.5 border border-sky-100 shadow-2xs">
                 <img src={aiSkillIconSrc} alt="AI Skill" className="w-full h-full object-contain" />
               </div>
               <div className="min-w-0 flex-1">
-                <span className="text-[8.5px] sm:text-[10px] font-bold uppercase tracking-wider text-sky-500 block leading-tight">
+                <span className="text-[9.5px] sm:text-xs font-black uppercase tracking-wider text-sky-600 block leading-tight">
                   Your AI Skill
                 </span>
-                <span className="text-[10.5px] sm:text-[12.5px] font-black text-sky-700 block leading-tight mt-0.5 line-clamp-2">
+                <span className="text-xs sm:text-sm md:text-[15px] font-black text-sky-800 block leading-tight mt-0.5 line-clamp-2">
                   {aiSkill}
                 </span>
               </div>
             </div>
           </div>
 
-          {/* Impact Message Box */}
-          <div className="bg-white/95 border border-white/85 rounded-xl sm:rounded-2xl px-3 sm:px-4 py-2 sm:py-2.5 shadow-sm flex items-center gap-2 sm:gap-2.5">
-            <img src={impactHeartSrc} alt="Impact" className="w-5.5 h-5.5 sm:w-7 sm:h-7 object-contain shrink-0" />
-            <p className="text-[10.5px] sm:text-xs md:text-[13px] font-bold text-slate-700 leading-snug text-center flex-1">
+          {/* Impact Message Box (Larger Horizontal Pill) */}
+          <div className="bg-white/95 border-2 border-white/90 rounded-2xl sm:rounded-3xl px-3.5 sm:px-6 py-2.5 sm:py-3.5 shadow-md flex items-center justify-between gap-2.5 sm:gap-4">
+            <img src={impactHeartSrc} alt="Impact" className="w-6.5 h-6.5 sm:w-8.5 sm:h-8.5 object-contain shrink-0 drop-shadow-2xs" />
+            <p className="text-xs sm:text-sm md:text-[15px] font-extrabold text-slate-800 leading-snug text-center flex-1">
               {impact}
             </p>
-            <Sparkles className="w-3.5 h-3.5 sm:w-4 sm:h-4 text-amber-400 shrink-0 animate-pulse" />
+            <Sparkles className="w-4 h-4 sm:w-5.5 sm:h-5.5 text-amber-400 shrink-0 animate-pulse" />
           </div>
         </div>
       </div>
@@ -502,7 +498,7 @@ export const RevealView: React.FC<RevealViewProps> = ({ result, onNext, onBack }
         {onBack ? (
           <button
             onClick={onBack}
-            className="flex-1 max-w-[140px] sm:max-w-[180px] h-11 sm:h-12.5 rounded-full bg-white/95 hover:bg-white text-[#002B7F] font-black text-xs sm:text-sm md:text-base border-2 border-white/90 shadow-[0_4px_16px_rgba(0,43,127,0.12)] flex items-center justify-center gap-1.5 sm:gap-2 active:scale-95 transition-all cursor-pointer backdrop-blur-md"
+            className="flex-1 max-w-[140px] sm:max-w-[180px] h-11.5 sm:h-13 rounded-full bg-white/95 hover:bg-white text-[#002B7F] font-black text-xs sm:text-sm md:text-base border-2 border-white/90 shadow-[0_4px_16px_rgba(0,43,127,0.12)] flex items-center justify-center gap-1.5 sm:gap-2 active:scale-95 transition-all cursor-pointer backdrop-blur-md"
           >
             <ChevronLeft className="w-4 h-4 sm:w-5 sm:h-5 text-[#002B7F] stroke-[2.5]" />
             <span>ย้อนกลับ</span>
@@ -513,7 +509,7 @@ export const RevealView: React.FC<RevealViewProps> = ({ result, onNext, onBack }
 
         <button
           onClick={onNext}
-          className="flex-[2] max-w-[260px] sm:max-w-[310px] h-11 sm:h-12.5 rounded-full bg-gradient-to-r from-[#FF3366] via-[#FF537A] to-[#FF3366] text-white font-black text-xs sm:text-sm md:text-base shadow-lg shadow-rose-500/35 flex items-center justify-center gap-1.5 sm:gap-2 active:scale-95 transition-all cursor-pointer btn-next-cta relative overflow-hidden group"
+          className="flex-[2] max-w-[260px] sm:max-w-[310px] h-11.5 sm:h-13 rounded-full bg-gradient-to-r from-[#FF3366] via-[#FF537A] to-[#FF3366] text-white font-black text-xs sm:text-sm md:text-base shadow-lg shadow-rose-500/35 flex items-center justify-center gap-1.5 sm:gap-2 active:scale-95 transition-all cursor-pointer btn-next-cta relative overflow-hidden group"
         >
           {/* Glossy top sheen */}
           <div className="absolute inset-x-0 top-0 h-[45%] bg-gradient-to-b from-white/35 to-transparent rounded-t-full pointer-events-none" />
