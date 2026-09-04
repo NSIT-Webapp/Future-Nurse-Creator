@@ -2,6 +2,7 @@ import React from 'react';
 import { ChevronRight } from 'lucide-react';
 import { ASSETS } from '../assets/registry';
 import { SoundControl } from '../components/SoundControl';
+import { TouchSparkles } from '../components/TouchSparkles';
 import { playAudio, playStartLaunchSfx } from '../engine/audioManager';
 
 interface WelcomeViewProps {
@@ -13,12 +14,14 @@ interface WelcomeViewProps {
  *
  * Distinct Integrated Layers:
  * 1. data-layer="home-background": Clean campus scenery background (background.jpg)
- * 2. data-layer="home-title": 3D Title Wordmark + Ribbon (title-wordmark.png)
- * 3. data-layer="home-characters": Male & Female students with gentle floating motion (character-male.png & character-female.png)
- * 4. data-layer="home-sound": Modular Sound / Music Control (SoundControl.tsx)
- * 5. data-layer="home-cta": Start Button with energetic "Let's Go!" launch SFX & active feedback
- * 6. data-layer="home-step-cards": 3-step cards with high-DPI native vector typography
- * 7. data-layer="home-mascot": Blue owl mascot with subtle natural bobbing (mascot.png)
+ * 2. data-layer="home-sun-dust": Subtle ambient glowing sun dust drifting across the sky
+ * 3. data-layer="home-title": 3D Title Wordmark + Ribbon (title-wordmark.png)
+ * 4. data-layer="home-characters": Male & Female students with gentle floating motion
+ * 5. data-layer="home-sound": Modular Sound / Music Control (SoundControl.tsx)
+ * 6. data-layer="home-cta": Start Button with glossy shimmer & launch SFX
+ * 7. data-layer="home-step-cards": 3-step cards with high-DPI native vector typography
+ * 8. data-layer="home-mascot": Blue owl mascot with subtle natural bobbing (mascot.png)
+ * 9. data-layer="home-sparkles": Interactive touch sparkle particle trail for iPad / touch screens
  */
 export const WelcomeView: React.FC<WelcomeViewProps> = ({ onStart }) => {
   const [isLaunching, setIsLaunching] = React.useState(false);
@@ -42,6 +45,9 @@ export const WelcomeView: React.FC<WelcomeViewProps> = ({ onStart }) => {
       className="relative w-full h-full min-h-full flex flex-col justify-between select-none overflow-hidden animate-fade-in"
       data-slot="home-root"
     >
+      {/* ── 0. Interactive Touch Sparkle Trail (iPad / Touch) ─────────────── */}
+      <TouchSparkles />
+
       {/* ── 1. Background Artwork Layer ───────────────────────────────────── */}
       <img
         src={ASSETS.home.background}
@@ -49,6 +55,37 @@ export const WelcomeView: React.FC<WelcomeViewProps> = ({ onStart }) => {
         className="absolute inset-0 w-full h-full object-cover pointer-events-none"
         draggable={false}
       />
+
+      {/* ── 1.5 Ambient Sun Dust / Bokeh Floating Dust ─────────────────────── */}
+      <div
+        data-layer="home-sun-dust"
+        className="absolute inset-0 pointer-events-none z-[5] overflow-hidden select-none"
+      >
+        <div
+          className="absolute left-[18%] top-[14%] w-3.5 h-3.5 rounded-full bg-amber-200/40 blur-[2px] animate-sun-dust"
+          style={{ animationDuration: '6.5s', animationDelay: '0s' }}
+        />
+        <div
+          className="absolute left-[35%] top-[22%] w-2 h-2 rounded-full bg-white/60 blur-[1px] animate-sun-dust"
+          style={{ animationDuration: '8s', animationDelay: '1.8s' }}
+        />
+        <div
+          className="absolute right-[22%] top-[12%] w-4 h-4 rounded-full bg-amber-100/35 blur-[3px] animate-sun-dust"
+          style={{ animationDuration: '7.2s', animationDelay: '0.9s' }}
+        />
+        <div
+          className="absolute right-[36%] top-[26%] w-2.5 h-2.5 rounded-full bg-sky-200/45 blur-[1.5px] animate-sun-dust"
+          style={{ animationDuration: '9s', animationDelay: '2.5s' }}
+        />
+        <div
+          className="absolute left-[48%] top-[8%] w-3 h-3 rounded-full bg-amber-300/40 blur-[2px] animate-sun-dust"
+          style={{ animationDuration: '7.8s', animationDelay: '3.4s' }}
+        />
+        <div
+          className="absolute right-[12%] top-[36%] w-2 h-2 rounded-full bg-pink-200/35 blur-[1px] animate-sun-dust"
+          style={{ animationDuration: '8.4s', animationDelay: '1.2s' }}
+        />
+      </div>
 
       {/* ── 2. Top Header Bar (Faculty Logo + Sound Control) ─────────────── */}
       <div className="relative z-30 flex items-center justify-between px-4 sm:px-6 pt-2.5 sm:pt-3 shrink-0">
@@ -159,33 +196,38 @@ export const WelcomeView: React.FC<WelcomeViewProps> = ({ onStart }) => {
       {/* ── 5. Primary CTA: Start Button Layer ────────────────────────────── */}
       <div
         data-layer="home-cta"
-        className="relative z-20 w-full px-5 sm:px-8 py-1.5 sm:py-2 flex justify-center mt-auto shrink-0"
+        className="relative z-20 w-full px-5 sm:px-8 py-2 sm:py-2.5 flex justify-center mt-auto shrink-0"
       >
         <button
           onClick={handleStartClick}
           disabled={isLaunching}
-          className={`group w-full max-w-sm sm:max-w-md py-3 sm:py-3.5 px-3.5 rounded-full bg-gradient-to-r from-[#FF4E72] via-[#FF3366] to-[#783BE8] hover:from-[#ff5b7d] hover:to-[#8449f0] active:scale-[0.98] transition-all duration-150 flex items-center justify-between shadow-[0_8px_25px_rgba(255,51,102,0.45)] cursor-pointer focus:outline-none focus:ring-4 focus:ring-amber-400/50 ${
+          className={`group relative overflow-hidden w-full max-w-md sm:max-w-lg py-3.5 sm:py-4 px-4 sm:px-5 rounded-full bg-gradient-to-r from-[#FF4E72] via-[#FF3366] to-[#783BE8] hover:from-[#ff5b7d] hover:to-[#8449f0] active:scale-[0.98] transition-all duration-150 flex items-center justify-between shadow-[0_8px_25px_rgba(255,51,102,0.45)] cursor-pointer focus:outline-none focus:ring-4 focus:ring-amber-400/50 ${
             isLaunching ? 'scale-98 brightness-110 shadow-[0_0_30px_rgba(255,78,114,0.7)]' : 'animate-cta-pulse'
           }`}
-          aria-label="เริ่มสร้างอนาคตของคุณเลย! เริ่มค้นหา Future Nurse ของคุณ"
+          aria-label="เริ่มค้นหา Future Nurse ของฉัน"
         >
+          {/* Glossy Light Streak Shimmer (Subtle recurring gleam across button) */}
+          <div className="absolute inset-0 pointer-events-none rounded-full overflow-hidden z-0">
+            <div className="absolute top-0 bottom-0 w-28 bg-gradient-to-r from-transparent via-white/30 to-transparent animate-button-shimmer" />
+          </div>
+
           {/* Rocket Bubble */}
           <div
-            className={`w-8 h-8 sm:w-9 sm:h-9 rounded-full bg-white flex items-center justify-center shadow-md shrink-0 transition-transform duration-200 ${
+            className={`relative z-10 w-9 h-9 sm:w-10 sm:h-10 rounded-full bg-white flex items-center justify-center shadow-md shrink-0 transition-transform duration-200 ${
               isLaunching ? 'scale-125 -translate-y-1 rotate-12' : 'group-hover:scale-105'
             }`}
           >
-            <span className="text-base sm:text-lg">🚀</span>
+            <span className="text-lg sm:text-xl">🚀</span>
           </div>
 
-          {/* Text */}
-          <span className="text-white font-extrabold text-sm sm:text-base md:text-lg font-heading tracking-wide drop-shadow-sm px-2">
-            เริ่มสร้างอนาคตของคุณเลย!
+          {/* Text (22-24px Bold 700) */}
+          <span className="relative z-10 text-white font-bold text-[19px] sm:text-[22px] md:text-[24px] tracking-wide drop-shadow-sm px-2 text-center flex-1">
+            เริ่มค้นหา Future Nurse ของฉัน
           </span>
 
           {/* Chevron */}
           <div
-            className={`w-7 h-7 flex items-center justify-center text-white shrink-0 transition-transform duration-200 ${
+            className={`relative z-10 w-8 h-8 flex items-center justify-center text-white shrink-0 transition-transform duration-200 ${
               isLaunching ? 'translate-x-2' : 'group-hover:translate-x-0.5'
             }`}
           >

@@ -18,8 +18,24 @@ export default {
         }
       },
       fontFamily: {
-        sans: ['Prompt', 'Sarabun', 'sans-serif'],
-        heading: ['Prompt', 'sans-serif']
+        sans: ['"LINE Seed Sans TH"', '"Noto Sans Thai"', 'Inter', 'sans-serif'],
+        heading: ['"LINE Seed Sans TH"', '"Noto Sans Thai"', 'Inter', 'sans-serif']
+      },
+      fontSize: {
+        "display": ["3.25rem", { lineHeight: "1.12" }],
+        "hero": ["2.5rem", { lineHeight: "1.15" }],
+        "page-title": ["2.125rem", { lineHeight: "1.25" }],
+        "question": ["2rem", { lineHeight: "1.4" }],
+        "answer": ["1.375rem", { lineHeight: "1.5" }],
+        "body-lg": ["1.25rem", { lineHeight: "1.5" }],
+        "body": ["1.125rem", { lineHeight: "1.5" }],
+        "label": ["0.9375rem", { lineHeight: "1.3" }],
+      },
+      fontWeight: {
+        regular: "400",
+        semibold: "600",
+        bold: "700",
+        extrabold: "800",
       },
       aspectRatio: {
         'card': '9 / 16'

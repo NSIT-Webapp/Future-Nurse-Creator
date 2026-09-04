@@ -155,6 +155,7 @@ export function App() {
 
   // card_preview → save_share (card data URL arrives here from CardPreviewView)
   const handleCardReady = (url: string) => { setCardDataUrl(url); };
+  const handleCardPreviewBack = () => { resetActivity(); setScreen('reveal'); };
   const handleCardPreviewNext = () => { resetActivity(); setScreen('save_share'); };
 
   // save_share → thank_you_reset
@@ -175,7 +176,7 @@ export function App() {
       {/* 3:4 Portrait Content Canvas: fixed 3:4 composition, centered, background-filled around */}
       <div className="canvas-3-4 flex flex-col relative shadow-2xl">
         {/* Kiosk chrome: header with step indicator + reset (shown on quiz/result flow) */}
-        {screen !== 'welcome' && screen !== 'quiz' && screen !== 'character' && screen !== 'analysis' && screen !== 'reveal' && screen !== 'thank_you_reset' && (
+        {screen !== 'welcome' && screen !== 'quiz' && screen !== 'character' && screen !== 'analysis' && screen !== 'reveal' && screen !== 'card_preview' && screen !== 'thank_you_reset' && (
           <Header
             showReset={true}
             onReset={handleReset}
@@ -233,6 +234,7 @@ export function App() {
             result={result}
             onCardReady={handleCardReady}
             onNext={handleCardPreviewNext}
+            onBack={handleCardPreviewBack}
           />
         )}
         {screen === 'save_share'   && result && (

@@ -17,9 +17,9 @@ const TRAIT_IDS: TraitId[] = ['EMP', 'OBS', 'ACT', 'COM', 'COL', 'INN'];
 const FAMILY_IDS: StrengthFamily[] = ['HUMAN_CONNECTION', 'CLINICAL_AWARENESS', 'FUTURE_COLLABORATION'];
 
 const FAMILY_LABELS: Record<StrengthFamily, string> = {
-  HUMAN_CONNECTION:     'Human Connection (EMP+COM)',
-  CLINICAL_AWARENESS:   'Clinical Awareness (OBS+ACT)',
-  FUTURE_COLLABORATION: 'Future Collaboration (COL+INN)',
+  HUMAN_CONNECTION:     'Heart Connector (EMP+COM)',
+  CLINICAL_AWARENESS:   'Clinical Instinct (OBS+ACT)',
+  FUTURE_COLLABORATION: 'Care Innovator (COL+INN)',
 };
 
 /**

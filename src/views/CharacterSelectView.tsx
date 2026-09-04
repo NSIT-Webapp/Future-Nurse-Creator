@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { ChevronLeft, ChevronRight, Sparkles } from 'lucide-react';
+import { ChevronLeft, Sparkles } from 'lucide-react';
 import { CharacterType } from '../types';
 import { ASSETS } from '../assets/registry';
 import { SoundControl } from '../components/SoundControl';
@@ -83,16 +83,17 @@ export const CharacterSelectView: React.FC<CharacterSelectViewProps> = ({
           <div className="shrink-0 text-center mb-1 sm:mb-2">
             <div className="inline-flex items-center justify-center gap-2 mb-0.5">
               <Sparkles className="w-5 h-5 sm:w-6 sm:h-6 text-amber-400 fill-amber-300 animate-spin-slow" />
-              <h2 className="text-2xl sm:text-3xl md:text-[34px] font-extrabold tracking-tight font-heading">
+              <h2 className="text-2xl sm:text-3xl md:text-[34px] font-extrabold tracking-tight leading-[1.25]">
                 <span className="text-[#002B7F]">เลือก </span>
                 <span className="bg-gradient-to-r from-[#FF2B6D] via-[#FF5277] to-[#1E62D0] bg-clip-text text-transparent">
                   Future Nurse Look
                 </span>
+                <span className="text-[#002B7F]"> ของคุณ</span>
               </h2>
               <span className="text-xl sm:text-2xl animate-pulse">💖</span>
             </div>
 
-            <p className="text-xs sm:text-sm text-slate-600 font-medium leading-relaxed flex items-center justify-center gap-2">
+            <p className="text-base sm:text-lg text-slate-600 font-semibold leading-relaxed flex items-center justify-center gap-2">
               <span className="text-pink-400 text-xs">✦</span>
               <span>เลือกคาแรกเตอร์ที่อยากให้แสดงในผลลัพธ์</span>
               <span className="text-pink-400 text-xs">✦</span>
@@ -229,9 +230,9 @@ export const CharacterSelectView: React.FC<CharacterSelectViewProps> = ({
               <button
                 type="button"
                 onClick={handleBack}
-                className="flex-1 max-w-[170px] py-2.5 sm:py-3 px-4 rounded-full bg-white hover:bg-slate-50 border-2 border-[#002B7F] text-[#002B7F] font-bold text-sm sm:text-base flex items-center justify-center gap-1.5 shadow-sm active:scale-95 transition-all"
+                className="flex-1 max-w-[180px] py-2.5 sm:py-3.5 px-4 rounded-full bg-white hover:bg-slate-50 border-2 border-[#002B7F] text-[#002B7F] font-semibold text-[17px] sm:text-[19px] flex items-center justify-center gap-1.5 shadow-sm active:scale-95 transition-all"
               >
-                <ChevronLeft className="w-4 h-4 sm:w-5 sm:h-5 stroke-[2.5]" />
+                <ChevronLeft className="w-5 h-5 stroke-[2.5]" />
                 <span>ย้อนกลับ</span>
               </button>
             )}
@@ -240,10 +241,9 @@ export const CharacterSelectView: React.FC<CharacterSelectViewProps> = ({
             <button
               type="button"
               onClick={handleNext}
-              className="flex-1 max-w-[170px] py-2.5 sm:py-3 px-4 rounded-full bg-gradient-to-r from-[#FF2B6D] to-[#FF5277] hover:from-[#e92060] hover:to-[#f0456b] text-white font-bold text-sm sm:text-base flex items-center justify-center gap-1.5 shadow-[0_4px_16px_rgba(255,43,109,0.35)] active:scale-95 transition-all"
+              className="flex-1 max-w-[180px] py-2.5 sm:py-3.5 px-4 rounded-full bg-gradient-to-r from-[#FF2B6D] to-[#FF5277] hover:from-[#e92060] hover:to-[#f0456b] text-white font-bold text-[19px] sm:text-[22px] flex items-center justify-center gap-1.5 shadow-[0_4px_16px_rgba(255,43,109,0.35)] active:scale-95 transition-all"
             >
-              <span>ต่อไป</span>
-              <ChevronRight className="w-4 h-4 sm:w-5 sm:h-5 stroke-[2.5]" />
+              <span>ต่อไป →</span>
             </button>
           </div>
 

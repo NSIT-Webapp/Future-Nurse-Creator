@@ -7,7 +7,6 @@ import {
   Lightbulb,
   MessageCircle,
   ChevronLeft,
-  ChevronRight,
 } from 'lucide-react';
 import { Question } from '../types';
 import { ASSETS, getQuestionCharacterUrl } from '../assets/registry';
@@ -184,24 +183,24 @@ export const QuizView: React.FC<QuizViewProps> = ({
 
             {/* ── Header Inside Card: Step Badge & Big Prompt (pr reserved for mascot) ── */}
             <div className="relative z-20 pr-28 sm:pr-36 md:pr-44 mb-2.5 sm:mb-3.5">
-              {/* Step Badge */}
-              <div className="inline-flex items-center px-3 py-1 rounded-full bg-gradient-to-r from-[#FF4E72] to-[#FF3366] text-white text-[10px] sm:text-xs font-black uppercase tracking-wider shadow-sm font-heading mb-2">
-                QUESTION {currentStep} / {totalSteps}
+              {/* Step Progress Badge */}
+              <div className="inline-flex items-center px-4 py-1.5 rounded-full bg-gradient-to-r from-[#FF4E72] to-[#FF3366] text-white text-[16px] sm:text-[17px] font-semibold tracking-wide shadow-sm mb-2">
+                คำถาม {currentStep} จาก {totalSteps}
               </div>
 
-              {/* Main Question Prompt (Promoted to Big Bold Primary Title) */}
-              <h2 className="text-base sm:text-xl md:text-[22px] font-black text-[#002B7F] font-heading leading-snug drop-shadow-xs">
+              {/* Main Question Prompt (30-34px Bold, max 2-3 lines) */}
+              <h2 className="question-text text-[26px] sm:text-[30px] md:text-[34px] font-bold text-[#002B7F] leading-[1.38] drop-shadow-xs">
                 {question.prompt}
               </h2>
 
-              {/* Instruction Callout */}
-              <p className="text-xs sm:text-sm font-bold text-[#FF3366] mt-2 flex items-center gap-1.5">
-                <span>💖</span> เลือกคำตอบที่เป็น “คุณ” ที่สุด 1 ข้อ
+              {/* Supporting Text Callout */}
+              <p className="text-[17px] sm:text-[18px] font-semibold text-[#FF3366] mt-2 flex items-center gap-1.5 leading-[1.45]">
+                <span>💖</span> เลือกคำตอบที่ใกล้กับตัวคุณที่สุด
               </p>
             </div>
 
-            {/* ── Choices List (A through F) (z-30 covers lower body of mascot) ── */}
-            <div className="relative z-30 flex flex-col gap-2 sm:gap-2.5 my-1">
+            {/* ── Choices List (Clean, No A-F letters, Height >= 76px, Text 21-24px) ── */}
+            <div className="relative z-30 flex flex-col gap-2.5 sm:gap-3 my-1">
               {question.options.map((opt) => {
                 const isSelected = selectedOption === opt.key;
                 const theme = OPTION_THEMES[opt.key] || OPTION_THEMES.A;
@@ -212,30 +211,23 @@ export const QuizView: React.FC<QuizViewProps> = ({
                     key={opt.key}
                     type="button"
                     onClick={() => handleSelectOption(opt.key)}
-                    className={`group relative w-full flex items-center justify-between p-2.5 sm:p-3 rounded-2xl border transition-all duration-150 active:scale-[0.99] text-left cursor-pointer select-none ${
+                    className={`answer-btn group relative w-full min-h-[76px] sm:min-h-[78px] md:min-h-[80px] flex items-center justify-between p-3.5 sm:p-4 rounded-2xl border transition-all duration-150 active:scale-[0.99] text-left cursor-pointer select-none ${
                       isSelected
-                        ? `bg-rose-50 ${theme.borderActive} border-2 shadow-md ring-2 ${theme.ringActive}`
+                        ? `bg-rose-50/90 ${theme.borderActive} border-2 shadow-md ring-2 ${theme.ringActive}`
                         : 'bg-white hover:bg-slate-50/90 border-slate-200/90 shadow-xs hover:border-sky-300'
                     }`}
                   >
-                    {/* Left: Icon Bubble + Letter + Title */}
-                    <div className="flex items-center gap-2.5 sm:gap-3.5 min-w-0 pr-2">
+                    {/* Left: Icon Bubble + Option Text (No A-F letter badges) */}
+                    <div className="flex items-center gap-3 sm:gap-4 min-w-0 pr-2">
                       {/* Icon Bubble */}
                       <div
-                        className={`w-8 h-8 sm:w-9 sm:h-9 md:w-10 md:h-10 rounded-xl flex items-center justify-center text-white shrink-0 shadow-sm ${theme.bgIcon}`}
+                        className={`w-9 h-9 sm:w-10 sm:h-10 md:w-11 md:h-11 rounded-xl flex items-center justify-center text-white shrink-0 shadow-sm ${theme.bgIcon}`}
                       >
-                        <IconComp className="w-4 h-4 sm:w-5 sm:h-5 stroke-[2.5]" />
+                        <IconComp className="w-5 h-5 sm:w-5.5 sm:h-5.5 stroke-[2.5]" />
                       </div>
 
-                      {/* Letter Key */}
-                      <span
-                        className={`text-sm sm:text-base md:text-lg font-black font-heading shrink-0 ${theme.textLetter}`}
-                      >
-                        {opt.key}
-                      </span>
-
-                      {/* Option Text */}
-                      <span className="text-xs sm:text-sm md:text-base font-bold text-slate-800 font-heading leading-snug">
+                      {/* Option Text (21-24px, SemiBold 600, Line-height 1.4-1.5) */}
+                      <span className="text-[19px] sm:text-[21px] md:text-[23px] font-semibold text-slate-800 leading-[1.42]">
                         {opt.title}
                       </span>
                     </div>
@@ -243,14 +235,14 @@ export const QuizView: React.FC<QuizViewProps> = ({
                     {/* Right: Radio Selection Circle */}
                     <div className="shrink-0 ml-2">
                       <div
-                        className={`w-5 h-5 sm:w-6 sm:h-6 rounded-full border-2 flex items-center justify-center transition-all ${
+                        className={`w-6 h-6 sm:w-7 sm:h-7 rounded-full border-2 flex items-center justify-center transition-all ${
                           isSelected
                             ? 'border-[#FF3366] bg-[#FF3366] shadow-xs'
                             : 'border-slate-300 bg-white group-hover:border-sky-400'
                         }`}
                       >
                         {isSelected && (
-                          <div className="w-2 h-2 sm:w-2.5 sm:h-2.5 rounded-full bg-white animate-scale-in" />
+                          <div className="w-2.5 h-2.5 sm:w-3 sm:h-3 rounded-full bg-white animate-scale-in" />
                         )}
                       </div>
                     </div>
@@ -259,31 +251,30 @@ export const QuizView: React.FC<QuizViewProps> = ({
               })}
             </div>
 
-            {/* ── Bottom Navigation Inside Card: Back / Next ─────────────────── */}
-            <div className="relative z-30 flex items-center justify-between pt-3 sm:pt-4 mt-auto border-t border-slate-100/80">
-              {/* Back Button */}
+            {/* ── Bottom Navigation Inside Card: Back / Next (Friendly Journey Microcopy) ── */}
+            <div className="relative z-30 flex items-center justify-between pt-3.5 sm:pt-4 mt-auto border-t border-slate-100/80">
+              {/* Back Button (18-20px SemiBold) */}
               <button
                 type="button"
                 onClick={handleBack}
-                className="inline-flex items-center gap-1.5 px-4 sm:px-6 py-2.5 rounded-full border-2 border-[#002B7F] text-[#002B7F] bg-white hover:bg-sky-50 active:scale-95 font-bold text-xs sm:text-sm font-heading transition-all shadow-xs"
+                className="inline-flex items-center gap-2 px-5 sm:px-7 py-2.5 sm:py-3 rounded-full border-2 border-[#002B7F] text-[#002B7F] bg-white hover:bg-sky-50 active:scale-95 font-semibold text-[17px] sm:text-[19px] transition-all shadow-xs"
               >
-                <ChevronLeft className="w-4 h-4 stroke-[3]" />
+                <ChevronLeft className="w-5 h-5 stroke-[2.5]" />
                 <span>ย้อนกลับ</span>
               </button>
 
-              {/* Next Button */}
+              {/* Next Button (22-24px Bold) */}
               <button
                 type="button"
                 disabled={!canProceed}
                 onClick={handleNext}
-                className={`inline-flex items-center gap-1.5 px-6 sm:px-9 py-2.5 rounded-full font-extrabold text-xs sm:text-sm font-heading transition-all duration-150 shadow-md ${
+                className={`inline-flex items-center gap-2 px-7 sm:px-9 py-2.5 sm:py-3 rounded-full font-bold text-[19px] sm:text-[22px] transition-all duration-150 shadow-md ${
                   canProceed
                     ? 'bg-gradient-to-r from-[#FF4E72] via-[#FF3366] to-[#783BE8] hover:from-[#ff5b7d] hover:to-[#8449f0] active:scale-95 text-white shadow-[0_4px_15px_rgba(255,51,102,0.4)] cursor-pointer'
                     : 'bg-slate-200 text-slate-400 cursor-not-allowed border border-slate-300/60'
                 }`}
               >
-                <span>ถัดไป</span>
-                <ChevronRight className="w-4 h-4 stroke-[3]" />
+                <span>{currentStep === totalSteps ? '✨ ดู Future Nurse ของฉัน' : 'ต่อไป →'}</span>
               </button>
             </div>
 

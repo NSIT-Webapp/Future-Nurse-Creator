@@ -11,9 +11,9 @@ interface ResultViewProps {
 }
 
 const FAMILY_META: Record<StrengthFamily, { emoji: string; label: string; color: string }> = {
-  HUMAN_CONNECTION:    { emoji: '❤️', label: 'Human Connection',    color: 'from-rose-500/20 to-pink-500/20 border-rose-400/40 text-rose-300' },
-  CLINICAL_AWARENESS:  { emoji: '👀', label: 'Clinical Awareness',  color: 'from-sky-500/20 to-blue-500/20 border-sky-400/40 text-sky-300' },
-  FUTURE_COLLABORATION:{ emoji: '💡', label: 'Future Collaboration', color: 'from-violet-500/20 to-purple-500/20 border-violet-400/40 text-violet-300' },
+  HUMAN_CONNECTION:    { emoji: '❤️', label: 'Heart Connector',    color: 'from-rose-500/20 to-pink-500/20 border-rose-400/40 text-rose-300' },
+  CLINICAL_AWARENESS:  { emoji: '👀', label: 'Clinical Instinct',  color: 'from-sky-500/20 to-blue-500/20 border-sky-400/40 text-sky-300' },
+  FUTURE_COLLABORATION:{ emoji: '✨', label: 'Care Innovator',     color: 'from-violet-500/20 to-purple-500/20 border-violet-400/40 text-violet-300' },
 };
 
 export const ResultView: React.FC<ResultViewProps> = ({ result, onReset }) => {
@@ -65,17 +65,17 @@ export const ResultView: React.FC<ResultViewProps> = ({ result, onReset }) => {
     <div className="flex-1 flex flex-col justify-between p-4 sm:p-6 max-w-2xl mx-auto w-full animate-fade-in">
       {/* Banner */}
       <div className="text-center pt-1 pb-2">
-        <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-mahidol-gold/20 border border-mahidol-gold/40 text-xs font-bold text-mahidol-gold mb-1.5 font-heading">
+        <div className="inline-flex items-center gap-1.5 px-3.5 py-1 rounded-full bg-mahidol-gold/20 border border-mahidol-gold/40 text-xs font-semibold text-mahidol-gold mb-1.5">
           <Sparkles className="w-3.5 h-3.5" />
-          <span>YOUR FUTURE NURSE CARD IS READY</span>
+          <span>FUTURE NURSE CARD</span>
         </div>
-        <h2 className="text-2xl sm:text-3xl font-extrabold text-white mb-0.5 font-heading">
+        <h2 className="text-hero sm:text-display font-extrabold text-white mb-0.5 leading-[1.15]">
           {result.path.emoji} {result.path.nameEn}
         </h2>
-        <p className="text-sm text-slate-300 mb-2">{result.path.nameTh}</p>
+        <p className="text-base text-slate-300 mb-2 font-semibold">{result.path.nameTh}</p>
 
         {/* Strength Family Badge */}
-        <div className={`inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-gradient-to-r border text-xs font-semibold ${familyMeta.color}`}>
+        <div className={`inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-gradient-to-r border text-sm font-semibold ${familyMeta.color}`}>
           <span>{familyMeta.emoji}</span>
           <span>{familyMeta.label}</span>
           <span className="mx-1 opacity-40">•</span>
