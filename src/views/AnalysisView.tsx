@@ -25,30 +25,29 @@ const BADGE_THEMES: Record<string, { textColor: string }> = {
 };
 
 const BADGE_POSITIONS: Record<string, string> = {
-  PED:  'left-[5%] sm:left-[7%] top-[12%]',
-  MAT:  'left-1/2 top-[11%] sm:top-[10%] -translate-x-1/2',
-  MH:   'right-[5%] sm:right-[7%] top-[12%]',
-  ER:   'left-[4%] top-[38%]',
-  OA:   'right-[4%] top-[38%]',
-  COMM: 'left-[10%] sm:left-[9%] bottom-[6%] sm:bottom-[10%]',
-  TECH: 'left-1/2 bottom-[1%] sm:bottom-[3%] -translate-x-1/2',
-  INT:  'right-[10%] sm:right-[9%] bottom-[6%] sm:bottom-[10%]',
+  PED:  'left-[4%] sm:left-[5%] top-[11%]',
+  MAT:  'left-1/2 top-[9%] sm:top-[8%] -translate-x-1/2',
+  MH:   'right-[4%] sm:right-[5%] top-[11%]',
+  ER:   'left-[1%] sm:left-[3%] top-[39%]',
+  OA:   'right-[1%] sm:right-[3%] top-[39%]',
+  COMM: 'left-[5%] sm:left-[7%] bottom-[10%] sm:bottom-[11%]',
+  TECH: 'left-1/2 bottom-[5%] sm:bottom-[6%] -translate-x-1/2',
+  INT:  'right-[5%] sm:right-[7%] bottom-[10%] sm:bottom-[11%]',
 };
 
 const BADGE_POSITIONS_MALE: Record<string, string> = {
-  PED:  'left-[6%] sm:left-[8%] top-[13%]',
-  MH:   'right-[6%] sm:right-[8%] top-[13%]',
-  ER:   'left-[5%] top-[40%]',
-  OA:   'right-[5%] top-[40%]',
-  COMM: 'left-[12%] sm:left-[13%] bottom-[6%] sm:bottom-[10%]',
-  TECH: 'left-1/2 bottom-[1%] sm:bottom-[3%] -translate-x-1/2',
-  INT:  'right-[12%] sm:right-[13%] bottom-[6%] sm:bottom-[10%]',
+  PED:  'left-[5%] sm:left-[6%] top-[12%]',
+  MH:   'right-[5%] sm:right-[6%] top-[12%]',
+  ER:   'left-[1%] sm:left-[4%] top-[39%]',
+  OA:   'right-[1%] sm:right-[4%] top-[39%]',
+  COMM: 'left-[6%] sm:left-[9%] bottom-[10%] sm:bottom-[11%]',
+  TECH: 'left-1/2 bottom-[5%] sm:bottom-[6%] -translate-x-1/2',
+  INT:  'right-[6%] sm:right-[9%] bottom-[10%] sm:bottom-[11%]',
 };
 
 export const AnalysisView: React.FC<AnalysisViewProps> = ({
   onComplete,
   characterType = 'female_student',
-  totalQuestions = 5,
   onBack,
 }) => {
   const isFemale = characterType === 'female_student';
@@ -177,7 +176,7 @@ export const AnalysisView: React.FC<AnalysisViewProps> = ({
     return (
       <div
         key={badge.pathId}
-        className={`absolute ${placementClass} flex flex-col items-center justify-start w-[68px] sm:w-[104px] md:w-[122px] select-none ${
+        className={`absolute ${placementClass} flex flex-col items-center justify-start w-[clamp(78px,23.5vw,184px)] select-none ${
           isFlipping
             ? 'animate-badge-flip z-40'
             : isScanning
@@ -205,7 +204,7 @@ export const AnalysisView: React.FC<AnalysisViewProps> = ({
         )}
 
         {/* ── Badge Icon Box with Overlay Effects ── */}
-        <div className={`w-[50px] h-[50px] sm:w-[78px] sm:h-[78px] md:w-[94px] md:h-[94px] flex items-center justify-center shrink-0 relative overflow-hidden rounded-2xl ${(isScanning || isFlipping) ? 'animate-bounce-gentle' : ''}`}>
+        <div className={`w-[clamp(60px,19.5vw,154px)] h-[clamp(60px,19.5vw,154px)] flex items-center justify-center shrink-0 relative overflow-hidden rounded-2xl ${(isScanning || isFlipping) ? 'animate-bounce-gentle' : ''}`}>
           {/* Badge Image (blurred when mystery) */}
           <img
             src={badge.imgUrl}
@@ -227,9 +226,9 @@ export const AnalysisView: React.FC<AnalysisViewProps> = ({
         </div>
 
         {/* ── Badge Title ── */}
-        <div className="h-[22px] sm:h-[30px] md:h-[34px] flex items-center justify-center w-full mt-0.5 sm:mt-1">
+        <div className="h-[clamp(24px,5vw,42px)] flex items-center justify-center w-full mt-0.5 sm:mt-1">
           <span
-            className={`text-[7px] sm:text-[10px] md:text-[11px] font-black tracking-tight uppercase text-center leading-tight px-0.5 drop-shadow-[0_1px_2px_rgba(255,255,255,0.95)] line-clamp-2 transition-colors duration-300 ${
+            className={`text-[clamp(7.5px,1.75vw,14px)] font-black tracking-tight uppercase text-center leading-tight px-0.5 drop-shadow-[0_1px_2px_rgba(255,255,255,0.95)] line-clamp-2 transition-colors duration-300 ${
               isMystery ? 'text-white/60' : theme.textColor
             }`}
           >
@@ -362,25 +361,38 @@ export const AnalysisView: React.FC<AnalysisViewProps> = ({
               เส้นทางพยาบาลที่ใช่สำหรับคุณ...
             </h3>
 
-            {/* Sub-caption */}
-            <p className="text-xs sm:text-sm font-bold text-[#FF3366] mt-1 flex items-center justify-center gap-1 drop-shadow-[0_1px_1px_rgba(255,255,255,0.95)]">
-              <span>💕 จากคำตอบทั้ง {totalQuestions} ข้อของคุณ 💕</span>
-            </p>
+            <div className="w-full max-w-[560px] mx-auto mt-2 rounded-full bg-white/88 backdrop-blur-md border border-white/90 px-3 py-1.5 shadow-sm">
+              <div className="flex items-center gap-2">
+                <Loader2 className="w-4 h-4 sm:w-5 sm:h-5 animate-spin text-[#FF3366] shrink-0" />
+                <div className="flex-1 min-w-0">
+                  <div className="flex items-center justify-between gap-2 text-[10px] sm:text-[11px] font-black text-slate-800 font-heading leading-tight">
+                    <span className="truncate">{getStatusMessage(progress)}</span>
+                    <span className="text-blue-600 font-mono shrink-0 font-extrabold">{progress}%</span>
+                  </div>
+                  <div className="w-full bg-slate-200/70 rounded-full h-1.5 sm:h-2 mt-1 overflow-hidden">
+                    <div
+                      className="h-full bg-gradient-to-r from-sky-400 via-[#FF3366] to-[#FF6584] rounded-full transition-all duration-75 ease-out shadow-[0_0_8px_rgba(255,51,102,0.5)]"
+                      style={{ width: `${progress}%` }}
+                    />
+                  </div>
+                </div>
+              </div>
+            </div>
           </div>
 
           {/* ── Center Stage: Radial Orbit Inspired by the Reference Mockup ── */}
-          <div className="flex-1 relative min-h-[330px] sm:min-h-[520px] md:min-h-[600px] overflow-hidden my-1 sm:my-2 px-1 sm:px-2">
+          <div className="flex-1 relative min-h-[350px] sm:min-h-[585px] md:min-h-[650px] overflow-hidden my-1 sm:my-2 px-1 sm:px-2">
 
             {/* Pulsing Concentric Holographic Radar Aura in Center */}
-            <div className="absolute top-[52%] left-1/2 -translate-x-1/2 -translate-y-1/2 w-[72%] max-w-[460px] aspect-square rounded-full bg-radial from-cyan-300/30 via-pink-300/10 to-transparent animate-pulse pointer-events-none" />
-            <div className="absolute top-[58%] left-1/2 -translate-x-1/2 w-[56%] max-w-[360px] h-10 rounded-full border-2 border-cyan-200/60 shadow-[0_0_24px_rgba(56,189,248,0.35)] pointer-events-none" />
+            <div className="absolute top-[52%] left-1/2 -translate-x-1/2 -translate-y-1/2 w-[76%] max-w-[520px] aspect-square rounded-full bg-radial from-cyan-300/30 via-pink-300/10 to-transparent animate-pulse pointer-events-none" />
+            <div className="absolute top-[61%] left-1/2 -translate-x-1/2 w-[62%] max-w-[430px] h-12 rounded-full border-2 border-cyan-200/60 shadow-[0_0_24px_rgba(56,189,248,0.35)] pointer-events-none" />
 
             {/* Center Character */}
-            <div className="absolute left-1/2 top-[50%] sm:top-[51%] -translate-x-1/2 -translate-y-1/2 z-10 h-[44%] sm:h-[46%] max-h-[305px] min-h-[170px] sm:min-h-[210px] flex items-center justify-center">
+            <div className="absolute left-1/2 top-[50%] sm:top-[51%] -translate-x-1/2 -translate-y-1/2 z-10 h-[48%] sm:h-[52%] max-h-[390px] min-h-[190px] sm:min-h-[285px] flex items-center justify-center">
               <img
                 src={centerCharacterUrl}
                 alt={isFemale ? 'Female Student' : 'Male Student'}
-                className="h-full w-auto max-w-[250px] sm:max-w-[310px] object-contain drop-shadow-[0_16px_32px_rgba(0,43,127,0.36)] animate-float-subtle select-none"
+                className="h-full w-auto max-w-[300px] sm:max-w-[390px] object-contain drop-shadow-[0_16px_32px_rgba(0,43,127,0.36)] animate-float-subtle select-none"
                 loading="eager"
                 decoding="sync"
               />
@@ -399,41 +411,7 @@ export const AnalysisView: React.FC<AnalysisViewProps> = ({
         </div>
       </div>
 
-      {/* ── 4. Floating AI Robot Mascot Status Bar (Outside Card on Campus Background) ──── */}
-      <div className="relative z-20 shrink-0 px-4 sm:px-7 pt-2 max-w-[780px] md:max-w-[820px] mx-auto w-full">
-        <div className="bg-white/95 backdrop-blur-md border border-white/90 rounded-3xl px-4 py-2.5 sm:py-3 shadow-md flex items-center justify-between gap-3">
-          <div className="flex items-center gap-2.5 sm:gap-3 flex-1 min-w-0">
-            <img
-              src={ASSETS.processing.robot}
-              alt="AI Robot Mascot"
-              className="w-11 h-11 sm:w-14 sm:h-14 md:w-16 md:h-16 object-contain drop-shadow-sm animate-mascot-bob shrink-0"
-            />
-            <div className="text-left flex-1 min-w-0">
-              <div className="flex items-center justify-between text-xs sm:text-sm font-black text-slate-800 font-heading leading-tight">
-                <span className="truncate">{getStatusMessage(progress)}</span>
-                <span className="text-blue-600 text-[11px] sm:text-xs font-mono shrink-0 ml-1.5 font-extrabold">{progress}%</span>
-              </div>
-              {/* Live Progress Bar with glowing gradient */}
-              <div className="w-full bg-slate-200/70 rounded-full h-2 sm:h-2.5 mt-1 overflow-hidden">
-                <div
-                  className="h-full bg-gradient-to-r from-sky-400 via-[#FF3366] to-[#FF6584] rounded-full transition-all duration-75 ease-out shadow-[0_0_8px_rgba(255,51,102,0.5)]"
-                  style={{ width: `${progress}%` }}
-                />
-              </div>
-              <div className="text-[10px] sm:text-[11px] font-bold text-pink-600 leading-tight mt-0.5">
-                โปรดรอสักครู่ ระบบกำลังค้นหาตัวตนที่แท้จริงของคุณ 💕
-              </div>
-            </div>
-          </div>
-
-          {/* Animated Spinner Loader */}
-          <div className="flex items-center justify-center shrink-0 pl-1">
-            <Loader2 className="w-6 h-6 sm:w-7 sm:h-7 animate-spin text-[#FF3366]" />
-          </div>
-        </div>
-      </div>
-
-      {/* ── 5. Bottom Navigation & Action Bar (Outside Card on Campus Background) ──── */}
+      {/* ── 4. Bottom Navigation & Action Bar (Outside Card on Campus Background) ──── */}
       <div className="relative z-20 shrink-0 px-4 sm:px-7 pb-3 sm:pb-4 pt-2 max-w-[780px] md:max-w-[820px] mx-auto w-full flex items-center justify-between gap-3">
         {/* Back Button */}
         {onBack ? (
