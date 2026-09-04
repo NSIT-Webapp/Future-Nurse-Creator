@@ -46,14 +46,22 @@ export const WelcomeView: React.FC<WelcomeViewProps> = ({ onStart }) => {
 
       {/* ── 2. Top Header Bar (Mahidol Seal + Sound Control) ─────────────── */}
       <div className="relative z-30 flex items-center justify-between px-4 sm:px-6 pt-3 sm:pt-4 shrink-0">
-        {/* University & Faculty Logo Lockup (Direct from Mockup) */}
-        <div className="flex items-center shrink-0">
+        {/* University Emblem & Name — Crisp High-DPI Vector Typography (No ghosting/double shadow) */}
+        <div className="flex items-center gap-2.5 sm:gap-3 shrink-0 select-none">
           <img
-            src={ASSETS.home.facultyLogo}
-            alt="มหาวิทยาลัยมหิดล คณะพยาบาลศาสตร์"
-            className="h-11 sm:h-12 md:h-14 w-auto object-contain drop-shadow-[0_1px_3px_rgba(0,43,127,0.15)] pointer-events-none"
+            src={ASSETS.home.mahidolSeal}
+            alt="ตราสัญลักษณ์มหาวิทยาลัยมหิดล"
+            className="w-11 h-11 sm:w-12 sm:h-12 md:w-14 md:h-14 object-contain shrink-0"
             draggable={false}
           />
+          <div className="flex flex-col justify-center leading-tight">
+            <h2 className="text-sm sm:text-base md:text-lg font-black text-[#002B7F] font-heading tracking-tight">
+              มหาวิทยาลัยมหิดล
+            </h2>
+            <p className="text-xs sm:text-sm md:text-base font-bold text-[#002B7F] font-heading tracking-tight">
+              คณะพยาบาลศาสตร์
+            </p>
+          </div>
         </div>
 
         {/* Sound Control Toggle */}

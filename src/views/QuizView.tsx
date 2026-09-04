@@ -105,19 +105,19 @@ export const QuizView: React.FC<QuizViewProps> = ({
 
       {/* ── 2. Top Header Bar (Mahidol Seal + Sound Control) ─────────────── */}
       <div className="relative z-30 flex items-center justify-between px-4 sm:px-6 pt-3 sm:pt-4 shrink-0">
-        {/* University Emblem & Name */}
-        <div className="flex items-center gap-2.5 sm:gap-3">
+        {/* University Emblem & Name — Crisp Vector Typography */}
+        <div className="flex items-center gap-2.5 sm:gap-3 shrink-0 select-none">
           <img
             src={ASSETS.home.mahidolSeal}
             alt="ตราสัญลักษณ์มหาวิทยาลัยมหิดล คณะพยาบาลศาสตร์"
-            className="w-10 h-10 sm:w-12 sm:h-12 object-contain drop-shadow-md shrink-0"
+            className="w-10 h-10 sm:w-12 sm:h-12 object-contain shrink-0"
             draggable={false}
           />
           <div className="leading-tight">
-            <h2 className="text-xs sm:text-sm md:text-base font-black text-[#002B7F] font-heading drop-shadow-[0_1px_2px_rgba(255,255,255,0.95)]">
+            <h2 className="text-xs sm:text-sm md:text-base font-black text-[#002B7F] font-heading tracking-tight">
               มหาวิทยาลัยมหิดล
             </h2>
-            <p className="text-[10px] sm:text-xs md:text-sm font-bold text-[#002B7F]/90 drop-shadow-[0_1px_2px_rgba(255,255,255,0.95)]">
+            <p className="text-[10px] sm:text-xs md:text-sm font-bold text-[#002B7F] font-heading tracking-tight">
               คณะพยาบาลศาสตร์
             </p>
           </div>
@@ -133,8 +133,8 @@ export const QuizView: React.FC<QuizViewProps> = ({
       </div>
 
       {/* ── 4. Main Question Card Container ─────────────────────────────────── */}
-      <div className="relative z-20 flex-1 flex flex-col items-center justify-center px-3 sm:px-5 md:px-6 py-1 sm:py-2 max-w-3xl mx-auto w-full">
-        <div className="relative w-full">
+      <div className="relative z-20 flex-1 flex flex-col items-center justify-center px-3 sm:px-5 md:px-6 pt-2 sm:pt-4 pb-6 sm:pb-8 md:pb-10 max-w-3xl mx-auto w-full">
+        <div className="relative w-full translate-y-4 sm:translate-y-8 md:translate-y-12">
 
           {/* Nurse Character Illustration (Peeking out playfully from BEHIND the question card) */}
           <div className="absolute -top-14 sm:-top-20 md:-top-24 right-4 sm:right-8 md:right-12 w-32 sm:w-40 md:w-48 pointer-events-none z-0 drop-shadow-[0_12px_25px_rgba(0,43,127,0.22)] select-none">
