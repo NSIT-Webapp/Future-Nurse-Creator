@@ -1,5 +1,6 @@
 import { ResultPayload, StrengthFamily } from '../types';
 import { getCardCharacterUrl, getCardTemplateUrl } from '../assets/registry';
+import { getCardIdentity } from '../data/cardIdentity';
 
 const FAMILY_EMOJI: Record<StrengthFamily, string> = {
   HUMAN_CONNECTION:     '❤️',
@@ -231,6 +232,8 @@ async function renderTemplateCard(
 
     ctx.restore();
   }
+
+  drawCollectibleFinish(ctx, result, scaleX, scaleY);
 }
 
 export async function renderFutureNurseCard(
@@ -563,6 +566,123 @@ function drawBadge(ctx: CanvasRenderingContext2D, rightX: number, topY: number, 
   ctx.textBaseline = 'middle';
   ctx.fillText(text, badgeX + badgeW / 2, topY + badgeH / 2 + 1);
   ctx.restore();
+}
+
+function drawCollectibleFinish(
+  ctx: CanvasRenderingContext2D,
+  result: ResultPayload,
+  scaleX = 1,
+  scaleY = 1
+) {
+  const identity = getCardIdentity(result);
+  const themeColor = result.path.color || '#2563EB';
+
+  ctx.save();
+  ctx.scale(scaleX, scaleY);
+
+  // Trading-card depth frame: subtle enough to preserve the supplied artwork.
+  const frameGradient = ctx.createLinearGradient(30, 30, 1050, 1890);
+  frameGradient.addColorStop(0, 'rgba(255, 255, 255, 0.72)');
+  frameGradient.addColorStop(0.28, hexToRgba(themeColor, 0.16));
+  frameGradient.addColorStop(0.5, 'rgba(255, 255, 255, 0.45)');
+  frameGradient.addColorStop(0.74, hexToRgba(themeColor, 0.12));
+  frameGradient.addColorStop(1, 'rgba(255, 255, 255, 0.66)');
+  ctx.strokeStyle = frameGradient;
+  ctx.lineWidth = 5;
+  roundRect(ctx, 30, 30, 1020, 1860, 32);
+  ctx.stroke();
+
+  const innerFrame = ctx.createLinearGradient(42, 42, 1038, 1878);
+  innerFrame.addColorStop(0, 'rgba(255, 255, 255, 0.42)');
+  innerFrame.addColorStop(0.5, 'rgba(255, 255, 255, 0.08)');
+  innerFrame.addColorStop(1, hexToRgba(themeColor, 0.12));
+  ctx.strokeStyle = innerFrame;
+  ctx.lineWidth = 1.5;
+  roundRect(ctx, 42, 42, 996, 1836, 26);
+  ctx.stroke();
+
+  // Soft diagonal foil pass that makes the exported PNG feel less flat.
+  const sheen = ctx.createLinearGradient(90, 1680, 980, 250);
+  sheen.addColorStop(0, 'rgba(255, 255, 255, 0)');
+  sheen.addColorStop(0.43, 'rgba(255, 255, 255, 0)');
+  sheen.addColorStop(0.5, 'rgba(255, 255, 255, 0.2)');
+  sheen.addColorStop(0.56, 'rgba(255, 255, 255, 0)');
+  sheen.addColorStop(1, 'rgba(255, 255, 255, 0)');
+  ctx.fillStyle = sheen;
+  ctx.fillRect(0, 0, 1080, 1920);
+
+  // Official event stamp, placed below the existing event badge.
+  const stampX = 724;
+  const stampY = 274;
+  ctx.shadowColor = hexToRgba(themeColor, 0.24);
+  ctx.shadowBlur = 18;
+  ctx.shadowOffsetY = 8;
+  ctx.fillStyle = 'rgba(255, 255, 255, 0.86)';
+  roundRect(ctx, stampX, stampY, 282, 74, 18);
+  ctx.fill();
+  ctx.shadowColor = 'transparent';
+  ctx.strokeStyle = hexToRgba(themeColor, 0.34);
+  ctx.lineWidth = 1.5;
+  ctx.setLineDash([7, 7]);
+  roundRect(ctx, stampX + 8, stampY + 8, 266, 58, 14);
+  ctx.stroke();
+  ctx.setLineDash([]);
+
+  ctx.textAlign = 'center';
+  ctx.textBaseline = 'middle';
+  ctx.fillStyle = themeColor;
+  ctx.font = `800 18px ${CARD_FONT}`;
+  ctx.fillText('OFFICIAL RESULT CARD', stampX + 141, stampY + 28);
+  ctx.fillStyle = '#002B7F';
+  ctx.font = `800 17px ${CARD_FONT}`;
+  ctx.fillText(identity.cardId, stampX + 141, stampY + 52);
+
+  // Archetype ribbon: the shareable identity produced from path + strength family.
+  const ribbonY = 1688;
+  const ribbonX = 132;
+  const ribbonW = 816;
+  const ribbonH = 72;
+  const ribbonGradient = ctx.createLinearGradient(ribbonX, ribbonY, ribbonX + ribbonW, ribbonY);
+  ribbonGradient.addColorStop(0, 'rgba(255, 255, 255, 0.78)');
+  ribbonGradient.addColorStop(0.5, 'rgba(255, 255, 255, 0.94)');
+  ribbonGradient.addColorStop(1, hexToRgba(themeColor, 0.14));
+  ctx.shadowColor = 'rgba(0, 43, 127, 0.13)';
+  ctx.shadowBlur = 18;
+  ctx.shadowOffsetY = 7;
+  ctx.fillStyle = ribbonGradient;
+  roundRect(ctx, ribbonX, ribbonY, ribbonW, ribbonH, 24);
+  ctx.fill();
+  ctx.shadowColor = 'transparent';
+  ctx.strokeStyle = 'rgba(255, 255, 255, 0.62)';
+  ctx.lineWidth = 1.5;
+  roundRect(ctx, ribbonX, ribbonY, ribbonW, ribbonH, 24);
+  ctx.stroke();
+
+  ctx.fillStyle = themeColor;
+  ctx.font = `900 29px ${CARD_FONT}`;
+  fitText(ctx, identity.archetype.toUpperCase(), ribbonX + ribbonW / 2, ribbonY + 27, ribbonW - 96, 29);
+  ctx.fillStyle = '#002B7F';
+  ctx.font = `700 21px ${CARD_FONT}`;
+  fitText(ctx, identity.thName, ribbonX + ribbonW / 2, ribbonY + 52, ribbonW - 112, 21);
+
+  ctx.restore();
+}
+
+function fitText(
+  ctx: CanvasRenderingContext2D,
+  text: string,
+  x: number,
+  y: number,
+  maxWidth: number,
+  startSize: number
+) {
+  let fontSize = startSize;
+  const fontTemplate = ctx.font;
+  while (fontSize > 16 && ctx.measureText(text).width > maxWidth) {
+    fontSize -= 1;
+    ctx.font = fontTemplate.replace(/\d+px/, `${fontSize}px`);
+  }
+  ctx.fillText(text, x, y);
 }
 
 function drawSectionBox(

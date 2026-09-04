@@ -6,6 +6,7 @@ import { renderFutureNurseCard } from '../engine/cardRenderer';
 import { ASSETS } from '../assets/registry';
 import { SoundControl } from '../components/SoundControl';
 import { generateResultQrCode } from '../engine/shareManager';
+import { getCardIdentity } from '../data/cardIdentity';
 
 interface CardPreviewViewProps {
   result: ResultPayload;
@@ -43,6 +44,7 @@ export const CardPreviewView: React.FC<CardPreviewViewProps> = ({
   const stepperSteps = [1, 2, 3, 4, 5, 6, 7, 8];
 
   const pathColor = result.path.color || '#FF6584';
+  const cardIdentity = getCardIdentity(result);
 
   useEffect(() => {
     let mounted = true;
@@ -216,22 +218,18 @@ export const CardPreviewView: React.FC<CardPreviewViewProps> = ({
           <div className="text-center shrink-0 pt-0.5">
             {/* Card Preview Pill Badge */}
             <div className="inline-flex items-center gap-1.5 px-3.5 py-0.5 rounded-full bg-gradient-to-r from-[#FF5E80] to-[#FF3366] text-white text-[9.5px] sm:text-[10.5px] font-black uppercase tracking-widest mb-1 shadow-xs">
-              <span>✦ CARD PREVIEW ✦</span>
+              <span>OFFICIAL RESULT CARD</span>
             </div>
 
             {/* Headline with Heart accents */}
-            <h2 className="text-xl sm:text-2xl md:text-[26px] font-black text-slate-800 tracking-tight font-heading leading-tight flex items-center justify-center gap-1.5">
-              <span>นี่คือ</span>
-              <span className="bg-gradient-to-r from-[#FF2B6D] via-[#FF5277] to-[#1E62D0] bg-clip-text text-transparent">
-                Future Nurse Card
-              </span>
-              <span>ของคุณ!</span>
-              <span className="text-base sm:text-lg animate-pulse">💖</span>
+            <h2 className="text-xl sm:text-2xl md:text-[26px] font-black text-slate-800 tracking-tight font-heading leading-tight flex flex-wrap items-center justify-center gap-x-1.5 gap-y-0.5">
+              <span>{cardIdentity.archetype}</span>
+              <span className="text-base sm:text-lg animate-pulse">♥</span>
             </h2>
 
             {/* Sub-caption */}
-            <p className="text-[11px] sm:text-xs font-semibold text-slate-500 mt-0.5">
-              ตรวจสอบการ์ดของคุณก่อนบันทึกและแชร์
+            <p className="text-[11px] sm:text-xs font-bold text-slate-500 mt-0.5">
+              {cardIdentity.thName} · {cardIdentity.cardId}
             </p>
           </div>
 

@@ -4,6 +4,7 @@ import QRCodeLib from 'qrcode';
 import { ResultPayload, StrengthFamily } from '../types';
 import { renderFutureNurseCard } from '../engine/cardRenderer';
 import { encodeResultState } from '../engine/stateCompressor';
+import { buildShareCaption } from '../engine/shareManager';
 
 interface ResultViewProps {
   result: ResultPayload;
@@ -55,7 +56,7 @@ export const ResultView: React.FC<ResultViewProps> = ({ result, onReset }) => {
     a.click();
   };
 
-  const caption = `My Future Nursing Path is ${result.path.nameEn} ${result.path.emoji}\nSuperpower: ${result.superpower}\nค้นพบ Future Nurse ในแบบของฉันที่ NSMU Open House 2026\n\n#NSMUOPENHOUSE2026 #NURSESOFTHELAND #NSMUTCAS70 #MahidolNursing #คณะพยาบาลศาสตร์มหิดล`;
+  const caption = buildShareCaption(result);
 
   const handleCopy = async () => {
     try { await navigator.clipboard.writeText(caption); setCopied(true); setTimeout(() => setCopied(false), 2500); } catch (_) {}

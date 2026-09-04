@@ -6,6 +6,7 @@ import { ResultPayload } from '../types';
 import { ASSETS, getRevealArtworkUrl, getRevealStickers, isPlaceholder } from '../assets/registry';
 import { SoundControl } from '../components/SoundControl';
 import pathsData from '../data/paths.json';
+import { getCardIdentity } from '../data/cardIdentity';
 
 interface RevealViewProps {
   result: ResultPayload;
@@ -44,7 +45,6 @@ export const RevealView: React.FC<RevealViewProps> = ({ result, onNext, onBack }
     : (ASSETS.characters as any)[pathId]?.male || `/characters/${pathId}_male.png`;
 
   const stickers = getRevealStickers(pathId);
-  const stepperSteps = [1, 2, 3, 4, 5, 6, 7, 8];
 
   const themeColor = pathInfo.themeColor || '#0284C7';
   const ribbonColor = pathInfo.ribbonColor || '#0284C7';
@@ -74,6 +74,7 @@ export const RevealView: React.FC<RevealViewProps> = ({ result, onNext, onBack }
 
   const revealArtworkUrl = getRevealArtworkUrl(pathId, isFemale ? 'female' : 'male');
   const hasFullRevealArtwork = !isPlaceholder(revealArtworkUrl);
+  const cardIdentity = getCardIdentity(result);
 
   // ── Effect 3: Star particles (stable across renders) ─────────────────────
   const stars = useMemo(() => generateStars(18), []);
@@ -91,42 +92,54 @@ export const RevealView: React.FC<RevealViewProps> = ({ result, onNext, onBack }
   if (hasFullRevealArtwork) {
     return (
       <div
-        className="relative h-full w-full overflow-hidden select-none bg-cover animate-fade-in"
+        className="relative h-full w-full flex flex-col overflow-hidden select-none bg-cover animate-fade-in"
         style={{ backgroundImage: `url(${ASSETS.reveal.background})`, backgroundPosition: 'center bottom', backgroundSize: 'cover' }}
         data-slot="reveal-root"
       >
-        <div className="absolute inset-0 bg-gradient-to-b from-sky-100/35 via-transparent to-blue-900/10 pointer-events-none" />
+        <div className="absolute inset-0 bg-gradient-to-b from-sky-100/50 via-white/10 to-blue-900/20 pointer-events-none" />
 
-        <div className="relative z-10 mx-auto h-full max-w-full" style={{ aspectRatio: '941 / 1672' }}>
-          <img
-            src={revealArtworkUrl}
-            alt={`${displayTitleEn} reveal result`}
-            className="h-full w-full object-contain select-none"
-            loading="eager"
-            decoding="sync"
-          />
-
+        <div className="relative z-30 shrink-0 flex items-center justify-between px-4 sm:px-6 pt-3 sm:pt-4 max-w-[720px] mx-auto w-full">
+          <div className="bg-white/95 backdrop-blur-md rounded-full px-3 py-1.5 shadow-md flex items-center gap-2 border border-white/80">
+            <img src={ASSETS.home.facultyLogo} alt="มหาวิทยาลัยมหิดล" className="h-7 sm:h-8 w-auto object-contain" />
+          </div>
           <SoundControl
             trackUrl={ASSETS.home.bgmTrack}
-            size="lg"
-            className="absolute right-[3.7%] top-[1.55%] z-20 h-[4.6%] min-h-[44px] w-[18%] min-w-[120px] opacity-0"
+            size="md"
+            className="shadow-[0_8px_22px_rgba(29,99,216,0.22)]"
           />
+        </div>
 
-          {onBack && (
-            <button
-              type="button"
-              onClick={onBack}
-              className="absolute bottom-[1.3%] left-[6.5%] z-20 h-[6.6%] w-[36%] rounded-full focus:outline-none focus:ring-4 focus:ring-blue-400/60 active:scale-[0.985] transition-transform"
-              aria-label="ย้อนกลับ"
+        <div className="relative z-10 flex-1 min-h-0 flex items-center justify-center px-3 sm:px-5 py-2">
+          <div
+            className="relative w-full overflow-hidden rounded-[2rem] sm:rounded-[2.4rem] shadow-[0_22px_55px_rgba(18,78,145,0.22)]"
+            style={{
+              aspectRatio: '941 / 1118',
+              maxWidth: 'min(100%, calc((100dvh - 9.75rem) * 941 / 1118))',
+              maxHeight: '100%',
+            }}
+          >
+            <img
+              src={revealArtworkUrl}
+              alt={`${displayTitleEn} reveal result`}
+              className="absolute left-0 w-full select-none"
+              style={{ top: '-35.1%' }}
+              loading="eager"
+              decoding="sync"
             />
-          )}
+          </div>
+        </div>
 
-          <button
-            type="button"
-            onClick={onNext}
-            className="absolute bottom-[1.3%] right-[6.7%] z-20 h-[6.6%] w-[45%] rounded-full focus:outline-none focus:ring-4 focus:ring-rose-400/60 active:scale-[0.985] transition-transform"
-            aria-label="ดูการ์ดของฉัน"
-          />
+        <div className="relative z-30 shrink-0 px-4 sm:px-6 pb-4 sm:pb-5 pt-2 max-w-[680px] mx-auto w-full flex items-center justify-between gap-3">
+          {onBack ? (
+            <button onClick={onBack} className="min-h-[52px] flex-1 px-4 py-3 rounded-full bg-white/95 hover:bg-white text-[#002B7F] font-black text-base sm:text-lg border border-white shadow-[0_10px_24px_rgba(29,99,216,0.18)] flex items-center justify-center gap-2 active:scale-95 transition-all focus:outline-none focus:ring-4 focus:ring-blue-400/40">
+              <ChevronLeft className="w-6 h-6 text-[#002B7F]" />
+              <span>ย้อนกลับ</span>
+            </button>
+          ) : <div className="flex-1" />}
+          <button onClick={onNext} className="min-h-[52px] flex-[1.45] px-4 py-3 rounded-full bg-gradient-to-r from-[#FF3366] via-[#FF5E80] to-[#FF3366] hover:from-[#FF2D55] hover:to-[#FF5E80] text-white font-black text-base sm:text-lg shadow-[0_12px_30px_rgba(255,51,102,0.36)] flex items-center justify-center gap-2 active:scale-95 transition-all animate-cta-pulse focus:outline-none focus:ring-4 focus:ring-rose-400/40">
+            <span>ดูการ์ดของฉัน</span>
+            <ArrowRight className="w-6 h-6" />
+          </button>
         </div>
       </div>
     );
@@ -176,15 +189,14 @@ export const RevealView: React.FC<RevealViewProps> = ({ result, onNext, onBack }
           filter: drop-shadow(0 2px 8px rgba(0,0,0,0.18)) drop-shadow(0 0 20px rgba(255,255,255,0.5));
         }
 
-        /* ── EFFECT 2: Character bounce-in from bottom ── */
-        @keyframes char-bounce-in {
+        /* ── EFFECT 2: Character rise-in from bottom ── */
+        @keyframes char-rise-in {
           0%   { transform: translateY(60px) scale(0.85); opacity: 0; }
-          60%  { transform: translateY(-12px) scale(1.03); opacity: 1; }
-          80%  { transform: translateY(6px) scale(0.98); }
+          65%  { transform: translateY(0px) scale(1.01); opacity: 1; }
           100% { transform: translateY(0px) scale(1); opacity: 1; }
         }
-        .char-bounce-in {
-          animation: char-bounce-in 0.75s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
+        .char-rise-in {
+          animation: char-rise-in 0.75s cubic-bezier(0.16, 1, 0.3, 1) forwards;
           animation-delay: 0.15s;
           opacity: 0;
         }
@@ -259,39 +271,6 @@ export const RevealView: React.FC<RevealViewProps> = ({ result, onNext, onBack }
         <SoundControl trackUrl={ASSETS.home.bgmTrack} size="md" />
       </div>
 
-      {/* Stepper */}
-      <div className="relative z-30 shrink-0 px-3 sm:px-5 pt-1 pb-3 sm:pb-4 max-w-[720px] mx-auto w-full">
-        <div className="flex items-center justify-between w-full">
-          {stepperSteps.map((stepNum, idx) => {
-            const isCompleted = stepNum < 6;
-            const isCurrent = stepNum === 6;
-            const isLast = idx === stepperSteps.length - 1;
-            return (
-              <React.Fragment key={stepNum}>
-                <div className="flex flex-col items-center shrink-0 relative">
-                  <div className={`w-7 h-7 sm:w-8 sm:h-8 rounded-full flex items-center justify-center font-black text-xs sm:text-sm font-heading transition-all duration-300 ${
-                    isCurrent ? 'bg-gradient-to-tr from-[#FF3366] to-[#FF6584] text-white shadow-[0_0_18px_rgba(255,51,102,.65)] scale-110 ring-4 ring-rose-200/80'
-                    : isCompleted ? 'bg-[#1D63D8] text-white shadow-sm'
-                    : 'bg-white/80 text-slate-400 border border-slate-300/80'}`}>
-                    {stepNum}
-                  </div>
-                  {isCurrent && (
-                    <div className="absolute -bottom-4.5 left-1/2 -translate-x-1/2 px-2 py-0.5 rounded-full bg-[#FF3366] text-white font-black text-[8px] tracking-wider uppercase shadow-sm whitespace-nowrap animate-pulse">
-                      REVEAL
-                    </div>
-                  )}
-                </div>
-                {!isLast && (
-                  <div className="flex-1 mx-0.5 flex items-center">
-                    <div className={`w-full border-t-2 ${stepNum < 6 ? 'border-[#1D63D8]' : 'border-white/60'}`} />
-                  </div>
-                )}
-              </React.Fragment>
-            );
-          })}
-        </div>
-      </div>
-
       {/* Main Content */}
       <div className="relative z-20 flex-1 flex flex-col min-h-0 w-full max-w-[680px] mx-auto px-3 sm:px-4">
 
@@ -327,6 +306,15 @@ export const RevealView: React.FC<RevealViewProps> = ({ result, onNext, onBack }
               <span className="opacity-90">♥</span>
             </div>
           </div>
+
+          <div className="mt-1.5 inline-flex max-w-full flex-col items-center rounded-2xl bg-white/90 px-4 py-1.5 shadow-md border border-white/80">
+            <span className="text-[10px] sm:text-[11px] font-black uppercase tracking-widest" style={{ color: bubbleTextColor }}>
+              {cardIdentity.archetype}
+            </span>
+            <span className="text-[10px] sm:text-[11px] font-bold text-slate-600 leading-tight">
+              {cardIdentity.thName}
+            </span>
+          </div>
         </div>
 
         {/* Character Stage */}
@@ -350,12 +338,12 @@ export const RevealView: React.FC<RevealViewProps> = ({ result, onNext, onBack }
             })}
           </div>
 
-          {/* ── EFFECT 2: Character bounce-in from bottom ── */}
+          {/* ── EFFECT 2: Character rise-in from bottom ── */}
           <div className="relative z-10 flex items-end justify-center w-full h-full max-h-[340px] sm:max-h-[390px] md:max-h-[440px]">
             <img
               src={characterImgUrl}
               alt={`${displayTitleEn} - ${isFemale ? 'Female' : 'Male'}`}
-              className="h-full w-auto max-w-full object-contain drop-shadow-[0_16px_40px_rgba(0,43,127,0.3)] select-none char-bounce-in"
+              className="h-full w-auto max-w-full object-contain drop-shadow-[0_16px_40px_rgba(0,43,127,0.3)] select-none char-rise-in"
               loading="eager"
               decoding="sync"
             />

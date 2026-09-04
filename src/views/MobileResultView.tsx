@@ -23,6 +23,7 @@ import {
   getTwitterShareUrl,
   shareCardViaWebShare,
   isWebShareSupported,
+  buildShareCaption,
 } from '../engine/shareManager';
 import { playSelectSfx } from '../engine/audioManager';
 
@@ -59,6 +60,7 @@ export const MobileResultView: React.FC<MobileResultViewProps> = ({ result, onPl
   const hashtags = getHashtagsString();
   const currentUrl = typeof window !== 'undefined' ? window.location.href : '';
   const customTip = PATH_TIPS[result.pathId] || 'คุณคือพลังแห่งการเปลี่ยนแปลง';
+  const shareCaption = buildShareCaption(result);
 
   useEffect(() => {
     let isMounted = true;
@@ -207,8 +209,7 @@ export const MobileResultView: React.FC<MobileResultViewProps> = ({ result, onPl
 
   const handleLineShare = () => {
     playSelectSfx('D');
-    const text = `นี่คือ Future Nurse Path ของฉัน: ${result.path.nameEn} ${result.path.emoji}\nคณะพยาบาลศาสตร์ มหาวิทยาลัยมหิดล`;
-    window.open(getLineShareUrl(currentUrl, text), '_blank', 'noopener,noreferrer');
+    window.open(getLineShareUrl(currentUrl, shareCaption), '_blank', 'noopener,noreferrer');
   };
 
   const handleFacebookShare = () => {
@@ -218,8 +219,7 @@ export const MobileResultView: React.FC<MobileResultViewProps> = ({ result, onPl
 
   const handleTwitterShare = () => {
     playSelectSfx('D');
-    const text = `นี่คือ Future Nurse Path ของฉัน: ${result.path.nameEn} ${result.path.emoji}`;
-    window.open(getTwitterShareUrl(currentUrl, text), '_blank', 'noopener,noreferrer');
+    window.open(getTwitterShareUrl(currentUrl, shareCaption), '_blank', 'noopener,noreferrer');
   };
 
   return (

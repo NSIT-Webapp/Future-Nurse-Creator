@@ -11,6 +11,7 @@
 
 import QRCodeLib from 'qrcode';
 import { ResultPayload } from '../types';
+import { getCardIdentity } from '../data/cardIdentity';
 import { encodeResultState } from './stateCompressor';
 
 // ── QR Code generation ────────────────────────────────────────────────────────
@@ -138,10 +139,13 @@ export function getTwitterShareUrl(url: string, text: string): string {
 
 /** Builds the standard social media caption + hashtags. */
 export function buildShareCaption(result: ResultPayload): string {
+  const identity = getCardIdentity(result);
   return [
     `My Future Nursing Path is ${result.path.nameEn} ${result.path.emoji}`,
+    `Result Card: ${identity.archetype}`,
     `Superpower: ${result.superpower}`,
-    `ค้นพบ Future Nurse ในแบบของฉันที่ คณะพยาบาลศาสตร์ มหาวิทยาลัยมหิดล`,
+    `ฉันได้การ์ด ${identity.thName} จาก NSMU Open House 2026`,
+    `ลองค้นหา Future Nurse Path ของคุณที่ คณะพยาบาลศาสตร์ มหาวิทยาลัยมหิดล`,
     ``,
     getHashtagsString(),
   ].join('\n');
