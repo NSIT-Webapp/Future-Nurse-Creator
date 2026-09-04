@@ -15,9 +15,9 @@ interface AnalysisViewProps {
 
 
 const BADGE_POSITIONS: Record<string, string> = {
-  PED:  'left-[4%] sm:left-[5%] top-[14%]',
-  MAT:  'left-1/2 top-[12%] sm:top-[11%] -translate-x-1/2',
-  MH:   'right-[4%] sm:right-[5%] top-[14%]',
+  PED:  'left-[4%] sm:left-[5%] top-[10%] sm:top-[9%]',
+  MAT:  'left-1/2 top-[3%] sm:top-[2%] -translate-x-1/2',
+  MH:   'right-[4%] sm:right-[5%] top-[10%] sm:top-[9%]',
   ER:   'left-[-1%] sm:left-[2%] top-[44%]',
   OA:   'right-[-1%] sm:right-[2%] top-[44%]',
   COMM: 'left-[4%] sm:left-[7%] bottom-[3%] sm:bottom-[4%]',
@@ -26,8 +26,8 @@ const BADGE_POSITIONS: Record<string, string> = {
 };
 
 const BADGE_POSITIONS_MALE: Record<string, string> = {
-  PED:  'left-[5%] sm:left-[6%] top-[15%]',
-  MH:   'right-[5%] sm:right-[6%] top-[15%]',
+  PED:  'left-[5%] sm:left-[6%] top-[13%] sm:top-[12%]',
+  MH:   'right-[5%] sm:right-[6%] top-[13%] sm:top-[12%]',
   ER:   'left-[-1%] sm:left-[3%] top-[44%]',
   OA:   'right-[-1%] sm:right-[3%] top-[44%]',
   COMM: 'left-[5%] sm:left-[9%] bottom-[3%] sm:bottom-[4%]',
@@ -64,7 +64,7 @@ export const AnalysisView: React.FC<AnalysisViewProps> = ({
   const badgeMAT  = isFemale ? findBadge('MAT') : null;
   const badgePositions = isFemale ? BADGE_POSITIONS : BADGE_POSITIONS_MALE;
   const centerCharacterPlacement = isFemale
-    ? 'top-[50%] sm:top-[51%]'
+    ? 'top-[54%] sm:top-[55%]'
     : 'top-[47%] sm:top-[48%]';
 
   // Scanning sequence order (Circular Clockwise Orbit around center student)
