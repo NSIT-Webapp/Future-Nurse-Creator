@@ -69,11 +69,11 @@ export const ASSETS = {
   // Replace each PLACEHOLDER with the final asset path when ready.
   questions: {
     nursePresenter: '/assets/questions/nurse-cutout.png',
-    q1: '/assets/questions/nurse-cutout.png',
-    q2: '/assets/questions/nurse-cutout.png',
-    q3: '/assets/questions/nurse-cutout.png',
-    q4: '/assets/questions/nurse-cutout.png',
-    q5: '/assets/questions/nurse-cutout.png',
+    q1: '/assets/questions/q1.png',
+    q2: '/assets/questions/q2.png',
+    q3: '/assets/questions/q3.png',
+    q4: '/assets/questions/q4.png',
+    q5: '/assets/questions/q5.png',
   },
 
   // ── Card character illustrations (per Nursing Path × gender) ─────────────────

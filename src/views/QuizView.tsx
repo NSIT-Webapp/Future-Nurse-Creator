@@ -10,7 +10,7 @@ import {
   ChevronRight,
 } from 'lucide-react';
 import { Question } from '../types';
-import { ASSETS } from '../assets/registry';
+import { ASSETS, getQuestionCharacterUrl } from '../assets/registry';
 import { SoundControl } from '../components/SoundControl';
 import { QuizStepper } from '../components/QuizStepper';
 
@@ -125,24 +125,24 @@ export const QuizView: React.FC<QuizViewProps> = ({
       </div>
 
       {/* ── 4. Main Question Card Container ─────────────────────────────────── */}
-      <div className="relative z-20 flex-1 flex flex-col items-center justify-center px-3 sm:px-5 md:px-6 pt-2 sm:pt-4 pb-6 sm:pb-8 md:pb-10 max-w-3xl mx-auto w-full">
-        <div className="relative w-full translate-y-4 sm:translate-y-8 md:translate-y-12">
+      <div className="relative z-20 flex-1 flex flex-col items-center justify-center px-3 sm:px-5 md:px-6 pt-2 pb-6 max-w-3xl mx-auto w-full">
+        <div className="relative w-full">
 
-          {/* Nurse Character Illustration (Peeking out playfully from BEHIND the question card) */}
-          <div className="absolute -top-14 sm:-top-20 md:-top-24 right-4 sm:right-8 md:right-12 w-32 sm:w-40 md:w-48 pointer-events-none z-0 drop-shadow-[0_12px_25px_rgba(0,43,127,0.22)] select-none">
-            <img
-              src="/assets/questions/nurse-cutout.png"
-              alt="Nurse Character"
-              className="w-full h-auto object-contain animate-float-subtle"
-              draggable={false}
-            />
-          </div>
+          {/* Unified Question Card (Slightly faint/translucent frosted glass bg-white/80) */}
+          <div className="relative z-10 w-full rounded-[28px] sm:rounded-[32px] bg-white/80 backdrop-blur-lg shadow-[0_14px_40px_rgba(0,43,127,0.12)] border border-white/60 p-4 sm:p-6 md:p-7 flex flex-col justify-between min-h-[490px]">
 
-          {/* Main Question Card (z-10 covers lower half of nurse character) */}
-          <div className="relative z-10 w-full rounded-[24px] sm:rounded-[32px] bg-white/95 backdrop-blur-md shadow-[0_14px_40px_rgba(0,43,127,0.15)] border border-white/80 p-4 sm:p-6 md:p-7 flex flex-col justify-between min-h-[490px]">
+            {/* Nurse Mascot: In front of white card (z-20), peeking behind Row A (z-30) */}
+            <div className="absolute -top-20 sm:-top-24 md:-top-28 right-2 sm:right-4 md:right-6 w-38 sm:w-46 md:w-52 pointer-events-none z-20 drop-shadow-[0_12px_28px_rgba(0,43,127,0.22)] select-none">
+              <img
+                src={getQuestionCharacterUrl((Math.min(Math.max(currentStep, 1), 5)) as 1 | 2 | 3 | 4 | 5)}
+                alt={`Nurse Character Step ${currentStep}`}
+                className="w-full h-auto object-contain animate-float-subtle"
+                draggable={false}
+              />
+            </div>
 
-            {/* ── Header Inside Card: Step Badge & Prompt ─────────────────────── */}
-            <div className="relative z-10 mb-2 sm:mb-3">
+            {/* ── Header Inside Card: Step Badge & Prompt (pr reserved for mascot) ── */}
+            <div className="relative z-20 pr-28 sm:pr-36 md:pr-44 mb-2 sm:mb-3">
               {/* Step Badge */}
               <div className="inline-flex items-center px-3 py-1 rounded-full bg-gradient-to-r from-[#FF4E72] to-[#FF3366] text-white text-[10px] sm:text-xs font-black uppercase tracking-wider shadow-sm font-heading mb-1.5">
                 QUESTION {currentStep} / {totalSteps}
@@ -164,8 +164,8 @@ export const QuizView: React.FC<QuizViewProps> = ({
               </p>
             </div>
 
-            {/* ── Choices List (A through F) ─────────────────────────────────── */}
-            <div className="relative z-10 flex flex-col gap-2 sm:gap-2.5 my-1">
+            {/* ── Choices List (A through F) (z-30 covers lower body of mascot) ── */}
+            <div className="relative z-30 flex flex-col gap-2 sm:gap-2.5 my-1">
               {question.options.map((opt) => {
                 const isSelected = selectedOption === opt.key;
                 const theme = OPTION_THEMES[opt.key] || OPTION_THEMES.A;
@@ -178,8 +178,8 @@ export const QuizView: React.FC<QuizViewProps> = ({
                     onClick={() => onSelectOption(opt.key)}
                     className={`group relative w-full flex items-center justify-between p-2.5 sm:p-3 rounded-2xl border transition-all duration-150 active:scale-[0.99] text-left cursor-pointer select-none ${
                       isSelected
-                        ? `bg-rose-50/75 ${theme.borderActive} border-2 shadow-md ring-2 ${theme.ringActive}`
-                        : 'bg-white/90 hover:bg-white border-slate-200/90 shadow-xs hover:border-sky-300'
+                        ? `bg-rose-50 ${theme.borderActive} border-2 shadow-md ring-2 ${theme.ringActive}`
+                        : 'bg-white hover:bg-slate-50/90 border-slate-200/90 shadow-xs hover:border-sky-300'
                     }`}
                   >
                     {/* Left: Icon Bubble + Letter + Title */}
@@ -224,7 +224,7 @@ export const QuizView: React.FC<QuizViewProps> = ({
             </div>
 
             {/* ── Bottom Navigation Inside Card: Back / Next ─────────────────── */}
-            <div className="relative z-10 flex items-center justify-between pt-3 sm:pt-4 mt-auto border-t border-slate-100">
+            <div className="relative z-30 flex items-center justify-between pt-3 sm:pt-4 mt-auto border-t border-slate-100/80">
               {/* Back Button */}
               <button
                 type="button"
