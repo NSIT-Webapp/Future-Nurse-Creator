@@ -95,14 +95,25 @@ export function App() {
   const handleSelectOption = (optionKey: string) => {
     resetActivity();
     const currentQ = questionsData.questions[currentQuestionIdx];
-    const newAnswers: QuizAnswers = { ...answers, [currentQ.id]: optionKey };
-    setAnswers(newAnswers);
+    setAnswers(prev => ({ ...prev, [currentQ.id]: optionKey }));
+  };
 
+  const handleNextQuestion = () => {
+    resetActivity();
     if (currentQuestionIdx < questionsData.questions.length - 1) {
       setCurrentQuestionIdx(i => i + 1);
     } else {
       // All 5 answered — proceed to Choose Future Look
       setScreen('character');
+    }
+  };
+
+  const handleBackQuestion = () => {
+    resetActivity();
+    if (currentQuestionIdx > 0) {
+      setCurrentQuestionIdx(i => i - 1);
+    } else {
+      setScreen('welcome');
     }
   };
 
@@ -147,10 +158,8 @@ export function App() {
       {/* 3:4 Portrait Content Canvas: fixed 3:4 composition, centered, background-filled around */}
       <div className="canvas-3-4 flex flex-col relative shadow-2xl">
         {/* Kiosk chrome: header with step indicator + reset (shown on quiz/result flow) */}
-        {screen !== 'welcome' && (
+        {screen !== 'welcome' && screen !== 'quiz' && (
           <Header
-            currentStep={screen === 'quiz' ? currentQuestionIdx + 1 : undefined}
-            totalSteps={5}
             showReset={screen !== 'analysis' && screen !== 'thank_you_reset'}
             onReset={handleReset}
           />
@@ -167,6 +176,8 @@ export function App() {
             totalSteps={questionsData.questions.length}
             selectedOption={selectedOption}
             onSelectOption={handleSelectOption}
+            onNext={handleNextQuestion}
+            onBack={handleBackQuestion}
           />
         )}
         {screen === 'analysis'     && <AnalysisView onComplete={handleAnalysisComplete} characterType={characterType} />}

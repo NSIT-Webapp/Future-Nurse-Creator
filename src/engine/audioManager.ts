@@ -1,73 +1,162 @@
 /**
- * audioManager.ts — Global Background Audio & Sound Controller
+ * ══════════════════════════════════════════════════════════════════════════════
+ * AUDIO MANAGER — Future Nurse Creator
+ * ══════════════════════════════════════════════════════════════════════════════
  *
- * Responsibilities:
- * - Default state: MUTED / OFF (respects iOS Safari autoplay policy)
- * - User toggle on/off: initializes and plays audio context upon explicit gesture
- * - Session persistence: maintains user preference across screens
- * - Reset behavior: Thank You & Reset returns audio to default (muted / stopped)
- * - Safe failover: gracefully handles missing audio file or blocked playback
+ * Kiosk Background Music Controller:
+ * - Compatible with iOS Safari gesture/touch activation requirements
+ * - Looping background soundtrack (/audio/bgm.mp3)
+ * - Reactive subscription for UI buttons (SoundControl, Header)
+ * - Safe error handling (catches browser audio autoplay restrictions)
  */
 
-let bgmAudio: HTMLAudioElement | null = null;
-let isMutedState = true;
-const listeners = new Set<(isMuted: boolean) => void>();
+let globalAudio: HTMLAudioElement | null = null;
+let isMuted: boolean = false; // Default unmuted ("เปิดเสียงไว้เลย")
+let isPlaying: boolean = false;
+const listeners = new Set<(muted: boolean, playing: boolean) => void>();
 
-export function getAudioMuted(): boolean {
-  return isMutedState;
+function notify() {
+  listeners.forEach(fn => {
+    try {
+      fn(isMuted, isPlaying);
+    } catch (_e) {}
+  });
 }
 
-export function subscribeAudio(listener: (isMuted: boolean) => void): () => void {
-  listeners.add(listener);
-  return () => listeners.delete(listener);
+// Auto-unlock audio on first touch/click/key if browser blocked initial autoplay
+if (typeof window !== 'undefined') {
+  const unlockAudio = () => {
+    if (!isMuted && (!globalAudio || globalAudio.paused)) {
+      playAudio().catch(() => {});
+    }
+  };
+  ['pointerdown', 'touchstart', 'click', 'keydown'].forEach(evt => {
+    window.addEventListener(evt, unlockAudio, { passive: true, once: false });
+  });
 }
 
-function notifyListeners() {
-  listeners.forEach(fn => fn(isMutedState));
-}
+function getOrCreateAudio(trackUrl: string = '/audio/bgm.mp3'): HTMLAudioElement {
+  if (!globalAudio) {
+    globalAudio = new Audio(trackUrl);
+    globalAudio.loop = true;
+    globalAudio.volume = 0.45;
+    globalAudio.preload = 'auto';
 
-/**
- * Toggle sound on/off
- * If unmuting, begins playback (user gesture required on iOS).
- */
-export function toggleAudio(trackUrl?: string): boolean {
-  isMutedState = !isMutedState;
+    globalAudio.addEventListener('play', () => {
+      isPlaying = true;
+      notify();
+    });
 
-  if (!isMutedState) {
-    if (!bgmAudio && trackUrl) {
-      try {
-        bgmAudio = new Audio(trackUrl);
-        bgmAudio.loop = true;
-        bgmAudio.volume = 0.5;
-      } catch (err) {
-        console.warn('Audio init warning:', err);
-      }
-    }
+    globalAudio.addEventListener('pause', () => {
+      isPlaying = false;
+      notify();
+    });
 
-    if (bgmAudio) {
-      bgmAudio.play().catch(err => {
-        console.warn('Audio playback prevented by browser policy:', err);
-        isMutedState = true; // revert if blocked
-      });
-    }
-  } else {
-    if (bgmAudio) {
-      bgmAudio.pause();
-    }
+    globalAudio.addEventListener('ended', () => {
+      // Loop backup
+      globalAudio?.play().catch(() => {});
+    });
+  } else if (trackUrl && !globalAudio.src.endsWith(trackUrl)) {
+    globalAudio.src = trackUrl;
   }
-
-  notifyListeners();
-  return isMutedState;
+  return globalAudio;
 }
 
 /**
- * Reset audio to default muted/stopped state on kiosk session reset.
+ * Returns true if audio is currently muted/paused.
+ */
+export function getAudioMuted(): boolean {
+  return isMuted;
+}
+
+/**
+ * Returns true if audio is actively playing.
+ */
+export function isAudioPlaying(): boolean {
+  return isPlaying;
+}
+
+/**
+ * Subscribes a listener to audio state changes. Returns unsubscribe function.
+ */
+export function subscribeAudio(listener: (muted: boolean, playing: boolean) => void): () => void {
+  listeners.add(listener);
+  listener(isMuted, isPlaying);
+  return () => {
+    listeners.delete(listener);
+  };
+}
+
+/**
+ * Plays background music with the specified track URL.
+ */
+export async function playAudio(trackUrl: string = '/audio/bgm.mp3'): Promise<boolean> {
+  const audio = getOrCreateAudio(trackUrl);
+  isMuted = false;
+  audio.muted = false;
+  try {
+    await audio.play();
+    isPlaying = true;
+    notify();
+    return true;
+  } catch (_err) {
+    // Autoplay prevented by browser policy until interaction
+    isPlaying = false;
+    notify();
+    return false;
+  }
+}
+
+/**
+ * Pauses background music.
+ */
+export function pauseAudio(): void {
+  if (globalAudio) {
+    globalAudio.pause();
+    isMuted = true;
+    isPlaying = false;
+    notify();
+  }
+}
+
+/**
+ * Toggles audio between playing (unmuted) and paused (muted).
+ */
+export function toggleAudio(trackUrl: string = '/audio/bgm.mp3'): boolean {
+  const audio = getOrCreateAudio(trackUrl);
+  if (!audio.paused && !isMuted) {
+    pauseAudio();
+    return false;
+  } else {
+    playAudio(trackUrl);
+    return true;
+  }
+}
+
+/**
+ * Resets audio state on kiosk session reset.
  */
 export function resetAudioState(): void {
-  if (bgmAudio) {
-    bgmAudio.pause();
-    bgmAudio.currentTime = 0;
+  if (globalAudio && !isMuted) {
+    if (globalAudio.paused) {
+      globalAudio.play().catch(() => {});
+    }
   }
-  isMutedState = true;
-  notifyListeners();
 }
+
+export const audioManager = {
+  getAudioMuted,
+  isAudioPlaying,
+  getState: () => ({ isPlaying, isMuted }),
+  subscribe: (fn: (state: { isPlaying: boolean; isMuted: boolean }) => void) => {
+    return subscribeAudio((m, p) => fn({ isMuted: m, isPlaying: p }));
+  },
+  subscribeAudio,
+  playAudio,
+  play: playAudio,
+  pauseAudio,
+  pause: pauseAudio,
+  toggleAudio,
+  toggle: toggleAudio,
+  resetAudioState,
+};

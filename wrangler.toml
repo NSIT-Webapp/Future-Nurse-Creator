@@ -1,0 +1,16 @@
+name = "future-nurse-creator"
+main = "worker/index.ts"
+compatibility_date = "2026-09-03"
+
+[assets]
+directory = "./dist"
+binding = "ASSETS"
+not_found_handling = "single-page-application"
+
+[[d1_databases]]
+binding = "DB"
+database_name = "future-nurse-db"
+database_id = "9a1bc5bd-4d25-4e28-8cf3-ec79c4e77e74"
+
+[observability]
+enabled = true

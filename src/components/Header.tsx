@@ -1,5 +1,6 @@
 import React from 'react';
 import { Sparkles, RotateCcw } from 'lucide-react';
+import { SoundControl } from './SoundControl';
 
 interface HeaderProps {
   currentStep?: number;
@@ -36,7 +37,9 @@ export const Header: React.FC<HeaderProps> = ({
         </div>
       </div>
 
-      <div className="flex items-center gap-3">
+      <div className="flex items-center gap-2.5">
+        <SoundControl className="!bg-white/10 !text-slate-200 !border-white/20 hover:!bg-white/20" />
+
         {currentStep && (
           <div className="flex items-center gap-2 px-3 py-1.5 rounded-full bg-white/5 border border-white/10 text-xs text-slate-300 font-medium">
             <Sparkles className="w-3.5 h-3.5 text-mahidol-gold animate-pulse" />

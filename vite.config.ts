@@ -7,13 +7,13 @@ export default defineConfig({
     react(),
     VitePWA({
       registerType: 'autoUpdate',
-      includeAssets: ['favicon.ico', 'apple-touch-icon.png', 'assets/**/*', 'characters/**/*'],
+      includeAssets: ['favicon.svg', 'apple-touch-icon.png', 'pwa-192x192.png', 'pwa-512x512.png', 'assets/**/*', 'characters/**/*', 'audio/**/*'],
       manifest: {
-        name: 'Future Nurse Creator - NSMU Open House 2026',
+        name: 'Future Nurse',
         short_name: 'Future Nurse',
         description: 'Discover your Nursing Path & Superpower at Faculty of Nursing, Mahidol University',
         theme_color: '#002B7F',
-        background_color: '#0A192F',
+        background_color: '#FFFFFF',
         display: 'standalone',
         orientation: 'portrait',
         icons: [

@@ -2,6 +2,7 @@ import React from 'react';
 import { ChevronRight } from 'lucide-react';
 import { ASSETS } from '../assets/registry';
 import { SoundControl } from '../components/SoundControl';
+import { playAudio } from '../engine/audioManager';
 
 interface WelcomeViewProps {
   onStart: () => void;
@@ -21,6 +22,15 @@ interface WelcomeViewProps {
  * 8. data-layer="home-footer": High-DPI vector footer text
  */
 export const WelcomeView: React.FC<WelcomeViewProps> = ({ onStart }) => {
+  React.useEffect(() => {
+    playAudio();
+  }, []);
+
+  const handleStartClick = () => {
+    playAudio();
+    onStart();
+  };
+
   return (
     <div
       className="relative w-full h-full min-h-full flex flex-col justify-between select-none overflow-hidden animate-fade-in"
@@ -35,31 +45,56 @@ export const WelcomeView: React.FC<WelcomeViewProps> = ({ onStart }) => {
       />
 
       {/* ── 2. Top Header Bar (Mahidol Seal + Sound Control) ─────────────── */}
-      <div className="relative z-30 flex items-center justify-between px-4 sm:px-6 pt-3 shrink-0">
-        {/* University Emblem & Name */}
-        <div className="flex items-center gap-2.5">
+      <div className="relative z-30 flex items-center justify-between px-4 sm:px-6 pt-3 sm:pt-4 shrink-0">
+        {/* University & Faculty Logo Lockup (Direct from Mockup) */}
+        <div className="flex items-center shrink-0">
           <img
-            src={ASSETS.home.mahidolSeal}
-            alt="ตราสัญลักษณ์มหาวิทยาลัยมหิดล"
-            className="w-9 h-9 sm:w-10 sm:h-10 object-contain drop-shadow-sm shrink-0"
+            src={ASSETS.home.facultyLogo}
+            alt="มหาวิทยาลัยมหิดล คณะพยาบาลศาสตร์"
+            className="h-11 sm:h-12 md:h-14 w-auto object-contain drop-shadow-[0_1px_3px_rgba(0,43,127,0.15)] pointer-events-none"
             draggable={false}
           />
-          <div className="leading-tight">
-            <h2 className="text-xs sm:text-[13px] font-extrabold text-[#002B7F] font-heading drop-shadow-[0_1px_2px_rgba(255,255,255,0.9)]">
-              มหาวิทยาลัยมหิดล
-            </h2>
-            <p className="text-[10px] sm:text-[11px] font-semibold text-[#002B7F]/80 drop-shadow-[0_1px_2px_rgba(255,255,255,0.9)]">
-              คณะพยาบาลศาสตร์
-            </p>
-          </div>
         </div>
 
         {/* Sound Control Toggle */}
-        <SoundControl trackUrl={ASSETS.home.bgmTrack} />
+        <SoundControl trackUrl={ASSETS.home.bgmTrack} size="lg" />
       </div>
 
-      {/* ── 3. Title Wordmark Layer ───────────────────────────────────────── */}
+      {/* ── 3. Title Wordmark Layer + Floating Decorative Icons ───────────── */}
       <div data-layer="home-title" className="relative z-30 flex flex-col items-center pt-0.5 pb-1 shrink-0">
+        {/* Floating Decorative Elements (Stethoscope, Bulb, Heart, Sparkles) */}
+        <div className="absolute inset-0 pointer-events-none overflow-visible select-none">
+          {/* Stethoscope (Upper Left) */}
+          <span className="absolute left-[8%] sm:left-[10%] top-[25%] text-2xl sm:text-3xl drop-shadow-md animate-float-subtle opacity-90">
+            🩺
+          </span>
+          {/* Lightbulb (Upper Right) */}
+          <span
+            className="absolute right-[10%] sm:right-[12%] top-[8%] text-2xl sm:text-3xl drop-shadow-md animate-float-subtle opacity-90"
+            style={{ animationDelay: '0.8s' }}
+          >
+            💡
+          </span>
+          {/* Heart (Right of wordmark) */}
+          <span
+            className="absolute right-[6%] sm:right-[8%] top-[42%] text-xl sm:text-2xl drop-shadow-md animate-float-subtle opacity-90"
+            style={{ animationDelay: '1.5s' }}
+          >
+            💖
+          </span>
+          {/* Sparkle 1 */}
+          <span className="absolute left-[20%] top-[10%] text-amber-400 font-black text-sm drop-shadow-xs animate-pulse">
+            ✦
+          </span>
+          {/* Sparkle 2 */}
+          <span
+            className="absolute right-[22%] top-[55%] text-sky-400 font-black text-sm drop-shadow-xs animate-pulse"
+            style={{ animationDelay: '0.5s' }}
+          >
+            ✦
+          </span>
+        </div>
+
         <img
           src={ASSETS.home.titleWordmark}
           alt="Future Nurse Creator - Mahidol Open House"
@@ -71,30 +106,30 @@ export const WelcomeView: React.FC<WelcomeViewProps> = ({ onStart }) => {
         </p>
       </div>
 
-      {/* ── 4. Character Duo Layer (Male on Left, Female on Right) ────────── */}
+      {/* ── 4. Character Duo Layer (Mockup Scale & Position: Legs Behind CTA) ── */}
       <div
         data-layer="home-characters"
-        className="absolute inset-x-0 top-0 bottom-[28%] pointer-events-none z-10 overflow-hidden"
+        className="absolute inset-0 pointer-events-none z-10 overflow-hidden"
       >
-        {/* Male Student (Left side) */}
-        <div className="absolute left-[-2%] sm:left-[4%] top-[25%] sm:top-[26%] w-[56%] sm:w-[50%] h-[72%] animate-float-subtle">
+        {/* Male Student (Left side, scaled to fill upper-middle, legs behind CTA) */}
+        <div className="absolute left-[3%] sm:left-[3.5%] top-[32.5%] sm:top-[32.5%] w-[70%] sm:w-[69%] aspect-[3/4] animate-float-subtle">
           <img
             src={ASSETS.home.characterMale}
             alt="Male Nursing Student"
-            className="w-full h-full object-contain object-top drop-shadow-[0_8px_16px_rgba(0,43,127,0.18)]"
+            className="w-full h-full object-contain object-top drop-shadow-[0_12px_24px_rgba(0,43,127,0.22)]"
             draggable={false}
           />
         </div>
 
-        {/* Female Student (Right side, slightly in front) */}
+        {/* Female Student (Right side, standing close to Male, legs behind CTA) */}
         <div
-          className="absolute right-[-2%] sm:right-[4%] top-[27%] sm:top-[28%] w-[54%] sm:w-[48%] h-[72%] animate-float-subtle"
+          className="absolute left-[31.5%] sm:left-[32%] top-[34.5%] sm:top-[34.5%] w-[70%] sm:w-[69%] aspect-[3/4] animate-float-subtle"
           style={{ animationDelay: '1.2s' }}
         >
           <img
             src={ASSETS.home.characterFemale}
             alt="Female Nursing Student"
-            className="w-full h-full object-contain object-top drop-shadow-[0_8px_16px_rgba(0,43,127,0.18)]"
+            className="w-full h-full object-contain object-top drop-shadow-[0_12px_24px_rgba(0,43,127,0.22)]"
             draggable={false}
           />
         </div>
@@ -106,7 +141,7 @@ export const WelcomeView: React.FC<WelcomeViewProps> = ({ onStart }) => {
         className="relative z-20 w-full px-5 sm:px-8 py-1.5 flex justify-center mt-auto"
       >
         <button
-          onClick={onStart}
+          onClick={handleStartClick}
           className="group w-full max-w-sm sm:max-w-md py-3 sm:py-3.5 px-3.5 rounded-full bg-gradient-to-r from-[#FF4E72] via-[#FF3366] to-[#783BE8] hover:from-[#ff5b7d] hover:to-[#8449f0] active:scale-[0.98] transition-all duration-150 flex items-center justify-between shadow-[0_8px_25px_rgba(255,51,102,0.45)] cursor-pointer focus:outline-none focus:ring-4 focus:ring-amber-400/50 animate-cta-pulse"
           aria-label="เริ่มสร้างอนาคตของคุณเลย! เริ่มค้นหา Future Nurse ของคุณ"
         >
@@ -140,24 +175,24 @@ export const WelcomeView: React.FC<WelcomeViewProps> = ({ onStart }) => {
         </div>
 
         {/* Mascot + 3 Cards Row */}
-        <div className="flex items-center gap-2 sm:gap-3 max-w-lg mx-auto w-full">
+        <div className="flex items-end gap-2 sm:gap-2.5 max-w-lg mx-auto w-full px-1">
           {/* Mascot (Clean Transparent with subtle natural bobbing) */}
           <div
             data-layer="home-mascot"
-            className="w-16 sm:w-20 shrink-0 flex items-end justify-center animate-mascot-bob"
+            className="w-[84px] sm:w-[96px] shrink-0 flex items-end justify-center animate-mascot-bob"
           >
             <img
               src={ASSETS.home.mascot}
               alt="Mascot"
-              className="w-full h-auto object-contain drop-shadow-md"
+              className="w-full max-w-[96px] h-auto object-contain drop-shadow-md"
               draggable={false}
             />
           </div>
 
-          {/* 3 Native High-DPI Vector Cards */}
-          <div className="grid grid-cols-3 gap-1.5 sm:gap-2 flex-1">
+          {/* 3 Native High-DPI Vector Cards with Connecting Arrows */}
+          <div className="flex items-center gap-1 sm:gap-1.5 flex-1 min-w-0">
             {/* Card 1 */}
-            <div className="relative rounded-xl sm:rounded-2xl bg-white/95 border border-slate-200/90 shadow-sm p-1.5 sm:p-2 flex flex-col items-center justify-between text-center backdrop-blur-sm">
+            <div className="relative flex-1 rounded-xl sm:rounded-2xl bg-white/95 border border-slate-200/90 shadow-sm p-1.5 sm:p-2 flex flex-col items-center justify-between text-center backdrop-blur-sm min-h-[74px] sm:min-h-[80px]">
               <div className="absolute -top-1.5 -left-1.5 w-4 h-4 sm:w-5 sm:h-5 rounded-full bg-[#FF4E72] text-white text-[9px] sm:text-[10px] font-bold flex items-center justify-center shadow">
                 1
               </div>
@@ -172,8 +207,13 @@ export const WelcomeView: React.FC<WelcomeViewProps> = ({ onStart }) => {
               </p>
             </div>
 
+            {/* Connecting Arrow 1 -> 2 */}
+            <div className="shrink-0 text-pink-400/80 font-bold text-xs select-none">
+              ⇢
+            </div>
+
             {/* Card 2 */}
-            <div className="relative rounded-xl sm:rounded-2xl bg-white/95 border border-slate-200/90 shadow-sm p-1.5 sm:p-2 flex flex-col items-center justify-between text-center backdrop-blur-sm">
+            <div className="relative flex-1 rounded-xl sm:rounded-2xl bg-white/95 border border-slate-200/90 shadow-sm p-1.5 sm:p-2 flex flex-col items-center justify-between text-center backdrop-blur-sm min-h-[74px] sm:min-h-[80px]">
               <div className="absolute -top-1.5 -left-1.5 w-4 h-4 sm:w-5 sm:h-5 rounded-full bg-[#F59E0B] text-white text-[9px] sm:text-[10px] font-bold flex items-center justify-center shadow">
                 2
               </div>
@@ -188,8 +228,13 @@ export const WelcomeView: React.FC<WelcomeViewProps> = ({ onStart }) => {
               </p>
             </div>
 
+            {/* Connecting Arrow 2 -> 3 */}
+            <div className="shrink-0 text-emerald-400/80 font-bold text-xs select-none">
+              ⇢
+            </div>
+
             {/* Card 3 */}
-            <div className="relative rounded-xl sm:rounded-2xl bg-white/95 border border-slate-200/90 shadow-sm p-1.5 sm:p-2 flex flex-col items-center justify-between text-center backdrop-blur-sm">
+            <div className="relative flex-1 rounded-xl sm:rounded-2xl bg-white/95 border border-slate-200/90 shadow-sm p-1.5 sm:p-2 flex flex-col items-center justify-between text-center backdrop-blur-sm min-h-[74px] sm:min-h-[80px]">
               <div className="absolute -top-1.5 -left-1.5 w-4 h-4 sm:w-5 sm:h-5 rounded-full bg-[#10B981] text-white text-[9px] sm:text-[10px] font-bold flex items-center justify-center shadow">
                 3
               </div>

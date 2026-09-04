@@ -50,7 +50,8 @@ export const ASSETS = {
     stepIcon1:         PLACEHOLDER('home/step-icon-1'),
     stepIcon2:         PLACEHOLDER('home/step-icon-2'),
     stepIcon3:         PLACEHOLDER('home/step-icon-3'),
-    universityLogo:    '/assets/home/mahidol-seal.png',
+    universityLogo:    '/assets/home/faculty-logo.png',
+    facultyLogo:       '/assets/home/faculty-logo.png',
     mahidolSeal:       '/assets/home/mahidol-seal.png',
     bgmTrack:          '/audio/bgm.mp3',
   },
@@ -67,11 +68,12 @@ export const ASSETS = {
   // These are presenter/illustration images fixed per question — not per player.
   // Replace each PLACEHOLDER with the final asset path when ready.
   questions: {
-    q1: PLACEHOLDER('questions/q1-character'),
-    q2: PLACEHOLDER('questions/q2-character'),
-    q3: PLACEHOLDER('questions/q3-character'),
-    q4: PLACEHOLDER('questions/q4-character'),
-    q5: PLACEHOLDER('questions/q5-character'),
+    nursePresenter: '/assets/questions/nurse-cutout.png',
+    q1: '/assets/questions/nurse-cutout.png',
+    q2: '/assets/questions/nurse-cutout.png',
+    q3: '/assets/questions/nurse-cutout.png',
+    q4: '/assets/questions/nurse-cutout.png',
+    q5: '/assets/questions/nurse-cutout.png',
   },
 
   // ── Card character illustrations (per Nursing Path × gender) ─────────────────

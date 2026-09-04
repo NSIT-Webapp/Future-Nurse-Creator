@@ -1,11 +1,18 @@
 import React from 'react';
 import {
-  Sparkles, ShieldCheck, Zap, HeartHandshake, Ear, Eye, Users,
-  Lightbulb, MessageSquareQuote, ListOrdered, Search, Cpu, Globe
+  ClipboardList,
+  HeartHandshake,
+  Search,
+  Users,
+  Lightbulb,
+  MessageCircle,
+  ChevronLeft,
+  ChevronRight,
 } from 'lucide-react';
 import { Question } from '../types';
-import { AssetImage } from '../components/AssetImage';
-import { getQuestionCharacterUrl } from '../assets/registry';
+import { ASSETS } from '../assets/registry';
+import { SoundControl } from '../components/SoundControl';
+import { QuizStepper } from '../components/QuizStepper';
 
 interface QuizViewProps {
   question: Question;
@@ -13,12 +20,63 @@ interface QuizViewProps {
   totalSteps: number;
   selectedOption?: string;
   onSelectOption: (optionKey: string) => void;
+  onNext?: () => void;
+  onBack?: () => void;
 }
 
-const iconMap: Record<string, React.FC<{ className?: string }>> = {
-  ShieldCheck, Zap, HeartHandshake, Ear, Eye, Users, Lightbulb,
-  MessageSquareQuote, ListOrdered, Search, Cpu, Globe, Sparkles,
-  FileSearch: Search,
+// Option config mapping for colors, badges, and icons matching the Open House mockup
+const OPTION_THEMES: Record<
+  string,
+  {
+    bgIcon: string;
+    textLetter: string;
+    borderActive: string;
+    ringActive: string;
+    Icon: React.FC<{ className?: string }>;
+  }
+> = {
+  A: {
+    bgIcon: 'bg-[#FF4E72]',
+    textLetter: 'text-[#FF4E72]',
+    borderActive: 'border-[#FF4E72]',
+    ringActive: 'ring-rose-200',
+    Icon: ClipboardList,
+  },
+  B: {
+    bgIcon: 'bg-[#F59E0B]',
+    textLetter: 'text-[#F59E0B]',
+    borderActive: 'border-[#F59E0B]',
+    ringActive: 'ring-amber-200',
+    Icon: HeartHandshake,
+  },
+  C: {
+    bgIcon: 'bg-[#10B981]',
+    textLetter: 'text-[#10B981]',
+    borderActive: 'border-[#10B981]',
+    ringActive: 'ring-emerald-200',
+    Icon: Search,
+  },
+  D: {
+    bgIcon: 'bg-[#0284C7]',
+    textLetter: 'text-[#0284C7]',
+    borderActive: 'border-[#0284C7]',
+    ringActive: 'ring-sky-200',
+    Icon: Users,
+  },
+  E: {
+    bgIcon: 'bg-[#8B5CF6]',
+    textLetter: 'text-[#8B5CF6]',
+    borderActive: 'border-[#8B5CF6]',
+    ringActive: 'ring-purple-200',
+    Icon: Lightbulb,
+  },
+  F: {
+    bgIcon: 'bg-[#06B6D4]',
+    textLetter: 'text-[#06B6D4]',
+    borderActive: 'border-[#06B6D4]',
+    ringActive: 'ring-cyan-200',
+    Icon: MessageCircle,
+  },
 };
 
 export const QuizView: React.FC<QuizViewProps> = ({
@@ -27,115 +85,178 @@ export const QuizView: React.FC<QuizViewProps> = ({
   totalSteps,
   selectedOption,
   onSelectOption,
+  onNext,
+  onBack,
 }) => {
-  // Question character: per-question presenter illustration.
-  // NOT tied to Future Look / characterType — independent system.
-  const characterSrc = getQuestionCharacterUrl(question.step as 1 | 2 | 3 | 4 | 5);
+  const canProceed = Boolean(selectedOption);
 
   return (
-    <div className="flex-1 flex flex-col p-4 sm:p-6 max-w-2xl mx-auto w-full animate-fade-in">
+    <div
+      className="relative w-full h-full min-h-full flex flex-col justify-between select-none overflow-y-auto overflow-x-hidden animate-fade-in pb-4"
+      data-slot="quiz-root"
+    >
+      {/* ── 1. Sky Background Artwork Layer ─────────────────────────────── */}
+      <img
+        src="/assets/home/sky-bg.png"
+        alt="Sky Background"
+        className="absolute inset-0 w-full h-full object-cover pointer-events-none"
+        draggable={false}
+      />
 
-      {/* ── Question header ──────────────────────────────────────────────── */}
-      {/* shrink-0: never compressed by flex children below */}
-      <div className="text-center pt-1 pb-3 shrink-0">
-        <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-mahidol-gold/15 border border-mahidol-gold/30 text-xs font-semibold text-mahidol-gold mb-2 font-heading">
-          <Sparkles className="w-3.5 h-3.5" />
-          <span>ข้อที่ {currentStep} จาก {totalSteps} • {question.categoryTh}</span>
+      {/* ── 2. Top Header Bar (Mahidol Seal + Sound Control) ─────────────── */}
+      <div className="relative z-30 flex items-center justify-between px-4 sm:px-6 pt-3 sm:pt-4 shrink-0">
+        {/* University Emblem & Name */}
+        <div className="flex items-center gap-2.5 sm:gap-3">
+          <img
+            src={ASSETS.home.mahidolSeal}
+            alt="ตราสัญลักษณ์มหาวิทยาลัยมหิดล คณะพยาบาลศาสตร์"
+            className="w-10 h-10 sm:w-12 sm:h-12 object-contain drop-shadow-md shrink-0"
+            draggable={false}
+          />
+          <div className="leading-tight">
+            <h2 className="text-xs sm:text-sm md:text-base font-black text-[#002B7F] font-heading drop-shadow-[0_1px_2px_rgba(255,255,255,0.95)]">
+              มหาวิทยาลัยมหิดล
+            </h2>
+            <p className="text-[10px] sm:text-xs md:text-sm font-bold text-[#002B7F]/90 drop-shadow-[0_1px_2px_rgba(255,255,255,0.95)]">
+              คณะพยาบาลศาสตร์
+            </p>
+          </div>
         </div>
 
-        <h2 className="text-xl sm:text-2xl font-extrabold text-white leading-snug mb-1 font-heading">
-          {question.prompt}
-        </h2>
-        {question.subtitle && (
-          <p className="text-xs sm:text-sm text-slate-300">{question.subtitle}</p>
-        )}
+        {/* Sound Control Toggle */}
+        <SoundControl trackUrl={ASSETS.home.bgmTrack} size="md" />
       </div>
 
-      {/* ── Question Character Illustration ──────────────────────────────── */}
-      {/*
-        SLOT: QUESTION_CHARACTER (Q1–Q5)
-        Source: ASSETS.questions.q{n} via getQuestionCharacterUrl()
-        Layout strategy:
-          - flex-1 min-h-0: fills ALL remaining height between header and answer grid
-          - On iPad mini landscape (~80px available): image shrinks naturally
-          - On iPad Pro landscape (~300px available): image grows naturally
-          - object-contain object-bottom: preserves aspect ratio, anchors to baseline
-          - NOT tied to Future Look / characterType selection
-        To replace: update ASSETS.questions.q{n} in registry.ts — no component change needed
-      */}
-      <div
-        data-slot="question-character"
-        data-question={`q${question.step}`}
-        className="flex-1 min-h-[72px] flex justify-center items-end pb-1"
-      >
-        <AssetImage
-          src={characterSrc}
-          alt={`Q${question.step} Character`}
-          className="max-h-full w-auto object-contain object-bottom"
-          placeholderClassName="w-36 sm:w-44 h-full"
-        />
+      {/* ── 3. Stepper & Progress Bar ──────────────────────────────────────── */}
+      <div className="relative z-30 shrink-0 mt-1 sm:mt-2">
+        <QuizStepper currentQuestion={currentStep} totalQuestions={totalSteps} />
       </div>
 
-      {/* ── 2×3 Touch Grid (6 options) ──────────────────────────────────── */}
-      {/* shrink-0: grid never compressed — answer buttons stay touch-friendly */}
-      <div className="grid grid-cols-2 gap-2.5 sm:gap-3 py-2 shrink-0">
-        {question.options.map((opt) => {
-          const isSelected = selectedOption === opt.key;
-          const IconComponent = opt.icon ? (iconMap[opt.icon] || Sparkles) : Sparkles;
+      {/* ── 4. Main Question Card Container ─────────────────────────────────── */}
+      <div className="relative z-20 flex-1 flex flex-col items-center justify-center px-3.5 sm:px-6 py-2 max-w-2xl mx-auto w-full">
+        <div className="relative w-full rounded-[24px] sm:rounded-[32px] bg-white/95 backdrop-blur-md shadow-[0_12px_35px_rgba(0,43,127,0.14)] border border-white/80 p-4 sm:p-6 flex flex-col justify-between min-h-[480px]">
 
-          return (
+          {/* Nurse Character Illustration (Leaning playfully over upper right) */}
+          <div className="absolute -top-12 sm:-top-16 md:-top-20 right-2 sm:right-5 w-28 sm:w-36 md:w-44 pointer-events-none z-30 drop-shadow-[0_10px_20px_rgba(0,43,127,0.22)] select-none">
+            <img
+              src="/assets/questions/nurse-cutout.png"
+              alt="Nurse Character"
+              className="w-full h-auto object-contain animate-float-subtle"
+              draggable={false}
+            />
+          </div>
+
+          {/* ── Header Inside Card: Step Badge & Prompt ─────────────────────── */}
+          <div className="relative z-10 pr-24 sm:pr-32 mb-2 sm:mb-3">
+            {/* Step Badge */}
+            <div className="inline-flex items-center px-3 py-1 rounded-full bg-gradient-to-r from-[#FF4E72] to-[#FF3366] text-white text-[10px] sm:text-xs font-black uppercase tracking-wider shadow-sm font-heading mb-1.5">
+              QUESTION {currentStep} / {totalSteps}
+            </div>
+
+            {/* Question Category / Short Title */}
+            <h2 className="text-base sm:text-lg md:text-xl font-black text-[#002B7F] font-heading leading-tight mb-1 drop-shadow-xs">
+              {question.categoryTh || 'ค้นหาตัวตนของคุณ'}
+            </h2>
+
+            {/* Full Prompt */}
+            <p className="text-xs sm:text-sm font-semibold text-slate-700 leading-snug">
+              {question.prompt}
+            </p>
+
+            {/* Instruction Callout */}
+            <p className="text-[11px] sm:text-xs font-bold text-[#FF3366] mt-1.5 flex items-center gap-1">
+              <span>💖</span> เลือกคำตอบที่เป็น “คุณ” ที่สุด 1 ข้อ
+            </p>
+          </div>
+
+          {/* ── Choices List (A through F) ─────────────────────────────────── */}
+          <div className="relative z-10 flex flex-col gap-2 sm:gap-2.5 my-1">
+            {question.options.map((opt) => {
+              const isSelected = selectedOption === opt.key;
+              const theme = OPTION_THEMES[opt.key] || OPTION_THEMES.A;
+              const IconComp = theme.Icon;
+
+              return (
+                <button
+                  key={opt.key}
+                  type="button"
+                  onClick={() => onSelectOption(opt.key)}
+                  className={`group relative w-full flex items-center justify-between p-2 sm:p-2.5 md:p-3 rounded-2xl border transition-all duration-150 active:scale-[0.99] text-left cursor-pointer select-none ${
+                    isSelected
+                      ? `bg-rose-50/70 ${theme.borderActive} border-2 shadow-md ring-2 ${theme.ringActive}`
+                      : 'bg-white/90 hover:bg-white border-slate-200/90 shadow-xs hover:border-sky-300'
+                  }`}
+                >
+                  {/* Left: Icon Bubble + Letter + Title */}
+                  <div className="flex items-center gap-2.5 sm:gap-3 min-w-0 pr-2">
+                    {/* Icon Bubble */}
+                    <div
+                      className={`w-8 h-8 sm:w-9 sm:h-9 rounded-xl flex items-center justify-center text-white shrink-0 shadow-sm ${theme.bgIcon}`}
+                    >
+                      <IconComp className="w-4 h-4 sm:w-5 sm:h-5 stroke-[2.5]" />
+                    </div>
+
+                    {/* Letter Key */}
+                    <span
+                      className={`text-sm sm:text-base font-black font-heading shrink-0 ${theme.textLetter}`}
+                    >
+                      {opt.key}
+                    </span>
+
+                    {/* Option Text */}
+                    <span className="text-xs sm:text-sm font-bold text-slate-800 font-heading leading-snug">
+                      {opt.title}
+                    </span>
+                  </div>
+
+                  {/* Right: Radio Selection Circle */}
+                  <div className="shrink-0 ml-2">
+                    <div
+                      className={`w-5 h-5 sm:w-5.5 sm:h-5.5 rounded-full border-2 flex items-center justify-center transition-all ${
+                        isSelected
+                          ? 'border-[#FF3366] bg-[#FF3366] shadow-xs'
+                          : 'border-slate-300 bg-white group-hover:border-sky-400'
+                      }`}
+                    >
+                      {isSelected && (
+                        <div className="w-2 h-2 sm:w-2.5 sm:h-2.5 rounded-full bg-white animate-scale-in" />
+                      )}
+                    </div>
+                  </div>
+                </button>
+              );
+            })}
+          </div>
+
+          {/* ── Bottom Navigation Inside Card: Back / Next ─────────────────── */}
+          <div className="relative z-10 flex items-center justify-between pt-3 sm:pt-4 mt-auto border-t border-slate-100">
+            {/* Back Button */}
             <button
-              key={opt.key}
-              onClick={() => onSelectOption(opt.key)}
-              className={`group relative p-3 sm:p-4 rounded-2xl border-2 text-left flex flex-col justify-between transition-all duration-200 active:scale-[0.96] select-none min-h-[100px] sm:min-h-[118px] ${
-                isSelected
-                  ? 'bg-gradient-to-br from-mahidol-blue to-blue-700 border-mahidol-gold shadow-lg shadow-blue-900/60 scale-[1.02]'
-                  : 'bg-white/10 hover:bg-white/15 border-white/10 hover:border-white/25 shadow-md'
+              type="button"
+              onClick={onBack}
+              className="inline-flex items-center gap-1 px-4 sm:px-5 py-2 sm:py-2.5 rounded-full border-2 border-[#002B7F] text-[#002B7F] bg-white hover:bg-sky-50 active:scale-95 font-bold text-xs sm:text-sm font-heading transition-all shadow-xs"
+            >
+              <ChevronLeft className="w-4 h-4 stroke-[3]" />
+              <span>ย้อนกลับ</span>
+            </button>
+
+            {/* Next Button */}
+            <button
+              type="button"
+              disabled={!canProceed}
+              onClick={onNext}
+              className={`inline-flex items-center gap-1.5 px-6 sm:px-8 py-2 sm:py-2.5 rounded-full font-extrabold text-xs sm:text-sm font-heading transition-all duration-150 shadow-md ${
+                canProceed
+                  ? 'bg-gradient-to-r from-[#FF4E72] via-[#FF3366] to-[#783BE8] hover:from-[#ff5b7d] hover:to-[#8449f0] active:scale-95 text-white shadow-[0_4px_15px_rgba(255,51,102,0.4)] cursor-pointer'
+                  : 'bg-slate-200 text-slate-400 cursor-not-allowed border border-slate-300/60'
               }`}
             >
-              {/* Key badge + icon */}
-              <div className="flex items-center justify-between w-full mb-2">
-                <div className={`w-7 h-7 rounded-xl font-bold flex items-center justify-center text-xs font-heading transition-colors ${
-                  isSelected
-                    ? 'bg-mahidol-gold text-slate-950 shadow-sm'
-                    : 'bg-white/10 text-white group-hover:bg-white/20'
-                }`}>
-                  {opt.key}
-                </div>
-                <IconComponent className={`w-5 h-5 ${isSelected ? 'text-mahidol-gold' : 'text-sky-300/80'}`} />
-              </div>
-
-              {/* Option title */}
-              <p className={`text-sm font-semibold leading-snug font-heading transition-colors ${
-                isSelected ? 'text-white' : 'text-slate-100 group-hover:text-white'
-              }`}>
-                {opt.title}
-              </p>
-
-              {/* Selected indicator dot */}
-              <div className={`absolute bottom-2 right-2 w-2 h-2 rounded-full transition-all ${
-                isSelected ? 'bg-mahidol-gold' : 'opacity-0'
-              }`} />
+              <span>ถัดไป</span>
+              <ChevronRight className="w-4 h-4 stroke-[3]" />
             </button>
-          );
-        })}
-      </div>
+          </div>
 
-      {/* ── Progress indicator ───────────────────────────────────────────── */}
-      <div className="flex items-center justify-center gap-2 pt-3 pb-1 shrink-0">
-        {Array.from({ length: totalSteps }, (_, i) => (
-          <div
-            key={i}
-            className={`rounded-full transition-all duration-300 ${
-              i + 1 < currentStep
-                ? 'w-4 h-2 bg-mahidol-gold/70'
-                : i + 1 === currentStep
-                  ? 'w-6 h-2 bg-mahidol-gold'
-                  : 'w-2 h-2 bg-white/20'
-            }`}
-          />
-        ))}
-        <span className="text-[11px] text-slate-400 ml-1">แตะตัวเลือกเพื่อไปต่อ</span>
+        </div>
       </div>
     </div>
   );
