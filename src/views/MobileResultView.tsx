@@ -48,6 +48,7 @@ export const MobileResultView: React.FC<MobileResultViewProps> = ({ result, onPl
   const [saveStatus, setSaveStatus] = useState<'idle' | 'saving' | 'saved'>('idle');
   const [showIgModal, setShowIgModal] = useState<boolean>(false);
   const [toastMessage, setToastMessage] = useState<string | null>(null);
+  const [cardAspect, setCardAspect] = useState<string>('9 / 16');
 
   // 3D Tilt & Holographic glare state
   const [rotate, setRotate] = useState({ x: 0, y: 0 });
@@ -90,6 +91,21 @@ export const MobileResultView: React.FC<MobileResultViewProps> = ({ result, onPl
       clearTimeout(confettiTimer);
     };
   }, [result]);
+
+  useEffect(() => {
+    if (!cardDataUrl) {
+      setCardAspect('9 / 16');
+      return;
+    }
+
+    const img = new Image();
+    img.onload = () => {
+      if (img.naturalWidth && img.naturalHeight) {
+        setCardAspect(`${img.naturalWidth} / ${img.naturalHeight}`);
+      }
+    };
+    img.src = cardDataUrl;
+  }, [cardDataUrl]);
 
   const showToast = (msg: string) => {
     setToastMessage(msg);
@@ -222,6 +238,9 @@ export const MobileResultView: React.FC<MobileResultViewProps> = ({ result, onPl
           <Sparkles className="w-3.5 h-3.5 text-mahidol-gold" />
           <span>คณะพยาบาลศาสตร์ มหาวิทยาลัยมหิดล</span>
         </div>
+        <p className="text-[11px] font-extrabold text-[#FF3366] mb-1 tracking-wide">
+          บันทึก แชร์ และส่งต่อ Future Nurse Card ของคุณ
+        </p>
         <h1 className="text-2xl sm:text-3xl font-extrabold text-[#002B7F] mb-0.5 font-heading">
           {result.path.emoji} {result.path.nameEn}
         </h1>
@@ -237,6 +256,7 @@ export const MobileResultView: React.FC<MobileResultViewProps> = ({ result, onPl
           onTouchMove={handleCardTouchMove}
           onTouchEnd={handleCardTouchEnd}
           style={{
+            aspectRatio: cardAspect,
             transform: `perspective(700px) rotateX(${rotate.x}deg) rotateY(${rotate.y}deg) ${
               isHovered ? 'scale3d(1.025, 1.025, 1.025)' : 'scale3d(1, 1, 1)'
             }`,
@@ -244,7 +264,7 @@ export const MobileResultView: React.FC<MobileResultViewProps> = ({ result, onPl
               ? 'transform 0.08s ease-out'
               : 'transform 0.5s cubic-bezier(0.2, 0.8, 0.2, 1)',
           }}
-          className="relative w-full max-w-[270px] rounded-3xl overflow-hidden shadow-2xl border-2 border-white/80 aspect-[9/16] bg-slate-100 flex items-center justify-center select-none cursor-pointer"
+          className="relative w-full max-w-[270px] rounded-3xl overflow-hidden shadow-2xl border-2 border-white/80 bg-slate-100 flex items-center justify-center select-none cursor-pointer"
           title="แตะเพื่อหมุนดูมิติการ์ด"
         >
           {/* Holographic light glare overlay */}
@@ -261,7 +281,7 @@ export const MobileResultView: React.FC<MobileResultViewProps> = ({ result, onPl
             <img
               src={cardDataUrl}
               alt="Future Nurse Card"
-              className="w-full h-full object-cover animate-fade-in select-none pointer-events-none"
+              className="w-full h-full object-contain animate-fade-in select-none pointer-events-none"
             />
           ) : (
             <div className="flex flex-col items-center gap-2 p-6 text-center">
@@ -317,7 +337,7 @@ export const MobileResultView: React.FC<MobileResultViewProps> = ({ result, onPl
         {/* Social Share Icons Row */}
         <div className="bg-white p-3 rounded-2xl shadow-sm border border-slate-100">
           <p className="text-[11px] font-bold text-slate-500 text-center mb-2">
-            แชร์เส้นทางนี้ให้เพื่อน ๆ ดู
+            แชร์ไปยัง social media ของคุณ
           </p>
           <div className="flex items-center justify-around">
             {/* LINE */}
@@ -414,14 +434,14 @@ export const MobileResultView: React.FC<MobileResultViewProps> = ({ result, onPl
       {/* Direct Admission Links (Minimal, clean buttons) */}
       <div className="space-y-2 mb-4">
         <a
-          href="https://ns.mahidol.ac.th"
+          href="https://ns.mahidol.ac.th/nurse_en/bns/bns2022_study.html"
           target="_blank"
           rel="noopener noreferrer"
           className="flex items-center justify-between p-3.5 rounded-2xl bg-white hover:bg-slate-50 text-xs font-bold text-slate-700 border border-slate-200 shadow-xs active:scale-[0.99] transition-all"
         >
           <span className="flex items-center gap-2.5">
             <GraduationCap className="w-4 h-4 text-blue-600" />
-            <span>หลักสูตรพยาบาลศาสตรบัณฑิต (B.N.S.)</span>
+            <span>ประชาสัมพันธ์หลักสูตรพยาบาลศาสตรบัณฑิต</span>
           </span>
           <ExternalLink className="w-3.5 h-3.5 text-slate-400" />
         </a>
@@ -434,7 +454,7 @@ export const MobileResultView: React.FC<MobileResultViewProps> = ({ result, onPl
         >
           <span className="flex items-center gap-2.5">
             <Sparkles className="w-4 h-4 text-amber-500" />
-            <span>ข้อมูลการรับสมัคร TCAS คณะพยาบาลศาสตร์</span>
+            <span>TCAS มหิดล</span>
           </span>
           <ExternalLink className="w-3.5 h-3.5 text-slate-400" />
         </a>

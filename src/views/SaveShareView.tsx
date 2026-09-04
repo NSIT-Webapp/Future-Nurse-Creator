@@ -1,6 +1,17 @@
 import React, { useEffect, useRef, useState } from 'react';
 import confetti from 'canvas-confetti';
-import { Check, Lightbulb, QrCode, ScanLine, Smartphone, Sparkles } from 'lucide-react';
+import {
+  Check,
+  Copy,
+  Download,
+  GraduationCap,
+  Lightbulb,
+  QrCode,
+  ScanLine,
+  Share2,
+  Smartphone,
+  Sparkles,
+} from 'lucide-react';
 import { ResultPayload } from '../types';
 import { generateResultQrCode } from '../engine/shareManager';
 
@@ -14,6 +25,13 @@ const PATH_TIPS: Record<string, string> = {
   INT: 'การเปิดกว้างและวิสัยทัศน์สากลของคุณ จะพาการพยาบาลไทยก้าวไกลไร้พรมแดน',
   TECH: 'ความคิดสร้างสรรค์และนวัตกรรมของคุณ จะเปลี่ยนโฉมวงการสุขภาพสู่อนาคต',
 };
+
+const MOBILE_HANDOFF_ITEMS = [
+  { label: 'บันทึกการ์ดลงเครื่อง', icon: Download },
+  { label: 'แชร์ไปยัง social media ของตนเอง', icon: Share2 },
+  { label: 'คัดลอก hashtag งาน', icon: Copy },
+  { label: 'ดูข้อมูลหลักสูตรและ TCAS มหิดล', icon: GraduationCap },
+];
 
 interface SaveShareViewProps {
   result: ResultPayload;
@@ -224,7 +242,7 @@ export const SaveShareView: React.FC<SaveShareViewProps> = ({
               สแกน QR Code ด้วยมือถือ
             </h3>
             <p className="text-[11px] sm:text-xs text-slate-500 mt-1 leading-relaxed">
-              หากต้องการบันทึกการ์ดหรือส่งต่อการ์ด กรุณาสแกน QR Code นี้ แล้วดำเนินการต่อบนมือถือของคุณ
+              หลังสแกน QR Code จะเปิดหน้าการ์ดส่วนตัวบนมือถือ เพื่อบันทึก ส่งต่อ และดูข้อมูลสำหรับสมัครเรียน
             </p>
           </div>
 
@@ -245,8 +263,24 @@ export const SaveShareView: React.FC<SaveShareViewProps> = ({
           <div className="w-full rounded-2xl bg-[#EFF6FF] border border-[#CFE5FF] px-3 py-2.5 flex items-start gap-2">
             <Smartphone className="w-4 h-4 text-blue-600 shrink-0 mt-0.5" />
             <p className="text-[11px] sm:text-xs text-blue-900 font-semibold leading-relaxed">
-              เพื่อความปลอดภัยของ iPad ในบูธ หน้านี้ปิดการดาวน์โหลดและการแชร์ออกจากเครื่อง
+              เพื่อความปลอดภัยของ iPad ในบูธ หน้านี้ปิดการดาวน์โหลดและการแชร์ออกจากเครื่อง กรุณาทำรายการบนมือถือของคุณเท่านั้น
             </p>
+          </div>
+
+          <div className="w-full grid grid-cols-2 gap-2">
+            {MOBILE_HANDOFF_ITEMS.map(({ label, icon: Icon }) => (
+              <div
+                key={label}
+                className="min-h-14 rounded-2xl bg-slate-50 border border-slate-100 px-2.5 py-2 flex items-center gap-2"
+              >
+                <div className="w-7 h-7 rounded-xl bg-white text-sky-600 flex items-center justify-center shadow-xs shrink-0">
+                  <Icon className="w-3.5 h-3.5" />
+                </div>
+                <span className="text-[10px] sm:text-[11px] leading-tight font-bold text-slate-600">
+                  {label}
+                </span>
+              </div>
+            ))}
           </div>
         </div>
       </div>
