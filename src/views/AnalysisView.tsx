@@ -3,7 +3,7 @@ import { ChevronLeft, Loader2, Sparkles } from 'lucide-react';
 import confetti from 'canvas-confetti';
 
 import { CharacterType } from '../types';
-import { ASSETS, getProcessingBadges } from '../assets/registry';
+import { ASSETS, getProcessingBadges, ProcessingBadgeItem } from '../assets/registry';
 import { SoundControl } from '../components/SoundControl';
 
 interface AnalysisViewProps {
@@ -12,6 +12,17 @@ interface AnalysisViewProps {
   totalQuestions?: number;
   onBack?: () => void;
 }
+
+const BADGE_THEMES: Record<string, { textColor: string }> = {
+  PED:  { textColor: 'text-[#002B7F]' },
+  ER:   { textColor: 'text-[#DC2626]' },
+  COMM: { textColor: 'text-[#002B7F]' },
+  MH:   { textColor: 'text-[#3730A3]' },
+  OA:   { textColor: 'text-[#059669]' },
+  INT:  { textColor: 'text-[#002B7F]' },
+  TECH: { textColor: 'text-[#0284C7]' },
+  MAT:  { textColor: 'text-[#DC2626]' },
+};
 
 export const AnalysisView: React.FC<AnalysisViewProps> = ({
   onComplete,
@@ -76,12 +87,26 @@ export const AnalysisView: React.FC<AnalysisViewProps> = ({
     return () => clearInterval(interval);
   }, [onComplete]);
 
-  // Layout distribution:
-  // - Female (8 badges): 4 Left, 4 Right
-  // - Male (7 badges): 3 Left, 3 Right, 1 Center Bottom (Nursing + Technology)
-  const leftBadges = isFemale ? badges.slice(0, 4) : badges.slice(0, 3);
-  const rightBadges = isFemale ? badges.slice(4, 8) : badges.slice(3, 6);
-  const centerBottomBadge = !isFemale && badges.length >= 7 ? badges[6] : null;
+  // Layout distribution matching official design mockups:
+  // Male (7 roles):
+  // - Left: PED, ER, COMM
+  // - Right: MH, OA, INT
+  // - Center Bottom: TECH
+  // Female (8 roles):
+  // - Left: PED, ER, COMM, MAT
+  // - Right: MH, OA, INT, TECH
+  const findBadge = (id: string): ProcessingBadgeItem =>
+    badges.find((b) => b.pathId === id) || badges[0];
+
+  const leftBadges: ProcessingBadgeItem[] = isFemale
+    ? [findBadge('PED'), findBadge('ER'), findBadge('COMM'), findBadge('MAT')]
+    : [findBadge('PED'), findBadge('ER'), findBadge('COMM')];
+
+  const rightBadges: ProcessingBadgeItem[] = isFemale
+    ? [findBadge('MH'), findBadge('OA'), findBadge('INT'), findBadge('TECH')]
+    : [findBadge('MH'), findBadge('OA'), findBadge('INT')];
+
+  const centerBottomBadge: ProcessingBadgeItem | null = !isFemale ? findBadge('TECH') : null;
 
   return (
     <div
@@ -96,24 +121,24 @@ export const AnalysisView: React.FC<AnalysisViewProps> = ({
       <div className="absolute inset-0 bg-gradient-to-b from-sky-400/10 via-transparent to-blue-900/15 pointer-events-none" />
 
       {/* ── 1. Top Bar: Faculty Logo + Audio Toggle ──────────────────────────── */}
-      <div className="relative z-30 shrink-0 flex items-center justify-between px-3 sm:px-6 pt-3 sm:pt-4 max-w-4xl mx-auto w-full">
+      <div className="relative z-30 shrink-0 flex items-center justify-between px-3 sm:px-6 pt-2.5 sm:pt-3.5 max-w-xl mx-auto w-full">
         {/* Faculty Logo Pill */}
-        <div className="bg-white/95 backdrop-blur-md rounded-full px-3.5 py-1.5 shadow-md flex items-center gap-2 border border-white/80">
+        <div className="bg-white/95 backdrop-blur-md rounded-full px-3 py-1 shadow-md flex items-center gap-2 border border-white/80">
           <img
             src={ASSETS.home.facultyLogo}
             alt="มหาวิทยาลัยมหิดล คณะพยาบาลศาสตร์"
-            className="h-6 sm:h-7 md:h-8 w-auto object-contain"
+            className="h-6 sm:h-7 w-auto object-contain"
           />
         </div>
 
         {/* Audio Toggle */}
-        <div className="flex items-center gap-2 sm:gap-3">
+        <div className="flex items-center gap-2">
           <SoundControl trackUrl={ASSETS.home.bgmTrack} size="md" />
         </div>
       </div>
 
       {/* ── 2. Stepper: 1..8 with Step 5 highlighted as ANALYZING ───────────── */}
-      <div className="relative z-30 shrink-0 px-2 sm:px-6 py-2 max-w-3xl mx-auto w-full">
+      <div className="relative z-30 shrink-0 px-3 sm:px-6 py-1.5 max-w-xl mx-auto w-full">
         <div className="flex items-center justify-between w-full">
           {stepperSteps.map((stepNum, idx) => {
             const isCompleted = stepNum < 5;
@@ -125,12 +150,12 @@ export const AnalysisView: React.FC<AnalysisViewProps> = ({
                 {/* Step Circle & Badge */}
                 <div className="flex flex-col items-center shrink-0 relative">
                   <div
-                    className={`w-7 h-7 sm:w-8 sm:h-8 md:w-9 md:h-9 rounded-full flex items-center justify-center font-black text-xs sm:text-sm font-heading transition-all duration-300 ${
+                    className={`w-7 h-7 sm:w-8 sm:h-8 rounded-full flex items-center justify-center font-black text-xs sm:text-sm font-heading transition-all duration-300 ${
                       isCurrent
                         ? 'bg-gradient-to-tr from-[#FF3366] to-[#FF6584] text-white shadow-[0_0_18px_rgba(255,51,102,0.65)] scale-110 ring-4 ring-rose-200/80'
                         : isCompleted
                         ? 'bg-[#1D63D8] text-white shadow-sm'
-                        : 'bg-white/70 text-slate-500 border border-slate-300'
+                        : 'bg-white/80 text-slate-400 border border-slate-300/80'
                     }`}
                   >
                     {stepNum}
@@ -138,7 +163,7 @@ export const AnalysisView: React.FC<AnalysisViewProps> = ({
 
                   {/* Pink ANALYZING Pill under step 5 */}
                   {isCurrent && (
-                    <div className="absolute -bottom-4.5 left-1/2 -translate-x-1/2 px-2 py-0.5 rounded-full bg-[#FF3366] text-white font-extrabold text-[8px] sm:text-[9px] tracking-wider uppercase shadow-sm whitespace-nowrap animate-pulse">
+                    <div className="absolute -bottom-4 left-1/2 -translate-x-1/2 px-2 py-0.5 rounded-full bg-[#FF3366] text-white font-black text-[8px] sm:text-[8.5px] tracking-wider uppercase shadow-xs whitespace-nowrap animate-pulse">
                       ANALYZING
                     </div>
                   )}
@@ -146,7 +171,7 @@ export const AnalysisView: React.FC<AnalysisViewProps> = ({
 
                 {/* Connecting Line */}
                 {!isLast && (
-                  <div className="flex-1 mx-1 flex items-center justify-center min-w-[10px] sm:min-w-[16px]">
+                  <div className="flex-1 mx-1 flex items-center justify-center min-w-[8px] sm:min-w-[14px]">
                     <div
                       className={`w-full border-t-2 transition-colors ${
                         stepNum < 5 ? 'border-[#1D63D8]' : 'border-slate-300/80'
@@ -160,10 +185,10 @@ export const AnalysisView: React.FC<AnalysisViewProps> = ({
         </div>
       </div>
 
-      {/* ── 3. Main Stage Card with High-Res Sci-Fi Sky & Radar Background ────────────────────────── */}
-      <div className="relative z-20 flex-1 flex flex-col justify-between max-w-4xl mx-auto w-full px-2 sm:px-4 md:px-6 pb-2 sm:pb-3.5 min-h-0">
+      {/* ── 3. Main Stage Card: High-Res Holographic Sky Window ───────────────── */}
+      <div className="relative z-20 flex-1 flex flex-col justify-between max-w-xl mx-auto w-full px-2.5 sm:px-4 min-h-0 mt-1">
         <div
-          className="h-full w-full rounded-3xl shadow-[0_12px_40px_rgba(0,43,127,0.22)] p-2.5 sm:p-3.5 md:p-4 flex flex-col justify-between overflow-hidden relative border border-white/70"
+          className="h-full w-full rounded-3xl shadow-[0_16px_48px_rgba(0,43,127,0.22)] p-2.5 sm:p-3.5 flex flex-col justify-between overflow-hidden relative border border-white/80"
           style={{
             backgroundImage: `url(${ASSETS.processing.innerCardBg})`,
             backgroundRepeat: 'no-repeat',
@@ -171,61 +196,59 @@ export const AnalysisView: React.FC<AnalysisViewProps> = ({
             backgroundSize: '100% 100%',
           }}
         >
-
           {/* ── Card Header: Title & Info ── */}
           <div className="text-center shrink-0 pt-0.5">
             {/* Analyzing Pill Badge */}
-            <div className="inline-flex items-center gap-1.5 px-3.5 py-0.5 rounded-full bg-white/85 backdrop-blur-xs border border-pink-400/50 text-pink-600 text-[10px] sm:text-xs font-black uppercase tracking-wider mb-1 shadow-xs">
-              <Sparkles className="w-3 h-3 text-pink-500 animate-pulse" />
+            <div className="inline-flex items-center gap-1.5 px-3.5 py-0.5 rounded-full bg-gradient-to-r from-[#FF5E80] to-[#FF3366] text-white text-[9.5px] sm:text-[10.5px] font-black uppercase tracking-widest mb-1 shadow-sm">
+              <Sparkles className="w-3 h-3 animate-pulse" />
               <span>ANALYZING</span>
-              <span className="text-xs">❤️</span>
+              <Sparkles className="w-3 h-3 animate-pulse" />
             </div>
 
             {/* Main Headline */}
-            <h2 className="text-xl sm:text-2xl md:text-3xl font-black text-slate-800 tracking-tight font-heading leading-tight drop-shadow-[0_1px_2px_rgba(255,255,255,0.85)]">
-              <span className="text-transparent bg-clip-text bg-gradient-to-r from-rose-600 via-pink-600 to-rose-600">
-                AI{' '}
-              </span>
+            <h2 className="text-2xl sm:text-3xl md:text-4xl font-black text-slate-800 tracking-tight font-heading leading-tight drop-shadow-[0_1px_2px_rgba(255,255,255,0.9)]">
+              <span className="text-[#FF2D55]">AI </span>
               กำลังวิเคราะห์
             </h2>
-            <h3 className="text-sm sm:text-base md:text-lg font-black text-slate-800 tracking-tight leading-snug drop-shadow-[0_1px_2px_rgba(255,255,255,0.85)]">
+            <h3 className="text-sm sm:text-base md:text-lg font-black text-[#0A2540] tracking-tight leading-snug drop-shadow-[0_1px_2px_rgba(255,255,255,0.9)]">
               เส้นทางพยาบาลที่ใช่สำหรับคุณ...
             </h3>
 
             {/* Sub-caption */}
-            <p className="text-[10.5px] sm:text-xs font-bold text-slate-700 mt-0.5 flex items-center justify-center gap-1 drop-shadow-[0_1px_1px_rgba(255,255,255,0.85)]">
-              <span>✨ จากคำตอบทั้ง {totalQuestions} ข้อของคุณ 💕</span>
+            <p className="text-[11px] sm:text-xs font-bold text-[#FF3366] mt-0.5 flex items-center justify-center gap-1 drop-shadow-[0_1px_1px_rgba(255,255,255,0.9)]">
+              <span>💕 จากคำตอบทั้ง {totalQuestions} ข้อของคุณ 💕</span>
             </p>
           </div>
 
-          {/* ── Center Stage: Large Center Character & Surrounding Orbiting Badges ── */}
-          <div className="flex-1 relative flex items-center justify-between my-1 min-h-0 overflow-hidden">
+          {/* ── Center Stage: Orbiting Floating Badges & Center Student ── */}
+          <div className="flex-1 relative flex items-center justify-between min-h-0 overflow-hidden my-0.5">
 
-            {/* Left Badges Column */}
-            <div className="w-[30%] sm:w-[26%] md:w-[24%] flex flex-col justify-around h-full z-20 py-1 space-y-1 sm:space-y-2">
+            {/* Left Badges Column (Floating without solid white boxes) */}
+            <div className="w-[30%] sm:w-[28%] flex flex-col justify-around h-full z-20 py-1 space-y-1 sm:space-y-2">
               {leftBadges.map((badge, idx) => {
                 const isScanning = activeBadgeIdx === idx;
+                const colorClass = BADGE_THEMES[badge.pathId]?.textColor || 'text-[#002B7F]';
                 return (
                   <div
                     key={badge.pathId}
-                    className={`w-full rounded-2xl p-1.5 sm:p-2 md:p-2.5 flex flex-col items-center justify-center transition-all duration-300 border animate-scale-up ${
+                    className={`flex flex-col items-center justify-center transition-all duration-300 select-none ${
                       isScanning
-                        ? 'bg-white border-pink-400 ring-2 ring-pink-400/80 shadow-lg shadow-pink-200/90 scale-105'
-                        : 'bg-white/95 hover:bg-white border-white/90 shadow-sm'
+                        ? 'scale-110 drop-shadow-[0_0_16px_rgba(255,100,150,0.9)]'
+                        : 'hover:scale-105 drop-shadow-xs'
                     }`}
                   >
-                    <div className="w-11 h-11 sm:w-14 sm:h-14 md:w-18 md:h-18 overflow-hidden flex items-center justify-center">
+                    <div className="w-13 h-13 sm:w-16 sm:h-16 md:w-20 md:h-20 flex items-center justify-center">
                       <img
                         src={badge.imgUrl}
                         alt={badge.titleEn}
-                        className="w-full h-full object-contain drop-shadow-xs"
+                        className="w-full h-full object-contain"
                         loading="eager"
                         decoding="sync"
-                        width={72}
-                        height={72}
                       />
                     </div>
-                    <span className="text-[7.5px] sm:text-[9px] md:text-[10px] font-black text-[#002B7F] tracking-tight uppercase text-center mt-1 leading-tight px-1 line-clamp-1">
+                    <span
+                      className={`text-[8px] sm:text-[9px] md:text-[10px] font-black tracking-tight uppercase text-center mt-0.5 leading-tight px-0.5 drop-shadow-[0_1px_2px_rgba(255,255,255,0.95)] ${colorClass}`}
+                    >
                       {badge.titleEn}
                     </span>
                   </div>
@@ -233,140 +256,140 @@ export const AnalysisView: React.FC<AnalysisViewProps> = ({
               })}
             </div>
 
-            {/* Center Thoughtful Character with subtle pulse glow matching high-res artwork radar */}
-            <div className="flex-1 h-full relative flex flex-col items-center justify-center z-10 px-1 min-h-0">
-              {/* Subtle Glowing Pulse over the background holographic radar */}
-              <div className="absolute w-44 h-44 sm:w-60 sm:h-60 md:w-76 md:h-76 rounded-full bg-radial from-cyan-300/25 via-pink-300/10 to-transparent animate-pulse pointer-events-none" />
+            {/* Center Student Standing on the Holographic Stage */}
+            <div className="flex-1 h-full relative flex flex-col items-center justify-end z-10 px-1 min-h-0 pb-1">
+              {/* Subtle Glowing Radial Pulse over the artwork's holographic radar */}
+              <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-48 h-48 sm:w-64 sm:h-64 rounded-full bg-radial from-cyan-300/30 via-pink-300/15 to-transparent animate-pulse pointer-events-none" />
 
-              {/* Student Character Full Image — Fills generous vertical height above platform */}
-              <div className="relative flex-1 w-full flex items-center justify-center min-h-0 max-h-[340px] sm:max-h-[420px] md:max-h-[480px]">
+              {/* Student Character Full Image — Placed directly above the pedestal */}
+              <div className="relative flex-1 w-full flex items-center justify-center min-h-0 max-h-[300px] sm:max-h-[360px] md:max-h-[420px]">
                 <img
                   src={centerCharacterUrl}
                   alt={isFemale ? 'Female Student' : 'Male Student'}
-                  className="h-full w-auto max-w-full object-contain drop-shadow-[0_12px_28px_rgba(0,43,127,0.3)] animate-float-subtle select-none"
+                  className="h-full w-auto max-w-full object-contain drop-shadow-[0_14px_30px_rgba(0,43,127,0.35)] animate-float-subtle select-none"
                   loading="eager"
                   decoding="sync"
                 />
               </div>
 
-              {/* Center Bottom Badge for Male (NURSING + TECHNOLOGY) */}
+              {/* Center Bottom Badge for Male (NURSING + TECHNOLOGY in Tech Hologram Frame) */}
               {centerBottomBadge && (
                 <div
-                  className={`mt-1 rounded-2xl px-2.5 py-1 sm:py-1.5 flex items-center gap-1.5 sm:gap-2 transition-all duration-300 border animate-scale-up z-20 ${
+                  className={`-mt-2 rounded-xl px-2.5 py-1 flex flex-col items-center transition-all duration-300 z-20 bg-white/45 backdrop-blur-xs border border-sky-300/70 shadow-sm ${
                     activeBadgeIdx === 6
-                      ? 'bg-white border-sky-400 ring-2 ring-sky-400/80 shadow-lg shadow-sky-200/90 scale-105'
-                      : 'bg-white/95 hover:bg-white border-white/90 shadow-sm'
+                      ? 'scale-110 ring-2 ring-sky-400 shadow-md shadow-sky-300/80'
+                      : 'hover:scale-105'
                   }`}
                 >
-                  <div className="w-8 h-8 sm:w-10 sm:h-10 md:w-12 md:h-12 overflow-hidden flex items-center justify-center shrink-0">
+                  <div className="w-9 h-9 sm:w-11 sm:h-11 md:w-13 md:h-13 overflow-hidden flex items-center justify-center">
                     <img
                       src={centerBottomBadge.imgUrl}
                       alt={centerBottomBadge.titleEn}
-                      className="w-full h-full object-contain drop-shadow-xs"
+                      className="w-full h-full object-contain"
                       loading="eager"
                       decoding="sync"
-                      width={48}
-                      height={48}
                     />
                   </div>
-                  <span className="text-[7.5px] sm:text-[9px] md:text-[10px] font-black text-[#002B7F] tracking-tight uppercase whitespace-nowrap">
-                    {centerBottomBadge.titleEn}
+                  <span className="text-[7.5px] sm:text-[8.5px] md:text-[9.5px] font-black text-[#0284C7] tracking-tight uppercase text-center leading-tight whitespace-nowrap drop-shadow-[0_1px_1px_rgba(255,255,255,0.9)]">
+                    NURSING + TECHNOLOGY
                   </span>
                 </div>
               )}
             </div>
 
-            {/* Right Badges Column */}
-            <div className="w-[30%] sm:w-[26%] md:w-[24%] flex flex-col justify-around h-full z-20 py-1 space-y-1 sm:space-y-2">
+            {/* Right Badges Column (Floating without solid white boxes) */}
+            <div className="w-[30%] sm:w-[28%] flex flex-col justify-around h-full z-20 py-1 space-y-1 sm:space-y-2">
               {rightBadges.map((badge, rIdx) => {
                 const globalIdx = leftBadges.length + rIdx;
                 const isScanning = activeBadgeIdx === globalIdx;
+                const colorClass = BADGE_THEMES[badge.pathId]?.textColor || 'text-[#002B7F]';
                 return (
                   <div
                     key={badge.pathId}
-                    className={`w-full rounded-2xl p-1.5 sm:p-2 md:p-2.5 flex flex-col items-center justify-center transition-all duration-300 border animate-scale-up ${
+                    className={`flex flex-col items-center justify-center transition-all duration-300 select-none ${
                       isScanning
-                        ? 'bg-white border-sky-400 ring-2 ring-sky-400/80 shadow-lg shadow-sky-200/90 scale-105'
-                        : 'bg-white/95 hover:bg-white border-white/90 shadow-sm'
+                        ? 'scale-110 drop-shadow-[0_0_16px_rgba(255,100,150,0.9)]'
+                        : 'hover:scale-105 drop-shadow-xs'
                     }`}
                   >
-                    <div className="w-11 h-11 sm:w-14 sm:h-14 md:w-18 md:h-18 overflow-hidden flex items-center justify-center">
+                    <div className="w-13 h-13 sm:w-16 sm:h-16 md:w-20 md:h-20 flex items-center justify-center">
                       <img
                         src={badge.imgUrl}
                         alt={badge.titleEn}
-                        className="w-full h-full object-contain drop-shadow-xs"
+                        className="w-full h-full object-contain"
                         loading="eager"
                         decoding="sync"
-                        width={72}
-                        height={72}
                       />
                     </div>
-                    <span className="text-[7.5px] sm:text-[9px] md:text-[10px] font-black text-[#002B7F] tracking-tight uppercase text-center mt-1 leading-tight px-1 line-clamp-1">
+                    <span
+                      className={`text-[8px] sm:text-[9px] md:text-[10px] font-black tracking-tight uppercase text-center mt-0.5 leading-tight px-0.5 drop-shadow-[0_1px_2px_rgba(255,255,255,0.95)] ${colorClass}`}
+                    >
                       {badge.titleEn}
                     </span>
                   </div>
                 );
               })}
             </div>
-          </div>
 
-          {/* ── 4. Floating AI Robot Mascot Status Bar with Live Progress ──── */}
-          <div className="shrink-0 bg-white/92 backdrop-blur-md border border-white/90 rounded-2xl px-3 py-1.5 sm:py-2 shadow-md flex items-center justify-between gap-2.5 my-1">
-            <div className="flex items-center gap-2 sm:gap-3 flex-1 min-w-0">
-              <img
-                src={ASSETS.processing.robot}
-                alt="AI Robot Mascot"
-                className="w-8 h-8 sm:w-10 sm:h-10 md:w-11 md:h-11 object-contain drop-shadow-sm animate-mascot-bob shrink-0"
-              />
-              <div className="text-left flex-1 min-w-0">
-                <div className="flex items-center justify-between text-xs sm:text-sm font-black text-slate-800 font-heading leading-tight">
-                  <span>กำลังประมวลผลคำตอบของคุณ</span>
-                  <span className="text-blue-600 text-[11px] sm:text-xs font-mono">{progress}%</span>
-                </div>
-                {/* Live Progress Bar */}
-                <div className="w-full bg-slate-200/70 rounded-full h-1.5 sm:h-2 mt-1 overflow-hidden">
-                  <div
-                    className="h-full bg-gradient-to-r from-sky-400 via-blue-500 to-pink-500 rounded-full transition-all duration-75 ease-out"
-                    style={{ width: `${progress}%` }}
-                  />
-                </div>
-                <div className="text-[10px] sm:text-[11px] font-extrabold text-pink-600 leading-tight mt-0.5">
-                  โปรดรอสักครู่ 💕
-                </div>
+          </div>
+        </div>
+      </div>
+
+      {/* ── 4. Floating AI Robot Mascot Status Bar (Outside Card on Campus Background) ──── */}
+      <div className="relative z-20 shrink-0 px-3 sm:px-6 pt-2 max-w-xl mx-auto w-full">
+        <div className="bg-white/92 backdrop-blur-md border border-white/90 rounded-2xl px-3.5 py-2 sm:py-2.5 shadow-md flex items-center justify-between gap-3">
+          <div className="flex items-center gap-2.5 sm:gap-3 flex-1 min-w-0">
+            <img
+              src={ASSETS.processing.robot}
+              alt="AI Robot Mascot"
+              className="w-9 h-9 sm:w-11 sm:h-11 md:w-12 md:h-12 object-contain drop-shadow-sm animate-mascot-bob shrink-0"
+            />
+            <div className="text-left flex-1 min-w-0">
+              <div className="flex items-center justify-between text-xs sm:text-sm font-black text-slate-800 font-heading leading-tight">
+                <span>กำลังประมวลผลคำตอบของคุณ</span>
+                <span className="text-blue-600 text-[11px] sm:text-xs font-mono">{progress}%</span>
+              </div>
+              {/* Live Progress Bar */}
+              <div className="w-full bg-slate-200/70 rounded-full h-1.5 sm:h-2 mt-1 overflow-hidden">
+                <div
+                  className="h-full bg-gradient-to-r from-sky-400 via-blue-500 to-pink-500 rounded-full transition-all duration-75 ease-out"
+                  style={{ width: `${progress}%` }}
+                />
+              </div>
+              <div className="text-[10.5px] sm:text-xs font-bold text-pink-600 leading-tight mt-0.5">
+                โปรดรอสักครู่ 💕
               </div>
             </div>
-
-            {/* Rotating Dots Loader */}
-            <div className="flex items-center gap-1 text-pink-500 shrink-0">
-              <Loader2 className="w-5 h-5 sm:w-6 sm:h-6 animate-spin text-pink-500" />
-            </div>
           </div>
 
-          {/* ── 5. Bottom Navigation & Action Bar ────────────────────────────── */}
-          <div className="shrink-0 flex items-center justify-between gap-3 pt-1">
-            {/* Back Button */}
-            {onBack ? (
-              <button
-                onClick={onBack}
-                className="px-4 sm:px-5 py-2 rounded-full bg-white/95 hover:bg-white text-[#002B7F] font-bold text-xs sm:text-sm border border-white shadow-md flex items-center gap-1 active:scale-95 transition-all"
-              >
-                <ChevronLeft className="w-4 h-4 text-[#002B7F]" />
-                <span>ย้อนกลับ</span>
-              </button>
-            ) : (
-              <div />
-            )}
-
-            {/* Active Analyzing Status Pill */}
-            <div className="px-5 sm:px-6 py-2 rounded-full bg-gradient-to-r from-pink-500 via-rose-500 to-pink-500 text-white font-extrabold text-xs sm:text-sm shadow-md shadow-pink-500/25 flex items-center gap-2 animate-cta-pulse">
-              <Sparkles className="w-4 h-4 animate-spin text-white" />
-              <span>กำลังวิเคราะห์...</span>
-            </div>
+          {/* Animated Spinner Loader */}
+          <div className="flex items-center justify-center shrink-0 pl-1">
+            <Loader2 className="w-6 h-6 sm:w-7 sm:h-7 animate-spin text-pink-500" />
           </div>
+        </div>
+      </div>
 
+      {/* ── 5. Bottom Navigation & Action Bar (Outside Card on Campus Background) ──── */}
+      <div className="relative z-20 shrink-0 px-3 sm:px-6 pb-2.5 sm:pb-3.5 pt-1.5 max-w-xl mx-auto w-full flex items-center justify-between gap-3">
+        {/* Back Button */}
+        {onBack ? (
+          <button
+            onClick={onBack}
+            className="px-5 py-2 sm:py-2.5 rounded-full bg-white/95 hover:bg-white text-[#002B7F] font-bold text-xs sm:text-sm border border-white shadow-md flex items-center gap-1.5 active:scale-95 transition-all"
+          >
+            <ChevronLeft className="w-4 h-4 text-[#002B7F]" />
+            <span>ย้อนกลับ</span>
+          </button>
+        ) : (
+          <div />
+        )}
+
+        {/* Active Analyzing Status Pill */}
+        <div className="px-5 sm:px-6 py-2 sm:py-2.5 rounded-full bg-gradient-to-r from-[#FF5E80] to-[#FF3366] text-white font-extrabold text-xs sm:text-sm shadow-md shadow-rose-400/30 flex items-center gap-2 animate-cta-pulse">
+          <Sparkles className="w-4 h-4 animate-spin text-white" />
+          <span>กำลังวิเคราะห์...</span>
         </div>
       </div>
     </div>
   );
 };
-
