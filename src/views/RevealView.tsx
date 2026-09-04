@@ -213,6 +213,32 @@ export const RevealView: React.FC<RevealViewProps> = ({ result, onNext, onBack }
         .box-slide-up-1 { animation: box-slide-up 0.45s ease-out 0.55s both; }
         .box-slide-up-2 { animation: box-slide-up 0.45s ease-out 0.7s both; }
         .box-slide-up-3 { animation: box-slide-up 0.45s ease-out 0.85s both; }
+
+        /* ── 3D Card Depth Highlights ── */
+        .card-3d-white {
+          background-color: #FFFFFF;
+          box-shadow:
+            0 10px 28px -4px rgba(0, 43, 127, 0.14),
+            0 4px 12px -2px rgba(0, 43, 127, 0.08),
+            inset 0 2px 0 0 rgba(255, 255, 255, 0.95),
+            inset 0 -2px 0 0 rgba(0, 43, 127, 0.04);
+        }
+        .card-3d-superpower {
+          background: linear-gradient(135deg, #FFFFFF 0%, #FFF5F7 100%);
+          box-shadow:
+            0 10px 28px -4px rgba(255, 51, 102, 0.16),
+            0 4px 12px -2px rgba(255, 51, 102, 0.10),
+            inset 0 2px 0 0 rgba(255, 255, 255, 1),
+            inset 0 -2px 0 0 rgba(255, 51, 102, 0.06);
+        }
+        .card-3d-aiskill {
+          background: linear-gradient(135deg, #FFFFFF 0%, #F0F9FF 100%);
+          box-shadow:
+            0 10px 28px -4px rgba(2, 132, 199, 0.16),
+            0 4px 12px -2px rgba(2, 132, 199, 0.10),
+            inset 0 2px 0 0 rgba(255, 255, 255, 1),
+            inset 0 -2px 0 0 rgba(2, 132, 199, 0.06);
+        }
       `}</style>
 
       {/* Sky ambient lighting gradient */}
@@ -239,7 +265,7 @@ export const RevealView: React.FC<RevealViewProps> = ({ result, onNext, onBack }
 
       {/* ── 1. Top Bar: Faculty Logo + Audio Toggle ──────────────────────────── */}
       <div className="relative z-30 shrink-0 flex items-center justify-between px-3.5 sm:px-6 pt-3 sm:pt-3.5 max-w-[720px] mx-auto w-full header-slide-in">
-        <div className="bg-white/95 backdrop-blur-md rounded-full px-3.5 sm:px-4 py-1.5 shadow-md flex items-center gap-2 border border-white/85">
+        <div className="bg-white rounded-full px-3.5 sm:px-4 py-1.5 shadow-md flex items-center gap-2 border-2 border-white/90">
           <img
             src={ASSETS.home.facultyLogo}
             alt="มหาวิทยาลัยมหิดล คณะพยาบาลศาสตร์"
@@ -268,7 +294,7 @@ export const RevealView: React.FC<RevealViewProps> = ({ result, onNext, onBack }
                         ? 'bg-gradient-to-tr from-[#FF3366] to-[#FF6584] text-white shadow-[0_0_18px_rgba(255,51,102,.65)] scale-110 ring-2 sm:ring-4 ring-rose-200/80'
                         : isCompleted
                         ? 'bg-[#1D63D8] text-white shadow-xs'
-                        : 'bg-white/80 text-slate-400 border border-slate-300/80'
+                        : 'bg-white text-slate-400 border border-slate-300/80 shadow-2xs'
                     }`}
                   >
                     {stepNum}
@@ -300,7 +326,7 @@ export const RevealView: React.FC<RevealViewProps> = ({ result, onNext, onBack }
         {/* ── Header Titles ── */}
         <div className="text-center shrink-0">
           {/* REVEAL Badge Pill */}
-          <div className="inline-flex items-center gap-1.5 px-4 sm:px-5 py-1 rounded-full bg-white/95 border border-rose-200/80 text-[#FF3366] text-xs sm:text-sm font-black uppercase tracking-widest mb-1 shadow-xs">
+          <div className="inline-flex items-center gap-1.5 px-4 sm:px-5 py-1 rounded-full bg-white border-2 border-rose-200 text-[#FF3366] text-xs sm:text-sm font-black uppercase tracking-widest mb-1 shadow-sm">
             <Sparkles className="w-3 h-3 sm:w-3.5 sm:h-3.5 animate-pulse" />
             <span>✦ REVEAL ✦</span>
             <span className="text-xs">💕</span>
@@ -369,12 +395,12 @@ export const RevealView: React.FC<RevealViewProps> = ({ result, onNext, onBack }
 
           {/* 4. Concentric Glowing Celestial White Ring */}
           <div
-            className="absolute left-1/2 top-[50%] -translate-x-1/2 -translate-y-1/2 w-[min(84vw,410px)] h-[min(84vw,410px)] rounded-full border-[2.5px] border-white/95 shadow-[0_0_40px_rgba(255,255,255,1),0_0_18px_rgba(255,255,255,0.9)] pointer-events-none"
+            className="absolute left-1/2 top-[50%] -translate-x-1/2 -translate-y-1/2 w-[min(84vw,410px)] h-[min(84vw,410px)] rounded-full border-[2.5px] border-white shadow-[0_0_40px_rgba(255,255,255,1),0_0_18px_rgba(255,255,255,0.9)] pointer-events-none"
           />
 
           {/* 5. Inner Delicate Prismatic Ring */}
           <div
-            className="absolute left-1/2 top-[50%] -translate-x-1/2 -translate-y-1/2 w-[min(70vw,340px)] h-[min(70vw,340px)] rounded-full border border-white/55 shadow-[inset_0_0_26px_rgba(255,255,255,0.75)] pointer-events-none"
+            className="absolute left-1/2 top-[50%] -translate-x-1/2 -translate-y-1/2 w-[min(70vw,340px)] h-[min(70vw,340px)] rounded-full border border-white/60 shadow-[inset_0_0_26px_rgba(255,255,255,0.75)] pointer-events-none"
           />
 
           {/* 6. Orbiting Stardust Stars around the Celestial Ring */}
@@ -440,15 +466,12 @@ export const RevealView: React.FC<RevealViewProps> = ({ result, onNext, onBack }
           </div>
         </div>
 
-        {/* ── Bottom Information Capsules (EXTRA ENLARGED & HIGHLY ATTRACTIVE CARDS) ── */}
+        {/* ── Bottom Information Capsules (3D DEPTH CARDS WITH PURE SOLID WHITE & VIVID COLOR) ── */}
         <div className="shrink-0 space-y-2.5 sm:space-y-3 pt-2 pb-1.5">
           {/* 2-Column Grid: Superpower & AI Skill */}
           <div className="grid grid-cols-2 gap-2.5 sm:gap-3.5">
             {/* Superpower Card */}
-            <div className="bg-gradient-to-br from-[#FFF5F8]/98 via-white/95 to-[#FFEBF0]/95 border-2 border-rose-200/90 rounded-2xl sm:rounded-3xl p-3 sm:p-4 flex items-center gap-3 sm:gap-4 shadow-[0_8px_24px_rgba(255,51,102,0.14)] min-h-[76px] sm:min-h-[90px] md:min-h-[96px] box-slide-up-1 relative overflow-hidden group">
-              {/* Subtle shine corner accent */}
-              <div className="absolute top-0 right-0 w-16 h-16 bg-rose-300/10 rounded-full blur-xl pointer-events-none" />
-
+            <div className="card-3d-superpower border-2 border-rose-200/90 rounded-2xl sm:rounded-3xl p-3 sm:p-4 flex items-center gap-3 sm:gap-4 min-h-[76px] sm:min-h-[90px] md:min-h-[96px] box-slide-up-1 relative overflow-hidden group">
               {/* Large 3D Icon Container */}
               <div className="w-13 h-13 sm:w-16 sm:h-16 md:w-18 md:h-18 rounded-2xl bg-gradient-to-tr from-[#FFE4E9] to-[#FFF0F3] flex items-center justify-center shrink-0 overflow-hidden p-2 border-2 border-rose-200 shadow-sm group-hover:scale-105 transition-transform">
                 <img
@@ -461,22 +484,19 @@ export const RevealView: React.FC<RevealViewProps> = ({ result, onNext, onBack }
               {/* Content text */}
               <div className="min-w-0 flex-1">
                 <div className="flex items-center gap-1 mb-0.5">
-                  <Heart className="w-3 h-3 text-rose-500 fill-rose-500" />
+                  <Heart className="w-3.5 h-3.5 text-rose-500 fill-rose-500" />
                   <span className="text-[10px] sm:text-xs font-black uppercase tracking-wider text-rose-500 block leading-tight">
                     Your Superpower
                   </span>
                 </div>
-                <span className="text-sm sm:text-base md:text-lg font-black text-rose-700 block leading-snug line-clamp-2 drop-shadow-2xs">
+                <span className="text-sm sm:text-base md:text-lg font-black text-rose-700 block leading-snug line-clamp-2">
                   {superpower}
                 </span>
               </div>
             </div>
 
             {/* AI Skill Card */}
-            <div className="bg-gradient-to-br from-[#F0F9FF]/98 via-white/95 to-[#E0F2FE]/95 border-2 border-sky-200/90 rounded-2xl sm:rounded-3xl p-3 sm:p-4 flex items-center gap-3 sm:gap-4 shadow-[0_8px_24px_rgba(2,132,199,0.14)] min-h-[76px] sm:min-h-[90px] md:min-h-[96px] box-slide-up-2 relative overflow-hidden group">
-              {/* Subtle shine corner accent */}
-              <div className="absolute top-0 right-0 w-16 h-16 bg-sky-300/10 rounded-full blur-xl pointer-events-none" />
-
+            <div className="card-3d-aiskill border-2 border-sky-200/90 rounded-2xl sm:rounded-3xl p-3 sm:p-4 flex items-center gap-3 sm:gap-4 min-h-[76px] sm:min-h-[90px] md:min-h-[96px] box-slide-up-2 relative overflow-hidden group">
               {/* Large 3D Icon Container */}
               <div className="w-13 h-13 sm:w-16 sm:h-16 md:w-18 md:h-18 rounded-2xl bg-gradient-to-tr from-[#E0F2FE] to-[#F0F9FF] flex items-center justify-center shrink-0 overflow-hidden p-2 border-2 border-sky-200 shadow-sm group-hover:scale-105 transition-transform">
                 <img
@@ -489,20 +509,20 @@ export const RevealView: React.FC<RevealViewProps> = ({ result, onNext, onBack }
               {/* Content text */}
               <div className="min-w-0 flex-1">
                 <div className="flex items-center gap-1 mb-0.5">
-                  <Zap className="w-3 h-3 text-sky-500 fill-sky-500" />
+                  <Zap className="w-3.5 h-3.5 text-sky-500 fill-sky-500" />
                   <span className="text-[10px] sm:text-xs font-black uppercase tracking-wider text-sky-600 block leading-tight">
                     Your AI Skill
                   </span>
                 </div>
-                <span className="text-sm sm:text-base md:text-lg font-black text-sky-800 block leading-snug line-clamp-2 drop-shadow-2xs">
+                <span className="text-sm sm:text-base md:text-lg font-black text-sky-800 block leading-snug line-clamp-2">
                   {aiSkill}
                 </span>
               </div>
             </div>
           </div>
 
-          {/* Impact Message Box (Premium Horizontal Pill) */}
-          <div className="bg-gradient-to-r from-white/98 via-[#FFFDF8]/98 to-white/98 border-2 border-amber-200/80 rounded-2xl sm:rounded-3xl px-4 sm:px-6 py-3.5 sm:py-4 shadow-[0_8px_24px_rgba(0,43,127,0.1)] flex items-center justify-between gap-3 sm:gap-4 box-slide-up-3">
+          {/* Impact Message Box (100% Solid Pure White 3D Pill with Crisp Gold & Vivid Shadows) */}
+          <div className="card-3d-white border-2 border-amber-200/90 rounded-2xl sm:rounded-3xl px-4 sm:px-6 py-3.5 sm:py-4 flex items-center justify-between gap-3 sm:gap-4 box-slide-up-3 relative z-10">
             {/* Large 3D Heart */}
             <img
               src={impactHeartSrc}
@@ -510,11 +530,11 @@ export const RevealView: React.FC<RevealViewProps> = ({ result, onNext, onBack }
               className="w-8 h-8 sm:w-10 sm:h-10 md:w-11 md:h-11 object-contain shrink-0 drop-shadow-[0_4px_10px_rgba(0,0,0,0.15)]"
             />
             {/* Message */}
-            <p className="text-base sm:text-lg md:text-xl font-extrabold text-slate-800 leading-snug text-center flex-1">
+            <p className="text-xs sm:text-sm md:text-base font-extrabold text-[#002B7F] leading-snug text-center flex-1">
               {impact}
             </p>
             {/* Sparkles */}
-            <Sparkles className="w-5 h-5 sm:w-6 sm:h-6 text-amber-400 shrink-0 animate-pulse fill-amber-300" />
+            <Sparkles className="w-5 h-5 sm:w-6 sm:h-6 text-amber-500 shrink-0 animate-pulse fill-amber-400" />
           </div>
         </div>
       </div>
@@ -525,9 +545,9 @@ export const RevealView: React.FC<RevealViewProps> = ({ result, onNext, onBack }
         {onBack ? (
           <button
             onClick={onBack}
-            className="flex-1 max-w-[160px] sm:max-w-[200px] min-h-[52px] h-13 sm:h-14 rounded-full bg-white/95 hover:bg-white text-[#002B7F] font-bold text-lg sm:text-xl border-2 border-white/90 shadow-[0_4px_16px_rgba(0,43,127,0.14)] flex items-center justify-center gap-2 active:scale-95 transition-all cursor-pointer backdrop-blur-md"
+            className="flex-1 max-w-[145px] sm:max-w-[185px] h-12 sm:h-13.5 rounded-full bg-white hover:bg-slate-50 text-[#002B7F] font-black text-sm sm:text-base border-2 border-white shadow-[0_6px_20px_rgba(0,43,127,0.14)] flex items-center justify-center gap-1.5 sm:gap-2 active:scale-95 transition-all cursor-pointer"
           >
-            <ChevronLeft className="w-5 h-5 text-[#002B7F] stroke-[2.5]" />
+            <ChevronLeft className="w-4.5 h-4.5 sm:w-5 sm:h-5 text-[#002B7F] stroke-[2.5]" />
             <span>ย้อนกลับ</span>
           </button>
         ) : (
@@ -536,7 +556,7 @@ export const RevealView: React.FC<RevealViewProps> = ({ result, onNext, onBack }
 
         <button
           onClick={onNext}
-          className="flex-[2] max-w-[280px] sm:max-w-[340px] min-h-[52px] h-13 sm:h-14 rounded-full bg-gradient-to-r from-[#FF3366] via-[#FF537A] to-[#FF3366] text-white font-black text-xl sm:text-2xl shadow-lg shadow-rose-500/35 flex items-center justify-center gap-2 active:scale-95 transition-all cursor-pointer btn-next-cta relative overflow-hidden group"
+          className="flex-[2] max-w-[270px] sm:max-w-[320px] h-12 sm:h-13.5 rounded-full bg-gradient-to-r from-[#FF3366] via-[#FF537A] to-[#FF3366] text-white font-black text-sm sm:text-base shadow-lg shadow-rose-500/35 flex items-center justify-center gap-2 active:scale-95 transition-all cursor-pointer btn-next-cta relative overflow-hidden group"
         >
           {/* Glossy top sheen */}
           <div className="absolute inset-x-0 top-0 h-[45%] bg-gradient-to-b from-white/35 to-transparent rounded-t-full pointer-events-none" />
@@ -544,7 +564,7 @@ export const RevealView: React.FC<RevealViewProps> = ({ result, onNext, onBack }
           <span className="relative z-10 tracking-wide drop-shadow-[0_1px_2px_rgba(0,0,0,0.2)]">
             ดูการ์ดของฉัน
           </span>
-          <ChevronRight className="relative z-10 w-6 h-6 text-white stroke-[3] group-hover:translate-x-0.5 transition-transform" />
+          <ChevronRight className="relative z-10 w-5 h-5 text-white stroke-[3] group-hover:translate-x-0.5 transition-transform" />
         </button>
       </div>
     </div>
