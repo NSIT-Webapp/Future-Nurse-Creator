@@ -29,16 +29,24 @@ export const AnalysisView: React.FC<AnalysisViewProps> = ({
   // Stepper state: 1..8 steps
   const stepperSteps = [1, 2, 3, 4, 5, 6, 7, 8];
 
-  // Cycling badge highlight every 350ms
+  // Eagerly ensure all badge images are decoded in memory
+  useEffect(() => {
+    badges.forEach((b) => {
+      const img = new Image();
+      img.src = b.imgUrl;
+    });
+  }, [badges]);
+
+  // Cycling badge highlight every 320ms
   useEffect(() => {
     const scanInterval = setInterval(() => {
       setActiveBadgeIdx((prev) => (prev + 1) % badges.length);
-    }, 350);
+    }, 320);
 
     return () => clearInterval(scanInterval);
   }, [badges.length]);
 
-  // Complete analysis after 4.2 seconds
+  // Complete analysis after 4.8 seconds to give full visual appreciation
   useEffect(() => {
     const timer = setTimeout(() => {
       try {
@@ -50,7 +58,7 @@ export const AnalysisView: React.FC<AnalysisViewProps> = ({
         });
       } catch (_e) {}
       onComplete();
-    }, 4200);
+    }, 4800);
 
     return () => clearTimeout(timer);
   }, [onComplete]);
@@ -175,10 +183,10 @@ export const AnalysisView: React.FC<AnalysisViewProps> = ({
                 return (
                   <div
                     key={badge.pathId}
-                    className={`rounded-xl sm:rounded-2xl p-1 sm:p-1.5 flex flex-col items-center justify-center transition-all duration-300 border ${
+                    className={`rounded-xl sm:rounded-2xl p-1 sm:p-1.5 flex flex-col items-center justify-center transition-all duration-300 border animate-scale-up ${
                       isScanning
                         ? 'bg-white border-pink-400 ring-2 ring-pink-400/70 shadow-lg shadow-pink-200/80 scale-105'
-                        : 'bg-white/80 hover:bg-white border-sky-200/70 shadow-xs'
+                        : 'bg-white/85 hover:bg-white border-sky-200/80 shadow-xs'
                     }`}
                   >
                     <div className="w-9 h-9 sm:w-11 sm:h-11 md:w-12 md:h-12 overflow-hidden flex items-center justify-center">
@@ -187,6 +195,9 @@ export const AnalysisView: React.FC<AnalysisViewProps> = ({
                         alt={badge.titleEn}
                         className="w-full h-full object-contain drop-shadow-xs"
                         loading="eager"
+                        decoding="sync"
+                        width={48}
+                        height={48}
                       />
                     </div>
                     <span className="text-[7.5px] sm:text-[8.5px] font-black text-[#002B7F] tracking-tight uppercase text-center mt-0.5 line-clamp-1 leading-tight px-0.5">
@@ -209,6 +220,8 @@ export const AnalysisView: React.FC<AnalysisViewProps> = ({
                   src={centerCharacterUrl}
                   alt={isFemale ? 'Female Student' : 'Male Student'}
                   className="h-full w-auto object-contain drop-shadow-xl animate-float-subtle select-none"
+                  loading="eager"
+                  decoding="sync"
                 />
               </div>
             </div>
@@ -221,10 +234,10 @@ export const AnalysisView: React.FC<AnalysisViewProps> = ({
                 return (
                   <div
                     key={badge.pathId}
-                    className={`rounded-xl sm:rounded-2xl p-1 sm:p-1.5 flex flex-col items-center justify-center transition-all duration-300 border ${
+                    className={`rounded-xl sm:rounded-2xl p-1 sm:p-1.5 flex flex-col items-center justify-center transition-all duration-300 border animate-scale-up ${
                       isScanning
                         ? 'bg-white border-sky-400 ring-2 ring-sky-400/70 shadow-lg shadow-sky-200/80 scale-105'
-                        : 'bg-white/80 hover:bg-white border-sky-200/70 shadow-xs'
+                        : 'bg-white/85 hover:bg-white border-sky-200/80 shadow-xs'
                     }`}
                   >
                     <div className="w-9 h-9 sm:w-11 sm:h-11 md:w-12 md:h-12 overflow-hidden flex items-center justify-center">
@@ -233,6 +246,9 @@ export const AnalysisView: React.FC<AnalysisViewProps> = ({
                         alt={badge.titleEn}
                         className="w-full h-full object-contain drop-shadow-xs"
                         loading="eager"
+                        decoding="sync"
+                        width={48}
+                        height={48}
                       />
                     </div>
                     <span className="text-[7.5px] sm:text-[8.5px] font-black text-[#002B7F] tracking-tight uppercase text-center mt-0.5 line-clamp-1 leading-tight px-0.5">

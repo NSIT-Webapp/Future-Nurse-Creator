@@ -13,6 +13,7 @@ import { SaveShareView } from './views/SaveShareView';
 import { ThankYouResetView } from './views/ThankYouResetView';
 import { MobileResultView } from './views/MobileResultView';
 import { CharacterType, QuizAnswers, ResultPayload } from './types';
+import { preloadProcessingAssets } from './assets/registry';
 import { calculateResult } from './engine/scoringEngine';
 import { decodeResultState } from './engine/stateCompressor';
 import { useIdleTimer } from './engine/idleManager';
@@ -48,8 +49,9 @@ export function App() {
 
   const isDebugMode = useDebugMode();
 
-  // ── QR hand-off: decode #result= URL hash ──────────────────────────────────
+  // ── QR hand-off: decode #result= URL hash & Preload processing assets ────
   useEffect(() => {
+    preloadProcessingAssets();
     const handleHash = () => {
       const hash = window.location.hash;
       if (hash.startsWith('#result=')) {

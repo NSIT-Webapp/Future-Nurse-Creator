@@ -242,3 +242,25 @@ export function getProcessingBadges(gender: 'female' | 'male' | string = 'female
   }
 }
 
+/**
+ * Eagerly preloads all analyzing/processing screen assets into browser cache
+ * to ensure zero-latency rendering when navigating from Character Select to Analyzing.
+ */
+export function preloadProcessingAssets(): void {
+  if (typeof window === 'undefined' || typeof Image === 'undefined') return;
+  const urls = [
+    ASSETS.processing.background,
+    ASSETS.processing.female,
+    ASSETS.processing.male,
+    ASSETS.processing.robot,
+    ...getProcessingBadges('female_student').map(b => b.imgUrl),
+    ...getProcessingBadges('male_student').map(b => b.imgUrl),
+  ];
+  urls.forEach(url => {
+    if (url && !isPlaceholder(url)) {
+      const img = new Image();
+      img.src = url;
+    }
+  });
+}
+
