@@ -25,24 +25,24 @@ const BADGE_THEMES: Record<string, { textColor: string }> = {
 };
 
 const BADGE_POSITIONS: Record<string, string> = {
-  PED:  'left-[4%] sm:left-[5%] top-[11%]',
-  MAT:  'left-1/2 top-[9%] sm:top-[8%] -translate-x-1/2',
-  MH:   'right-[4%] sm:right-[5%] top-[11%]',
-  ER:   'left-[1%] sm:left-[3%] top-[39%]',
-  OA:   'right-[1%] sm:right-[3%] top-[39%]',
-  COMM: 'left-[5%] sm:left-[7%] bottom-[10%] sm:bottom-[11%]',
-  TECH: 'left-1/2 bottom-[5%] sm:bottom-[6%] -translate-x-1/2',
-  INT:  'right-[5%] sm:right-[7%] bottom-[10%] sm:bottom-[11%]',
+  PED:  'left-[4%] sm:left-[5%] top-[14%]',
+  MAT:  'left-1/2 top-[12%] sm:top-[11%] -translate-x-1/2',
+  MH:   'right-[4%] sm:right-[5%] top-[14%]',
+  ER:   'left-[-1%] sm:left-[2%] top-[44%]',
+  OA:   'right-[-1%] sm:right-[2%] top-[44%]',
+  COMM: 'left-[4%] sm:left-[7%] bottom-[3%] sm:bottom-[4%]',
+  TECH: 'left-1/2 bottom-[-2%] sm:bottom-[-1%] -translate-x-1/2',
+  INT:  'right-[4%] sm:right-[7%] bottom-[3%] sm:bottom-[4%]',
 };
 
 const BADGE_POSITIONS_MALE: Record<string, string> = {
-  PED:  'left-[5%] sm:left-[6%] top-[12%]',
-  MH:   'right-[5%] sm:right-[6%] top-[12%]',
-  ER:   'left-[1%] sm:left-[4%] top-[39%]',
-  OA:   'right-[1%] sm:right-[4%] top-[39%]',
-  COMM: 'left-[6%] sm:left-[9%] bottom-[10%] sm:bottom-[11%]',
-  TECH: 'left-1/2 bottom-[5%] sm:bottom-[6%] -translate-x-1/2',
-  INT:  'right-[6%] sm:right-[9%] bottom-[10%] sm:bottom-[11%]',
+  PED:  'left-[5%] sm:left-[6%] top-[15%]',
+  MH:   'right-[5%] sm:right-[6%] top-[15%]',
+  ER:   'left-[-1%] sm:left-[3%] top-[44%]',
+  OA:   'right-[-1%] sm:right-[3%] top-[44%]',
+  COMM: 'left-[5%] sm:left-[9%] bottom-[3%] sm:bottom-[4%]',
+  TECH: 'left-1/2 bottom-[-2%] sm:bottom-[-1%] -translate-x-1/2',
+  INT:  'right-[5%] sm:right-[9%] bottom-[3%] sm:bottom-[4%]',
 };
 
 export const AnalysisView: React.FC<AnalysisViewProps> = ({
