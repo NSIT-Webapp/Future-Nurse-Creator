@@ -13,16 +13,6 @@ interface AnalysisViewProps {
   onBack?: () => void;
 }
 
-const BADGE_THEMES: Record<string, { textColor: string }> = {
-  PED:  { textColor: 'text-[#002B7F]' },
-  ER:   { textColor: 'text-[#DC2626]' },
-  COMM: { textColor: 'text-[#002B7F]' },
-  MH:   { textColor: 'text-[#4338CA]' },
-  OA:   { textColor: 'text-[#059669]' },
-  INT:  { textColor: 'text-[#002B7F]' },
-  TECH: { textColor: 'text-[#0284C7]' },
-  MAT:  { textColor: 'text-[#DC2626]' },
-};
 
 const BADGE_POSITIONS: Record<string, string> = {
   PED:  'left-[4%] sm:left-[5%] top-[14%]',
@@ -152,7 +142,7 @@ export const AnalysisView: React.FC<AnalysisViewProps> = ({
     return () => clearInterval(interval);
   }, [onComplete]);
 
-  // ── Render Single Role Badge Card — Group 2 Suspense Effects ──────────────
+  // ── Render Single Role Badge Card — Clean Holographic Badge (No text for mystery & elegance) ──
   const renderBadge = (
     badge: ProcessingBadgeItem,
     isFlipped: boolean = false,
@@ -166,16 +156,15 @@ export const AnalysisView: React.FC<AnalysisViewProps> = ({
     const isMystery   = !isRevealed && !isScanning && !isFlipping;
     // Pre-glow = next card about to be scanned (still mysterious)
     const isNextInLine = isMystery && nextScanId === badge.pathId;
-    const theme = BADGE_THEMES[badge.pathId] || { textColor: 'text-[#002B7F]' };
 
     return (
       <div
         key={badge.pathId}
-        className={`absolute ${placementClass} flex flex-col items-center justify-start w-[clamp(78px,23.5vw,184px)] select-none ${
+        className={`absolute ${placementClass} flex flex-col items-center justify-center select-none ${
           isFlipping
             ? 'animate-badge-flip z-40'
             : isScanning
-            ? 'scale-110 z-30 drop-shadow-[0_0_22px_rgba(255,51,102,0.95)] transition-transform duration-200'
+            ? 'scale-110 z-30 drop-shadow-[0_0_24px_rgba(255,51,102,0.95)] transition-transform duration-200'
             : isNextInLine
             ? 'animate-preglow z-20 scale-105'
             : isMystery
@@ -185,7 +174,7 @@ export const AnalysisView: React.FC<AnalysisViewProps> = ({
       >
         {/* ── Scanning / Unlocked! tag ── */}
         {(isScanning || isFlipping) && (
-          <div className="absolute -top-3 left-1/2 -translate-x-1/2 bg-[#FF3366] text-white text-[7px] sm:text-[8px] font-black px-1.5 py-0.5 rounded-full uppercase shadow-md flex items-center gap-0.5 whitespace-nowrap animate-pulse z-40">
+          <div className="absolute -top-3 left-1/2 -translate-x-1/2 bg-[#FF3366] text-white text-[7px] sm:text-[8px] font-black px-2 py-0.5 rounded-full uppercase shadow-md flex items-center gap-0.5 whitespace-nowrap animate-pulse z-40">
             <Zap className="w-2.5 h-2.5 fill-current" />
             <span>{isFlipping ? 'UNLOCKED!' : 'SCANNING'}</span>
           </div>
@@ -199,7 +188,7 @@ export const AnalysisView: React.FC<AnalysisViewProps> = ({
         )}
 
         {/* ── Badge Icon Box with Overlay Effects ── */}
-        <div className={`w-[clamp(60px,19.5vw,154px)] h-[clamp(60px,19.5vw,154px)] flex items-center justify-center shrink-0 relative overflow-hidden rounded-2xl ${(isScanning || isFlipping) ? 'animate-bounce-gentle' : ''}`}>
+        <div className={`w-[clamp(64px,20.5vw,162px)] h-[clamp(64px,20.5vw,162px)] flex items-center justify-center shrink-0 relative overflow-hidden rounded-2xl ${(isScanning || isFlipping) ? 'animate-bounce-gentle' : ''}`}>
           {/* Badge Image (blurred when mystery) */}
           <img
             src={badge.imgUrl}
@@ -218,17 +207,6 @@ export const AnalysisView: React.FC<AnalysisViewProps> = ({
 
           {/* ✨ RAINBOW SHIMMER OVERLAY: flowing light on all revealed cards */}
           {isRevealed && !isScanning && <div className="shimmer-overlay" />}
-        </div>
-
-        {/* ── Badge Title ── */}
-        <div className="h-[clamp(24px,5vw,42px)] flex items-center justify-center w-full mt-0.5 sm:mt-1">
-          <span
-            className={`text-[clamp(7.5px,1.75vw,14px)] font-black tracking-tight uppercase text-center leading-tight px-0.5 drop-shadow-[0_1px_2px_rgba(255,255,255,0.95)] line-clamp-2 transition-colors duration-300 ${
-              isMystery ? 'text-white/60' : theme.textColor
-            }`}
-          >
-            {isMystery ? '???' : badge.titleEn}
-          </span>
         </div>
       </div>
     );
