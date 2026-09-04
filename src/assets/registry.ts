@@ -99,10 +99,11 @@ export const ASSETS = {
 
   // ── Processing / Analysis screen (2 visual versions based on selected look) ──
   processing: {
-    background: '/assets/processing/background.png',
-    female:     '/assets/processing/character-female.png',
-    male:       '/assets/processing/character-male.png',
-    robot:      '/assets/processing/ai-robot.png',
+    background:  '/assets/processing/background.png',
+    innerCardBg: '/assets/processing/inner-card-bg.png',
+    female:      '/assets/processing/character-female.png',
+    male:        '/assets/processing/character-male.png',
+    robot:       '/assets/processing/ai-robot.png',
     badges: {
       female: {
         PED:  '/assets/processing/badges/female/PED.png',
@@ -250,6 +251,7 @@ export function preloadProcessingAssets(): void {
   if (typeof window === 'undefined' || typeof Image === 'undefined') return;
   const urls = [
     ASSETS.processing.background,
+    ASSETS.processing.innerCardBg,
     ASSETS.processing.female,
     ASSETS.processing.male,
     ASSETS.processing.robot,

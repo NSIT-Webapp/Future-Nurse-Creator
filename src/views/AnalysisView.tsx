@@ -160,33 +160,40 @@ export const AnalysisView: React.FC<AnalysisViewProps> = ({
         </div>
       </div>
 
-      {/* ── 3. Main Translucent Glass Card Container ────────────────────────── */}
-      {/* Uses bg-white/45 with backdrop-blur so the campus background shines through */}
-      <div className="relative z-20 flex-1 flex flex-col justify-between max-w-4xl mx-auto w-full px-2.5 sm:px-5 md:px-6 pb-2.5 sm:pb-4 min-h-0">
-        <div className="h-full w-full bg-white/50 backdrop-blur-md rounded-3xl border-2 border-white/80 shadow-[0_12px_40px_rgba(0,43,127,0.14)] p-2.5 sm:p-3.5 md:p-4 flex flex-col justify-between overflow-hidden relative">
+      {/* ── 3. Main Stage Card with High-Res Sci-Fi Sky & Radar Background ────────────────────────── */}
+      <div className="relative z-20 flex-1 flex flex-col justify-between max-w-4xl mx-auto w-full px-2 sm:px-4 md:px-6 pb-2 sm:pb-3.5 min-h-0">
+        <div
+          className="h-full w-full rounded-3xl shadow-[0_12px_40px_rgba(0,43,127,0.22)] p-2.5 sm:p-3.5 md:p-4 flex flex-col justify-between overflow-hidden relative border border-white/70"
+          style={{
+            backgroundImage: `url(${ASSETS.processing.innerCardBg})`,
+            backgroundRepeat: 'no-repeat',
+            backgroundPosition: 'center',
+            backgroundSize: '100% 100%',
+          }}
+        >
 
           {/* ── Card Header: Title & Info ── */}
           <div className="text-center shrink-0 pt-0.5">
             {/* Analyzing Pill Badge */}
-            <div className="inline-flex items-center gap-1.5 px-3.5 py-0.5 rounded-full bg-gradient-to-r from-pink-500/15 via-rose-500/20 to-pink-500/15 border border-pink-400/40 text-pink-600 text-[10px] sm:text-xs font-black uppercase tracking-wider mb-1 shadow-xs">
+            <div className="inline-flex items-center gap-1.5 px-3.5 py-0.5 rounded-full bg-white/85 backdrop-blur-xs border border-pink-400/50 text-pink-600 text-[10px] sm:text-xs font-black uppercase tracking-wider mb-1 shadow-xs">
               <Sparkles className="w-3 h-3 text-pink-500 animate-pulse" />
               <span>ANALYZING</span>
               <span className="text-xs">❤️</span>
             </div>
 
             {/* Main Headline */}
-            <h2 className="text-xl sm:text-2xl md:text-3xl font-black text-slate-800 tracking-tight font-heading leading-tight">
-              <span className="text-transparent bg-clip-text bg-gradient-to-r from-rose-500 via-pink-500 to-rose-600">
+            <h2 className="text-xl sm:text-2xl md:text-3xl font-black text-slate-800 tracking-tight font-heading leading-tight drop-shadow-[0_1px_2px_rgba(255,255,255,0.85)]">
+              <span className="text-transparent bg-clip-text bg-gradient-to-r from-rose-600 via-pink-600 to-rose-600">
                 AI{' '}
               </span>
               กำลังวิเคราะห์
             </h2>
-            <h3 className="text-sm sm:text-base md:text-lg font-bold text-slate-700 tracking-tight leading-snug">
+            <h3 className="text-sm sm:text-base md:text-lg font-black text-slate-800 tracking-tight leading-snug drop-shadow-[0_1px_2px_rgba(255,255,255,0.85)]">
               เส้นทางพยาบาลที่ใช่สำหรับคุณ...
             </h3>
 
             {/* Sub-caption */}
-            <p className="text-[10.5px] sm:text-xs font-semibold text-slate-500 mt-0.5 flex items-center justify-center gap-1">
+            <p className="text-[10.5px] sm:text-xs font-bold text-slate-700 mt-0.5 flex items-center justify-center gap-1 drop-shadow-[0_1px_1px_rgba(255,255,255,0.85)]">
               <span>✨ จากคำตอบทั้ง {totalQuestions} ข้อของคุณ 💕</span>
             </p>
           </div>
@@ -204,7 +211,7 @@ export const AnalysisView: React.FC<AnalysisViewProps> = ({
                     className={`w-full rounded-2xl p-1.5 sm:p-2 md:p-2.5 flex flex-col items-center justify-center transition-all duration-300 border animate-scale-up ${
                       isScanning
                         ? 'bg-white border-pink-400 ring-2 ring-pink-400/80 shadow-lg shadow-pink-200/90 scale-105'
-                        : 'bg-white/90 hover:bg-white border-sky-200/80 shadow-xs'
+                        : 'bg-white/95 hover:bg-white border-white/90 shadow-sm'
                     }`}
                   >
                     <div className="w-11 h-11 sm:w-14 sm:h-14 md:w-18 md:h-18 overflow-hidden flex items-center justify-center">
@@ -226,18 +233,17 @@ export const AnalysisView: React.FC<AnalysisViewProps> = ({
               })}
             </div>
 
-            {/* Center Thoughtful Character (Prominently Sized) with Sci-Fi Radar Rings */}
+            {/* Center Thoughtful Character with subtle pulse glow matching high-res artwork radar */}
             <div className="flex-1 h-full relative flex flex-col items-center justify-center z-10 px-1 min-h-0">
-              {/* Concentric Glowing Radar Rings */}
-              <div className="absolute w-52 h-52 sm:w-68 sm:h-68 md:w-84 md:h-84 rounded-full border border-sky-300/40 bg-radial from-sky-200/25 via-transparent to-transparent animate-pulse pointer-events-none" />
-              <div className="absolute w-40 h-40 sm:w-52 sm:h-52 md:w-68 md:h-68 rounded-full border border-dashed border-sky-400/45 animate-spin-slow pointer-events-none" />
+              {/* Subtle Glowing Pulse over the background holographic radar */}
+              <div className="absolute w-44 h-44 sm:w-60 sm:h-60 md:w-76 md:h-76 rounded-full bg-radial from-cyan-300/25 via-pink-300/10 to-transparent animate-pulse pointer-events-none" />
 
-              {/* Student Character Full Image — Fills generous vertical height */}
+              {/* Student Character Full Image — Fills generous vertical height above platform */}
               <div className="relative flex-1 w-full flex items-center justify-center min-h-0 max-h-[340px] sm:max-h-[420px] md:max-h-[480px]">
                 <img
                   src={centerCharacterUrl}
                   alt={isFemale ? 'Female Student' : 'Male Student'}
-                  className="h-full w-auto max-w-full object-contain drop-shadow-2xl animate-float-subtle select-none"
+                  className="h-full w-auto max-w-full object-contain drop-shadow-[0_12px_28px_rgba(0,43,127,0.3)] animate-float-subtle select-none"
                   loading="eager"
                   decoding="sync"
                 />
@@ -246,10 +252,10 @@ export const AnalysisView: React.FC<AnalysisViewProps> = ({
               {/* Center Bottom Badge for Male (NURSING + TECHNOLOGY) */}
               {centerBottomBadge && (
                 <div
-                  className={`mt-1 rounded-2xl px-2 py-1 sm:py-1.5 flex items-center gap-1.5 sm:gap-2 transition-all duration-300 border animate-scale-up z-20 ${
+                  className={`mt-1 rounded-2xl px-2.5 py-1 sm:py-1.5 flex items-center gap-1.5 sm:gap-2 transition-all duration-300 border animate-scale-up z-20 ${
                     activeBadgeIdx === 6
                       ? 'bg-white border-sky-400 ring-2 ring-sky-400/80 shadow-lg shadow-sky-200/90 scale-105'
-                      : 'bg-white/90 hover:bg-white border-sky-200/80 shadow-xs'
+                      : 'bg-white/95 hover:bg-white border-white/90 shadow-sm'
                   }`}
                 >
                   <div className="w-8 h-8 sm:w-10 sm:h-10 md:w-12 md:h-12 overflow-hidden flex items-center justify-center shrink-0">
@@ -281,7 +287,7 @@ export const AnalysisView: React.FC<AnalysisViewProps> = ({
                     className={`w-full rounded-2xl p-1.5 sm:p-2 md:p-2.5 flex flex-col items-center justify-center transition-all duration-300 border animate-scale-up ${
                       isScanning
                         ? 'bg-white border-sky-400 ring-2 ring-sky-400/80 shadow-lg shadow-sky-200/90 scale-105'
-                        : 'bg-white/90 hover:bg-white border-sky-200/80 shadow-xs'
+                        : 'bg-white/95 hover:bg-white border-white/90 shadow-sm'
                     }`}
                   >
                     <div className="w-11 h-11 sm:w-14 sm:h-14 md:w-18 md:h-18 overflow-hidden flex items-center justify-center">
@@ -305,7 +311,7 @@ export const AnalysisView: React.FC<AnalysisViewProps> = ({
           </div>
 
           {/* ── 4. Floating AI Robot Mascot Status Bar with Live Progress ──── */}
-          <div className="shrink-0 bg-gradient-to-r from-sky-50/95 via-blue-50/95 to-pink-50/90 border border-sky-200/90 rounded-2xl px-3 py-1.5 sm:py-2 shadow-sm flex items-center justify-between gap-2.5 my-1">
+          <div className="shrink-0 bg-white/92 backdrop-blur-md border border-white/90 rounded-2xl px-3 py-1.5 sm:py-2 shadow-md flex items-center justify-between gap-2.5 my-1">
             <div className="flex items-center gap-2 sm:gap-3 flex-1 min-w-0">
               <img
                 src={ASSETS.processing.robot}
@@ -342,7 +348,7 @@ export const AnalysisView: React.FC<AnalysisViewProps> = ({
             {onBack ? (
               <button
                 onClick={onBack}
-                className="px-4 sm:px-5 py-2 rounded-full bg-white/95 hover:bg-white text-[#002B7F] font-bold text-xs sm:text-sm border border-slate-200/80 shadow-sm flex items-center gap-1 active:scale-95 transition-all"
+                className="px-4 sm:px-5 py-2 rounded-full bg-white/95 hover:bg-white text-[#002B7F] font-bold text-xs sm:text-sm border border-white shadow-md flex items-center gap-1 active:scale-95 transition-all"
               >
                 <ChevronLeft className="w-4 h-4 text-[#002B7F]" />
                 <span>ย้อนกลับ</span>
@@ -352,7 +358,7 @@ export const AnalysisView: React.FC<AnalysisViewProps> = ({
             )}
 
             {/* Active Analyzing Status Pill */}
-            <div className="px-5 sm:px-6 py-2 rounded-full bg-gradient-to-r from-pink-500 via-rose-500 to-pink-500 text-white font-extrabold text-xs sm:text-sm shadow-md flex items-center gap-2 animate-cta-pulse">
+            <div className="px-5 sm:px-6 py-2 rounded-full bg-gradient-to-r from-pink-500 via-rose-500 to-pink-500 text-white font-extrabold text-xs sm:text-sm shadow-md shadow-pink-500/25 flex items-center gap-2 animate-cta-pulse">
               <Sparkles className="w-4 h-4 animate-spin text-white" />
               <span>กำลังวิเคราะห์...</span>
             </div>
