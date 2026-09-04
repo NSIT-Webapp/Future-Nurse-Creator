@@ -110,13 +110,13 @@ export const QuizView: React.FC<QuizViewProps> = ({
           <img
             src={ASSETS.home.facultyLogo}
             alt="มหาวิทยาลัยมหิดล คณะพยาบาลศาสตร์"
-            className="h-9 sm:h-11 md:h-12 w-auto object-contain pointer-events-none"
+            className="h-10 sm:h-12 md:h-14 w-auto object-contain pointer-events-none"
             draggable={false}
           />
         </div>
 
         {/* Sound Control Toggle */}
-        <SoundControl trackUrl={ASSETS.home.bgmTrack} size="md" />
+        <SoundControl trackUrl={ASSETS.home.bgmTrack} size="lg" />
       </div>
 
       {/* ── 3. Stepper & Progress Bar ──────────────────────────────────────── */}
