@@ -128,17 +128,16 @@ export const ASSETS = {
   },
 
   // ── Reveal screen artwork (8 Nursing Paths × 2 Looks = 16 outcomes) ─────────
-  // Each path has 1 Female reveal character and 1 Male reveal character.
-  // Conceptually connected to the Card character, but presentation moment asset.
   reveal: {
-    PED:  { female: PLACEHOLDER('reveal/PED_female'),  male: PLACEHOLDER('reveal/PED_male')  },
-    MH:   { female: PLACEHOLDER('reveal/MH_female'),   male: PLACEHOLDER('reveal/MH_male')   },
-    ER:   { female: PLACEHOLDER('reveal/ER_female'),   male: PLACEHOLDER('reveal/ER_male')   },
-    OA:   { female: PLACEHOLDER('reveal/OA_female'),   male: PLACEHOLDER('reveal/OA_male')   },
-    MAT:  { female: PLACEHOLDER('reveal/MAT_female'),  male: PLACEHOLDER('reveal/MAT_male')  },
-    COMM: { female: PLACEHOLDER('reveal/COMM_female'), male: PLACEHOLDER('reveal/COMM_male') },
-    INT:  { female: PLACEHOLDER('reveal/INT_female'),  male: PLACEHOLDER('reveal/INT_male')  },
-    TECH: { female: PLACEHOLDER('reveal/TECH_female'), male: PLACEHOLDER('reveal/TECH_male') },
+    background: '/assets/reveal/background.png',
+    PED:  { female: '/characters/PED_female.png',  male: '/characters/PED_male.png'  },
+    MH:   { female: '/characters/MH_female.png',   male: '/characters/MH_male.png'   },
+    ER:   { female: '/characters/ER_female.png',   male: '/characters/ER_male.png'   },
+    OA:   { female: '/characters/OA_female.png',   male: '/characters/OA_male.png'   },
+    MAT:  { female: '/characters/MAT_female.png',  male: '/characters/MAT_male.png'  },
+    COMM: { female: '/characters/COMM_female.png', male: '/characters/COMM_male.png' },
+    INT:  { female: '/characters/INT_female.png',  male: '/characters/INT_male.png'  },
+    TECH: { female: '/characters/TECH_female.png', male: '/characters/TECH_male.png' },
   },
 
   // ── Card template ────────────────────────────────────────────────────────────
@@ -157,7 +156,7 @@ export const ASSETS = {
 // ── Type helpers ──────────────────────────────────────────────────────────────
 
 export type CharacterPathKey = keyof typeof ASSETS.characters;
-export type RevealPathKey     = keyof typeof ASSETS.reveal;
+export type RevealPathKey     = keyof typeof ASSETS.characters;
 export type QuestionCharKey   = keyof typeof ASSETS.questions;
 
 // ── Status helpers ────────────────────────────────────────────────────────────
@@ -171,6 +170,101 @@ export function isPlaceholder(path: string): boolean {
 export function placeholderLabel(path: string): string {
   return path.replace('__PLACEHOLDER__', '');
 }
+
+// ── Reveal Floating Stickers ──────────────────────────────────────────────────
+
+export interface RevealStickerConfig {
+  id: string;
+  name: string;
+  src: string;
+  position: {
+    top?: string;
+    bottom?: string;
+    left?: string;
+    right?: string;
+  };
+  size: number;
+  animationDelay?: string;
+  animationDuration?: string;
+  rotate?: string;
+  zIndex?: number;
+}
+
+const REVEAL_STICKERS_MAP: Record<string, RevealStickerConfig[]> = {
+  PED: [
+    { id: 'steth', name: 'Stethoscope', src: '/assets/reveal/stickers/PED/stethoscope-child.png', position: { top: '8%', left: '4%' }, size: 68, rotate: '-12deg', animationDelay: '0.4s' },
+    { id: 'rings', name: 'Stacking Rings', src: '/assets/reveal/stickers/PED/toy-stacking-rings.png', position: { top: '6%', right: '5%' }, size: 64, rotate: '12deg', animationDelay: '1.2s' },
+    { id: 'star_blue', name: 'Star Smile', src: '/assets/reveal/stickers/PED/star-blue-smile.png', position: { top: '42%', left: '1%' }, size: 44, rotate: '-8deg', animationDelay: '1.8s' },
+    { id: 'star_yellow', name: 'Star Gold', src: '/assets/reveal/stickers/PED/star-yellow.png', position: { top: '38%', right: '2%' }, size: 40, rotate: '15deg', animationDelay: '0.8s' },
+    { id: 'bear', name: 'Teddy Bear', src: '/assets/reveal/stickers/PED/teddy-bear.png', position: { bottom: '4%', left: '3%' }, size: 78, rotate: '-6deg', animationDelay: '0s' },
+    { id: 'cube', name: 'Block Cube', src: '/assets/reveal/stickers/PED/toy-block-cube.png', position: { bottom: '6%', right: '4%' }, size: 58, rotate: '14deg', animationDelay: '2.2s' },
+  ],
+  MH: [
+    { id: 'bubble', name: 'Speech Heart', src: '/assets/reveal/stickers/MH/speech-bubble-heart-purple.png', position: { top: '8%', left: '4%' }, size: 68, rotate: '-10deg', animationDelay: '0.2s' },
+    { id: 'brain', name: 'Brain Smile', src: '/assets/reveal/stickers/MH/brain-smile.png', position: { top: '6%', right: '5%' }, size: 72, rotate: '8deg', animationDelay: '1.0s' },
+    { id: 'heart_p', name: 'Purple Heart', src: '/assets/reveal/stickers/MH/heart-purple.png', position: { top: '40%', left: '2%' }, size: 46, rotate: '-6deg', animationDelay: '1.6s' },
+    { id: 'sparkles', name: 'Sparkles Glow', src: '/assets/reveal/stickers/MH/sparkles-glow.png', position: { top: '38%', right: '3%' }, size: 46, rotate: '12deg', animationDelay: '0.6s' },
+    { id: 'heart_smile', name: 'Heart Smile', src: '/assets/reveal/stickers/MH/heart-smile.png', position: { bottom: '5%', left: '4%' }, size: 64, rotate: '-8deg', animationDelay: '2.0s' },
+    { id: 'zen', name: 'Zen Stones', src: '/assets/reveal/stickers/MH/zen-stones.png', position: { bottom: '4%', right: '4%' }, size: 70, rotate: '6deg', animationDelay: '0s' },
+  ],
+  ER: [
+    { id: 'siren', name: 'Siren Red', src: '/assets/reveal/stickers/ER/siren-red.png', position: { top: '7%', left: '4%' }, size: 72, rotate: '-14deg', animationDelay: '0.1s' },
+    { id: 'star_life', name: 'Star of Life', src: '/assets/reveal/stickers/ER/star-of-life.png', position: { top: '6%', right: '5%' }, size: 68, rotate: '10deg', animationDelay: '0.9s' },
+    { id: 'sparkles', name: 'Gold Sparkles', src: '/assets/reveal/stickers/ER/sparkles-gold.png', position: { top: '41%', left: '2%' }, size: 42, rotate: '-5deg', animationDelay: '1.7s' },
+    { id: 'ecg', name: 'Heart ECG', src: '/assets/reveal/stickers/ER/heart-ecg.png', position: { top: '39%', right: '2%' }, size: 54, rotate: '12deg', animationDelay: '1.1s' },
+    { id: 'first_aid', name: 'First Aid Box', src: '/assets/reveal/stickers/ER/first-aid-box-red.png', position: { bottom: '4%', left: '3%' }, size: 74, rotate: '-8deg', animationDelay: '0s' },
+    { id: 'clock', name: 'Clock 24/7', src: '/assets/reveal/stickers/ER/clock-24-7.png', position: { bottom: '5%', right: '4%' }, size: 66, rotate: '12deg', animationDelay: '2.1s' },
+  ],
+  OA: [
+    { id: 'house', name: 'House Green', src: '/assets/reveal/stickers/OA/house-green.png', position: { top: '7%', left: '4%' }, size: 70, rotate: '-8deg', animationDelay: '0.3s' },
+    { id: 'elderly', name: 'Elderly Walking', src: '/assets/reveal/stickers/OA/elderly-walking.png', position: { top: '6%', right: '5%' }, size: 68, rotate: '8deg', animationDelay: '1.1s' },
+    { id: 'leaves', name: 'Green Leaves', src: '/assets/reveal/stickers/OA/leaves-green.png', position: { top: '40%', left: '2%' }, size: 48, rotate: '-15deg', animationDelay: '1.8s' },
+    { id: 'sparkles', name: 'Yellow Sparkles', src: '/assets/reveal/stickers/OA/sparkles-yellow.png', position: { top: '39%', right: '3%' }, size: 44, rotate: '10deg', animationDelay: '0.7s' },
+    { id: 'tea', name: 'Tea Cup', src: '/assets/reveal/stickers/OA/tea-cup.png', position: { bottom: '5%', left: '4%' }, size: 68, rotate: '-10deg', animationDelay: '0s' },
+    { id: 'plant', name: 'Potted Plant', src: '/assets/reveal/stickers/OA/potted-plant-ceramic.png', position: { bottom: '4%', right: '4%' }, size: 68, rotate: '10deg', animationDelay: '2.3s' },
+  ],
+  MAT: [
+    { id: 'pregnant', name: 'Pregnant Mother', src: '/assets/reveal/stickers/MAT/pregnant-mother.png', position: { top: '7%', left: '4%' }, size: 72, rotate: '-8deg', animationDelay: '0.2s' },
+    { id: 'baby_heart', name: 'Baby In Heart', src: '/assets/reveal/stickers/MAT/baby-in-heart.png', position: { top: '6%', right: '5%' }, size: 72, rotate: '8deg', animationDelay: '1.0s' },
+    { id: 'sparkles', name: 'Pink Gold Sparkles', src: '/assets/reveal/stickers/MAT/sparkles-pink-gold.png', position: { top: '40%', left: '2%' }, size: 42, rotate: '-6deg', animationDelay: '1.6s' },
+    { id: 'footprints', name: 'Baby Footprints', src: '/assets/reveal/stickers/MAT/baby-footprints.png', position: { top: '39%', right: '3%' }, size: 48, rotate: '14deg', animationDelay: '0.8s' },
+    { id: 'bottle', name: 'Baby Bottle', src: '/assets/reveal/stickers/MAT/baby-bottle.png', position: { bottom: '4%', left: '4%' }, size: 68, rotate: '-12deg', animationDelay: '0s' },
+    { id: 'pacifier', name: 'Pacifier', src: '/assets/reveal/stickers/MAT/baby-pacifier.png', position: { bottom: '5%', right: '4%' }, size: 62, rotate: '12deg', animationDelay: '2.2s' },
+  ],
+  COMM: [
+    { id: 'house', name: 'House Heart', src: '/assets/reveal/stickers/COMM/house-heart.png', position: { top: '7%', left: '4%' }, size: 72, rotate: '-8deg', animationDelay: '0.2s' },
+    { id: 'family', name: 'Family Heart', src: '/assets/reveal/stickers/COMM/family-heart.png', position: { top: '6%', right: '5%' }, size: 72, rotate: '8deg', animationDelay: '1.0s' },
+    { id: 'flower', name: 'Yellow Flower', src: '/assets/reveal/stickers/COMM/flower-yellow.png', position: { top: '40%', left: '2%' }, size: 48, rotate: '-12deg', animationDelay: '1.7s' },
+    { id: 'pin', name: 'Location Pin', src: '/assets/reveal/stickers/COMM/location-pin.png', position: { top: '39%', right: '3%' }, size: 46, rotate: '10deg', animationDelay: '0.8s' },
+    { id: 'kit', name: 'First Aid Kit', src: '/assets/reveal/stickers/COMM/first-aid-kit.png', position: { bottom: '5%', left: '4%' }, size: 68, rotate: '-10deg', animationDelay: '0s' },
+    { id: 'plant', name: 'Potted Plant', src: '/assets/reveal/stickers/COMM/potted-plant.png', position: { bottom: '4%', right: '4%' }, size: 68, rotate: '12deg', animationDelay: '2.3s' },
+  ],
+  INT: [
+    { id: 'plane', name: 'Airplane', src: '/assets/reveal/stickers/INT/airplane.png', position: { top: '7%', left: '4%' }, size: 70, rotate: '-14deg', animationDelay: '0.1s' },
+    { id: 'globe', name: 'Globe', src: '/assets/reveal/stickers/INT/globe.png', position: { top: '6%', right: '4%' }, size: 76, rotate: '10deg', animationDelay: '0.9s' },
+    { id: 'bubbles', name: 'Speech Bubbles', src: '/assets/reveal/stickers/INT/speech-bubbles.png', position: { top: '40%', left: '2%' }, size: 50, rotate: '-6deg', animationDelay: '1.7s' },
+    { id: 'pin', name: 'Location Pin Pink', src: '/assets/reveal/stickers/INT/location-pin-pink.png', position: { top: '39%', right: '3%' }, size: 46, rotate: '12deg', animationDelay: '0.8s' },
+    { id: 'passport', name: 'Passport & Tickets', src: '/assets/reveal/stickers/INT/passport-tickets.png', position: { bottom: '5%', left: '4%' }, size: 70, rotate: '-8deg', animationDelay: '0s' },
+    { id: 'handshake', name: 'Handshake', src: '/assets/reveal/stickers/INT/handshake.png', position: { bottom: '4%', right: '4%' }, size: 68, rotate: '8deg', animationDelay: '2.2s' },
+  ],
+  TECH: [
+    { id: 'robot', name: 'AI Robot', src: '/assets/reveal/stickers/TECH/ai-robot.png', position: { top: '7%', left: '4%' }, size: 72, rotate: '-8deg', animationDelay: '0.2s' },
+    { id: 'chip', name: 'AI Chip', src: '/assets/reveal/stickers/TECH/chip-ai.png', position: { top: '6%', right: '5%' }, size: 70, rotate: '10deg', animationDelay: '1.0s' },
+    { id: 'cloud', name: 'Cloud Upload', src: '/assets/reveal/stickers/TECH/cloud-upload.png', position: { top: '40%', left: '2%' }, size: 50, rotate: '-8deg', animationDelay: '1.7s' },
+    { id: 'datacube', name: 'Data Cube', src: '/assets/reveal/stickers/TECH/data-cube.png', position: { top: '39%', right: '3%' }, size: 48, rotate: '12deg', animationDelay: '0.7s' },
+    { id: 'monitor', name: 'ECG Monitor', src: '/assets/reveal/stickers/TECH/monitor-ecg.png', position: { bottom: '4%', left: '4%' }, size: 68, rotate: '-10deg', animationDelay: '0s' },
+    { id: 'hud', name: 'HUD Vitals', src: '/assets/reveal/stickers/TECH/hud-vitals.png', position: { bottom: '5%', right: '3%' }, size: 74, rotate: '8deg', animationDelay: '2.2s' },
+  ],
+};
+
+/**
+ * Returns the list of 3D floating stickers configured for a specific nursing path.
+ */
+export function getRevealStickers(pathId: string): RevealStickerConfig[] {
+  return REVEAL_STICKERS_MAP[pathId] || [];
+}
+
+// ── Convenience lookups ───────────────────────────────────────────────────────
 
 // ── Convenience lookups ───────────────────────────────────────────────────────
 
@@ -257,6 +351,23 @@ export function preloadProcessingAssets(): void {
     ASSETS.processing.robot,
     ...getProcessingBadges('female_student').map(b => b.imgUrl),
     ...getProcessingBadges('male_student').map(b => b.imgUrl),
+  ];
+  urls.forEach(url => {
+    if (url && !isPlaceholder(url)) {
+      const img = new Image();
+      img.src = url;
+    }
+  });
+}
+
+/**
+ * Eagerly preloads reveal screen background and selected assets.
+ */
+export function preloadRevealAssets(): void {
+  if (typeof window === 'undefined' || typeof Image === 'undefined') return;
+  const urls = [
+    ASSETS.reveal.background,
+    ...Object.values(ASSETS.characters).flatMap(c => [c.female, c.male]),
   ];
   urls.forEach(url => {
     if (url && !isPlaceholder(url)) {

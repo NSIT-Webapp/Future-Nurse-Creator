@@ -1,9 +1,9 @@
 {
   "PED": {
     "HUMAN_CONNECTION": {
-      "superpower": "Gentle Connector",
-      "aiSkill": "Kid-Friendly Education Creator",
-      "impact": "ช่วยทำให้เรื่องที่น่ากังวล กลายเป็นประสบการณ์ที่เด็กและครอบครัวรู้สึกปลอดภัยขึ้น"
+      "superpower": "Communication",
+      "aiSkill": "Patient Education Creator",
+      "impact": "คุณทำให้การดูแลรักษาอบอุ่น อ่อนโยน และเข้าใจเด็กได้อย่างเป็นธรรมชาติ"
     },
     "CLINICAL_AWARENESS": {
       "superpower": "Thoughtful Observer",
@@ -18,9 +18,9 @@
   },
   "MH": {
     "HUMAN_CONNECTION": {
-      "superpower": "Deep Listener",
-      "aiSkill": "Emotional Support Experience Designer",
-      "impact": "สร้างพื้นที่ปลอดภัยทางอารมณ์ที่ทำให้ผู้คนกล้าบอกเล่าและเริ่มต้นฟื้นฟูตนเอง"
+      "superpower": "Empathy",
+      "aiSkill": "Mental Health Support Designer",
+      "impact": "คุณช่วยให้ผู้คนได้รับการรับฟัง เข้าใจ และปลอดภัยทางใจ"
     },
     "CLINICAL_AWARENESS": {
       "superpower": "Emotional Insight",
@@ -35,9 +35,9 @@
   },
   "ER": {
     "HUMAN_CONNECTION": {
-      "superpower": "Steady Supporter",
-      "aiSkill": "Crisis Communication Assistant",
-      "impact": "ส่งต่อความมั่นคงและความเข้าใจในทุกวินาทีที่วุ่นวาย ให้ผู้ป่วยและญาติรู้สึกไม่โดดเดี่ยว"
+      "superpower": "Quick Decision Making",
+      "aiSkill": "Clinical Decision Support User",
+      "impact": "พร้อมเสมอในทุกวินาทีที่มีความหมาย ตัดสินใจแม่นยำ ภายใต้แรงกดดัน เพื่อชีวิตและความหวัง"
     },
     "CLINICAL_AWARENESS": {
       "superpower": "Calm Under Pressure",
@@ -52,9 +52,9 @@
   },
   "OA": {
     "HUMAN_CONNECTION": {
-      "superpower": "Patient Companion",
-      "aiSkill": "Holistic Elder Care Planner",
-      "impact": "อยู่เคียงข้างผู้สูงวัยด้วยความเอาใจใส่ ทำให้ทุกวันผ่านไปอย่างมีคุณค่าและศักดิ์ศรี"
+      "superpower": "Compassion",
+      "aiSkill": "Smart Care Planner",
+      "impact": "คุณช่วยให้ผู้คนใช้ชีวิตอย่างมีศักดิ์ศรี อบอุ่น และมั่นใจมากขึ้น"
     },
     "CLINICAL_AWARENESS": {
       "superpower": "Insightful Observer",
@@ -69,9 +69,9 @@
   },
   "MAT": {
     "HUMAN_CONNECTION": {
-      "superpower": "Warm Supporter",
-      "aiSkill": "Maternal Wellness Guide Creator",
-      "impact": "มอบความอบอุ่นและความมั่นใจให้คุณแม่และครอบครัวในทุกก้าวของการเดินทางแห่งชีวิตใหม่"
+      "superpower": "Reassurance & Observation",
+      "aiSkill": "Maternal Health Education Creator",
+      "impact": "คุณทำให้ทุกการเริ่มต้นของชีวิต เต็มไปด้วยความอุ่นใจ ปลอดภัย และอ่อนโยน"
     },
     "CLINICAL_AWARENESS": {
       "superpower": "Gentle Observer",
@@ -86,9 +86,9 @@
   },
   "COMM": {
     "HUMAN_CONNECTION": {
-      "superpower": "Community Listener",
-      "aiSkill": "Community Health Dialogue Designer",
-      "impact": "ฟังเรื่องราวของชุมชนอย่างลึกซึ้ง แล้วแปลงเป็นโปรแกรมสุขภาพที่ตรงกับความต้องการจริง"
+      "superpower": "Connection",
+      "aiSkill": "Community Care Connector",
+      "impact": "คุณเชื่อมโยงการดูแลให้ใกล้ชิดผู้คน เข้าใจชุมชน และเข้าถึงได้จริง"
     },
     "CLINICAL_AWARENESS": {
       "superpower": "Big Picture Thinker",
@@ -103,9 +103,9 @@
   },
   "INT": {
     "HUMAN_CONNECTION": {
-      "superpower": "Cross-Cultural Communicator",
-      "aiSkill": "Global Health Dialogue Facilitator",
-      "impact": "ทลายกำแพงภาษาและวัฒนธรรม ทำให้ผู้ป่วยจากทุกมุมโลกรู้สึกได้รับการดูแลอย่างเท่าเทียม"
+      "superpower": "Cross-cultural Communication",
+      "aiSkill": "Global Health Communicator",
+      "impact": "คุณเชื่อมการดูแลข้ามวัฒนธรรม และสื่อสารกับโลกได้อย่างมั่นใจ"
     },
     "CLINICAL_AWARENESS": {
       "superpower": "Global Observer",
@@ -120,9 +120,9 @@
   },
   "TECH": {
     "HUMAN_CONNECTION": {
-      "superpower": "Human-Centered Creator",
-      "aiSkill": "Empathetic Health UX Designer",
-      "impact": "พัฒนาเทคโนโลยีสุขภาพที่ยังคงไว้ซึ่งความอบอุ่นของมนุษย์ ทำให้ผู้ป่วยรู้สึกว่าถูกดูแล ไม่ใช่แค่ถูกประมวลผล"
+      "superpower": "Innovation",
+      "aiSkill": "Healthcare AI Creator",
+      "impact": "คุณออกแบบอนาคตการดูแลสุขภาพ ด้วยความคิดสร้างสรรค์และเทคโนโลยี"
     },
     "CLINICAL_AWARENESS": {
       "superpower": "Smart Problem Solver",
