@@ -158,7 +158,7 @@ export function App() {
       {/* 3:4 Portrait Content Canvas: fixed 3:4 composition, centered, background-filled around */}
       <div className="canvas-3-4 flex flex-col relative shadow-2xl">
         {/* Kiosk chrome: header with step indicator + reset (shown on quiz/result flow) */}
-        {screen !== 'welcome' && screen !== 'quiz' && (
+        {screen !== 'welcome' && screen !== 'quiz' && screen !== 'character' && (
           <Header
             showReset={screen !== 'analysis' && screen !== 'thank_you_reset'}
             onReset={handleReset}
@@ -168,7 +168,17 @@ export function App() {
         {/* Main content area */}
         <main className="flex-1 flex flex-col relative z-10 min-h-0 h-full overflow-hidden">
         {screen === 'welcome'      && <WelcomeView onStart={handleStart} />}
-        {screen === 'character'    && <CharacterSelectView onSelect={handleSelectCharacter} />}
+        {screen === 'character'    && (
+          <CharacterSelectView
+            initialCharacter={characterType}
+            onConfirm={handleSelectCharacter}
+            onBack={() => {
+              resetActivity();
+              setCurrentQuestionIdx(questionsData.questions.length - 1);
+              setScreen('quiz');
+            }}
+          />
+        )}
         {screen === 'quiz' && currentQuestion && (
           <QuizView
             question={currentQuestion as any}

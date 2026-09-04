@@ -19,6 +19,13 @@
  * ══════════════════════════════════════════════════════════════════════════════
  */
 
+// ── Direct Vite Static Asset Imports (Guarantees content-hashed bundling & cache busting) ──
+import q1Img from './questions/q1.png';
+import q2Img from './questions/q2.png';
+import q3Img from './questions/q3.png';
+import q4Img from './questions/q4.png';
+import q5Img from './questions/q5.png';
+
 // ── Internal helper ───────────────────────────────────────────────────────────
 const PLACEHOLDER = (label: string): string => `__PLACEHOLDER__${label}`;
 
@@ -58,9 +65,9 @@ export const ASSETS = {
 
   // ── Choose Future Look screen ────────────────────────────────────────────────
   characterSelect: {
-    background:      PLACEHOLDER('character-select/background'),
-    femaleThumbnail: PLACEHOLDER('character-select/female-thumbnail'),
-    maleThumbnail:   PLACEHOLDER('character-select/male-thumbnail'),
+    background:      '/assets/home/background.jpg',
+    femaleThumbnail: '/assets/character-select/character-female.png',
+    maleThumbnail:   '/assets/character-select/character-male.png',
   },
 
   // ── Question character illustrations (Q1–Q5) ────────────────────────────────
@@ -68,12 +75,12 @@ export const ASSETS = {
   // These are presenter/illustration images fixed per question — not per player.
   // Replace each PLACEHOLDER with the final asset path when ready.
   questions: {
-    nursePresenter: '/assets/questions/nurse-cutout.png',
-    q1: '/assets/questions/q1.png',
-    q2: '/assets/questions/q2.png',
-    q3: '/assets/questions/q3.png',
-    q4: '/assets/questions/q4.png',
-    q5: '/assets/questions/q5.png',
+    nursePresenter: q1Img,
+    q1: q1Img,
+    q2: q2Img,
+    q3: q3Img,
+    q4: q4Img,
+    q5: q5Img,
   },
 
   // ── Card character illustrations (per Nursing Path × gender) ─────────────────

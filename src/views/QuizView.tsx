@@ -141,25 +141,20 @@ export const QuizView: React.FC<QuizViewProps> = ({
               />
             </div>
 
-            {/* ── Header Inside Card: Step Badge & Prompt (pr reserved for mascot) ── */}
-            <div className="relative z-20 pr-28 sm:pr-36 md:pr-44 mb-2 sm:mb-3">
+            {/* ── Header Inside Card: Step Badge & Big Prompt (pr reserved for mascot) ── */}
+            <div className="relative z-20 pr-28 sm:pr-36 md:pr-44 mb-2.5 sm:mb-3.5">
               {/* Step Badge */}
-              <div className="inline-flex items-center px-3 py-1 rounded-full bg-gradient-to-r from-[#FF4E72] to-[#FF3366] text-white text-[10px] sm:text-xs font-black uppercase tracking-wider shadow-sm font-heading mb-1.5">
+              <div className="inline-flex items-center px-3 py-1 rounded-full bg-gradient-to-r from-[#FF4E72] to-[#FF3366] text-white text-[10px] sm:text-xs font-black uppercase tracking-wider shadow-sm font-heading mb-2">
                 QUESTION {currentStep} / {totalSteps}
               </div>
 
-              {/* Question Category / Short Title */}
-              <h2 className="text-base sm:text-lg md:text-xl font-black text-[#002B7F] font-heading leading-tight mb-1 drop-shadow-xs">
-                {question.categoryTh || 'ค้นหาตัวตนของคุณ'}
+              {/* Main Question Prompt (Promoted to Big Bold Primary Title) */}
+              <h2 className="text-base sm:text-xl md:text-[22px] font-black text-[#002B7F] font-heading leading-snug drop-shadow-xs">
+                {question.prompt}
               </h2>
 
-              {/* Full Prompt */}
-              <p className="text-xs sm:text-sm md:text-base font-semibold text-slate-700 leading-snug">
-                {question.prompt}
-              </p>
-
               {/* Instruction Callout */}
-              <p className="text-[11px] sm:text-xs font-bold text-[#FF3366] mt-1.5 flex items-center gap-1">
+              <p className="text-xs sm:text-sm font-bold text-[#FF3366] mt-2 flex items-center gap-1.5">
                 <span>💖</span> เลือกคำตอบที่เป็น “คุณ” ที่สุด 1 ข้อ
               </p>
             </div>
