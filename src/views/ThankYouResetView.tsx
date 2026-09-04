@@ -79,14 +79,14 @@ export const ThankYouResetView: React.FC<ThankYouResetViewProps> = ({
   const [timeLeft, setTimeLeft] = useState<number>(60);
   const [copiedTags, setCopiedTags] = useState<boolean>(false);
   const [shared, setShared] = useState<boolean>(false);
-  const timerRef = useRef<NodeJS.Timeout | null>(null);
+  const timerRef = useRef<ReturnType<typeof setInterval> | null>(null);
 
   // ── Interactive Mascot State ───────────────────────────────────────────────
   const [quoteIndex, setQuoteIndex] = useState<number | null>(null);
   const [showSpeechBubble, setShowSpeechBubble] = useState<boolean>(false);
   const [isBouncing, setIsBouncing] = useState<boolean>(false);
   const [tapHearts, setTapHearts] = useState<Array<{ id: number; x: number; y: number; scale: number }>>([]);
-  const bubbleTimeoutRef = useRef<NodeJS.Timeout | null>(null);
+  const bubbleTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
 
   // ── Confetti effect on mount ───────────────────────────────────────────────
   useEffect(() => {
@@ -141,6 +141,49 @@ export const ThankYouResetView: React.FC<ThankYouResetViewProps> = ({
   const handleUserActivity = useCallback(() => {
     setTimeLeft(60);
   }, []);
+
+  useEffect(() => {
+    return () => {
+      if (bubbleTimeoutRef.current) clearTimeout(bubbleTimeoutRef.current);
+    };
+  }, []);
+
+  const handleMascotTap = (e: React.MouseEvent<HTMLButtonElement>) => {
+    e.stopPropagation();
+    handleUserActivity();
+
+    const rect = e.currentTarget.getBoundingClientRect();
+    const x = ((e.clientX - rect.left) / rect.width) * 100;
+    const y = ((e.clientY - rect.top) / rect.height) * 100;
+    const heartId = Date.now();
+
+    setQuoteIndex(prev => {
+      if (ENCOURAGING_QUOTES.length <= 1) return 0;
+      const next = Math.floor(Math.random() * ENCOURAGING_QUOTES.length);
+      return next === prev ? (next + 1) % ENCOURAGING_QUOTES.length : next;
+    });
+    setShowSpeechBubble(true);
+    setIsBouncing(true);
+    setTapHearts(prev => [
+      ...prev.slice(-5),
+      {
+        id: heartId,
+        x: Math.max(14, Math.min(86, x)),
+        y: Math.max(18, Math.min(80, y)),
+        scale: 0.85 + Math.random() * 0.45,
+      },
+    ]);
+
+    window.setTimeout(() => setIsBouncing(false), 520);
+    window.setTimeout(() => {
+      setTapHearts(prev => prev.filter(heart => heart.id !== heartId));
+    }, 1150);
+
+    if (bubbleTimeoutRef.current) clearTimeout(bubbleTimeoutRef.current);
+    bubbleTimeoutRef.current = setTimeout(() => {
+      setShowSpeechBubble(false);
+    }, 3000);
+  };
 
   // ── Copy hashtags ──────────────────────────────────────────────────────────
   const handleCopyHashtags = async (e: React.MouseEvent) => {
@@ -341,12 +384,42 @@ export const ThankYouResetView: React.FC<ThankYouResetViewProps> = ({
             {/* Background Halo */}
             <div className="absolute inset-0 bg-gradient-to-tr from-sky-300/40 via-blue-200/30 to-amber-200/40 rounded-full blur-2xl -z-10" />
 
-            <div className="relative w-44 sm:w-56 md:w-60 max-w-full aspect-square flex items-center justify-center">
+            <button
+              type="button"
+              onClick={handleMascotTap}
+              className="relative w-44 sm:w-56 md:w-60 max-w-full aspect-square flex items-center justify-center rounded-full focus:outline-none focus-visible:ring-4 focus-visible:ring-sky-300/80 active:scale-95 transition-transform"
+              aria-label="แตะเพื่อส่งกำลังใจ"
+            >
+              {showSpeechBubble && quoteIndex !== null && (
+                <div className="absolute -top-3 left-1/2 -translate-x-1/2 z-20 w-48 sm:w-56 rounded-2xl bg-white/95 border border-rose-100 px-3 py-2 text-center text-xs sm:text-sm font-bold text-mahidol-blue shadow-lg animate-scale-up">
+                  {ENCOURAGING_QUOTES[quoteIndex]}
+                  <div className="absolute left-1/2 top-full h-3 w-3 -translate-x-1/2 -translate-y-1/2 rotate-45 bg-white border-b border-r border-rose-100" />
+                </div>
+              )}
+
+              {tapHearts.map(heart => (
+                <Heart
+                  key={heart.id}
+                  className="absolute z-30 h-5 w-5 fill-rose-400 text-rose-500 animate-float-heart pointer-events-none"
+                  style={{
+                    left: `${heart.x}%`,
+                    top: `${heart.y}%`,
+                    transform: `scale(${heart.scale})`,
+                  }}
+                />
+              ))}
+
               <img
                 src={characterSrc}
                 alt="Future Nurse Character"
-                className="w-full h-full object-contain filter drop-shadow-xl animate-float-subtle"
+                className={`w-full h-full object-contain filter drop-shadow-xl ${
+                  isBouncing ? 'animate-mascot-bounce' : 'animate-float-subtle'
+                }`}
               />
+            </button>
+
+            <div className="mt-1 text-[10px] sm:text-xs font-semibold text-sky-700 bg-white/70 border border-sky-100 rounded-full px-3 py-1 shadow-sm">
+              แตะตัวละครเพื่อรับกำลังใจ
             </div>
           </div>
 

@@ -3,7 +3,6 @@ import confetti from 'canvas-confetti';
 import {
   Download,
   Share2,
-  RotateCcw,
   Link as LinkIcon,
   Copy,
   Check,
@@ -44,14 +43,12 @@ interface SaveShareViewProps {
   /** Card data URL generated in CardPreviewView — passed down from App state */
   cardDataUrl: string;
   onNext: () => void;
-  onReset?: () => void;
 }
 
 export const SaveShareView: React.FC<SaveShareViewProps> = ({
   result,
   cardDataUrl,
   onNext,
-  onReset,
 }) => {
   const [qrDataUrl, setQrDataUrl] = useState<string>('');
   const [copiedLink, setCopiedLink] = useState<boolean>(false);
@@ -541,15 +538,15 @@ export const SaveShareView: React.FC<SaveShareViewProps> = ({
           </div>
         </button>
 
-        {/* 3. เริ่มใหม่อีกครั้ง / Finish */}
+        {/* 3. Finish */}
         <button
-          onClick={onReset || onNext}
+          onClick={onNext}
           className="flex flex-col sm:flex-row items-center justify-center gap-1 sm:gap-2 py-2.5 px-3 rounded-2xl bg-white hover:bg-slate-50 active:scale-[0.98] text-slate-800 font-bold text-xs sm:text-sm border border-slate-200 shadow-sm hover:shadow transition-all"
         >
-          <RotateCcw className="w-4 h-4 text-amber-500" />
+          <Check className="w-4 h-4 text-emerald-500" />
           <div className="text-center sm:text-left">
-            <div>เริ่มใหม่อีกครั้ง</div>
-            <div className="text-[9px] text-slate-400 font-normal hidden sm:block">Try Again</div>
+            <div>เสร็จสิ้น</div>
+            <div className="text-[9px] text-slate-400 font-normal hidden sm:block">Finish</div>
           </div>
         </button>
       </div>

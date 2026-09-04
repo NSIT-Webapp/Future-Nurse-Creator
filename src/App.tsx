@@ -242,7 +242,6 @@ export function App() {
             result={result}
             cardDataUrl={cardDataUrl}
             onNext={handleSaveShareNext}
-            onReset={handleReset}
           />
         )}
         {screen === 'thank_you_reset' && (
