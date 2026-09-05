@@ -103,6 +103,18 @@ export const ASSETS = {
     TECH: { female: '/characters/TECH_female.png', male: '/characters/TECH_male.png' },
   },
 
+  // ── Scene Backgrounds (per Nursing Path) ──────────────────────────────────
+  scenes: {
+    PED:  '/assets/scenes/PED.jpg',
+    MH:   '/assets/scenes/MH.jpg',
+    ER:   '/assets/scenes/ER.jpg',
+    OA:   '/assets/scenes/OA.jpg',
+    MAT:  '/assets/scenes/MAT.jpg',
+    COMM: '/assets/scenes/COMM.jpg',
+    INT:  '/assets/scenes/INT.jpg',
+    TECH: '/assets/scenes/TECH.jpg',
+  },
+
   // ── Official Future Nurse Card Templates (9:16 aspect ratio 576×1024) ──────
   cards: {
     backgroundOverlay: PLACEHOLDER('cards/background-overlay'),
@@ -283,6 +295,14 @@ export function getRevealStickers(pathId: string): RevealStickerConfig[] {
 // ── Convenience lookups ───────────────────────────────────────────────────────
 
 // ── Convenience lookups ───────────────────────────────────────────────────────
+
+/**
+ * Returns the card scene background URL for a given Nursing Path.
+ */
+export function getCardSceneUrl(pathId: string): string {
+  const entry = (ASSETS.scenes as Record<string, string>)[pathId];
+  return entry || '';
+}
 
 /**
  * Returns the card character asset URL for a given Nursing Path and gender.

@@ -1,5 +1,5 @@
 import { ResultPayload, StrengthFamily } from '../types';
-import { getCardCharacterUrl, getCardTemplateUrl } from '../assets/registry';
+import { getCardCharacterUrl, getCardTemplateUrl, getCardSceneUrl, isPlaceholder } from '../assets/registry';
 
 const FAMILY_EMOJI: Record<StrengthFamily, string> = {
   HUMAN_CONNECTION:     '❤️',
@@ -258,13 +258,368 @@ async function renderTemplateCard(
   }
 }
 
+const PATH_MOTTO: Record<string, string> = {
+  OA: 'Aging with Care, Living with Dignity 💕',
+  PED: 'Every Smile, Every Step, Growing with Love 💕',
+  MH: 'Gentle Minds, Peaceful Hearts, Healing Together 💕',
+  ER: 'Every Second Counts, Saving Lives with Courage 💕',
+  MAT: 'Nurturing New Beginnings with Gentle Hands 💕',
+  COMM: 'Healthier Communities, Happier Lives Together 💕',
+  INT: 'Bridging Worlds with Compassionate Care 💕',
+  TECH: 'Innovating Care, Transforming Tomorrow 💕',
+};
+
+const PATH_MOOD_TONE_DATA: Record<string, { emojis: string; th: string; en: string }> = {
+  OA:   { emojis: '💚 • 🌿 • 💛 • 🤲', th: 'อบอุ่น • ใจเย็น • ใส่ใจ • ให้เกียรติ', en: 'Warm • Gentle • Respect' },
+  PED:  { emojis: '🎈 • 🧸 • 💖 • ⭐', th: 'สดใส • อ่อนโยน • เข้าใจเด็ก • อบอุ่น', en: 'Playful • Gentle • Caring' },
+  MH:   { emojis: '🧠 • 💜 • 🕊️ • 🌸', th: 'สงบ • รับฟัง • เข้าใจใจ • นุ่มนวล', en: 'Calm • Empathetic • Mindful' },
+  ER:   { emojis: '⚡ • 🚑 • ❤️ • 🔥', th: 'รวดเร็ว • มีสติ • มุ่งมั่น • เฉียบขาด', en: 'Fast • Focused • Resilient' },
+  MAT:  { emojis: '🤱 • 👶 • 💖 • 🌷', th: 'อ่อนโยน • อบอุ่น • ใส่ใจ • มั่นใจ', en: 'Tender • Protective • Warm' },
+  COMM: { emojis: '🏡 • 🤝 • 💙 • 🌿', th: 'เข้าถึงง่าย • ผูกพัน • จริงใจ • ร่วมมือ', en: 'Connected • Holistic • Friendly' },
+  INT:  { emojis: '🌏 • ✈️ • 💬 • 🌟', th: 'เปิดกว้าง • คล่องแคล่ว • สากล • มั่นใจ', en: 'Global • Agile • Adaptive' },
+  TECH: { emojis: '💻 • 🚀 • 🤖 • 💡', th: 'ล้ำสมัย • สร้างสรรค์ • ช่างคิด • คล่องตัว', en: 'Innovative • Smart • Future-Ready' },
+};
+
+async function renderLayeredCard(
+  ctx: CanvasRenderingContext2D,
+  result: ResultPayload,
+  sceneUrl: string,
+  characterUrl: string
+): Promise<boolean> {
+  const targetWidth = 1364;
+  const targetHeight = 2048;
+
+  ctx.canvas.width = targetWidth;
+  ctx.canvas.height = targetHeight;
+  ctx.imageSmoothingEnabled = true;
+  ctx.imageSmoothingQuality = 'high';
+
+  // Load both images
+  const [bgImg, charImg] = await Promise.all([
+    new Promise<HTMLImageElement>((resolve, reject) => {
+      const img = new Image();
+      img.crossOrigin = 'anonymous';
+      img.onload = () => resolve(img);
+      img.onerror = reject;
+      img.src = sceneUrl;
+    }),
+    new Promise<HTMLImageElement>((resolve, reject) => {
+      const img = new Image();
+      img.crossOrigin = 'anonymous';
+      img.onload = () => resolve(img);
+      img.onerror = reject;
+      img.src = characterUrl;
+    }),
+  ]);
+
+  // 1. Draw Scene Background
+  ctx.drawImage(bgImg, 0, 0, targetWidth, targetHeight);
+
+  // 2. Draw Soft Lighting Wash on top-left to ensure text readability
+  const leftWash = ctx.createLinearGradient(0, 0, 800, 0);
+  leftWash.addColorStop(0, 'rgba(255, 255, 255, 0.45)');
+  leftWash.addColorStop(0.65, 'rgba(255, 255, 255, 0.20)');
+  leftWash.addColorStop(1, 'rgba(255, 255, 255, 0)');
+  ctx.fillStyle = leftWash;
+  ctx.fillRect(0, 0, 800, targetHeight);
+
+  // Top header gradient wash
+  const topWash = ctx.createLinearGradient(0, 0, 0, 420);
+  topWash.addColorStop(0, 'rgba(255, 255, 255, 0.70)');
+  topWash.addColorStop(0.7, 'rgba(255, 255, 255, 0.35)');
+  topWash.addColorStop(1, 'rgba(255, 255, 255, 0)');
+  ctx.fillStyle = topWash;
+  ctx.fillRect(0, 0, targetWidth, 420);
+
+  // 3. Draw Character Cutout
+  ctx.drawImage(charImg, 0, 0, targetWidth, targetHeight);
+
+  const theme = PATH_THEME[result.pathId] || {
+    primary: result.path.color || '#065F46',
+    lightBg: '#F0FDF4',
+    border: '#34D399',
+    descColor: '#334155',
+  };
+
+  // 4. Header: Path Title, Thai name, Tagline
+  ctx.save();
+  // Path Emblem Icon Circle
+  ctx.fillStyle = '#FFFFFF';
+  ctx.shadowColor = 'rgba(0, 43, 127, 0.12)';
+  ctx.shadowBlur = 16;
+  ctx.shadowOffsetY = 6;
+  ctx.beginPath();
+  ctx.arc(110, 120, 52, 0, Math.PI * 2);
+  ctx.fill();
+
+  ctx.shadowColor = 'transparent';
+  ctx.strokeStyle = theme.border;
+  ctx.lineWidth = 3.5;
+  ctx.stroke();
+
+  // Emblem Emoji / Icon inside
+  ctx.font = `50px ${CARD_FONT}`;
+  ctx.textAlign = 'center';
+  ctx.textBaseline = 'middle';
+  ctx.fillText(result.path.emoji, 110, 122);
+
+  // English Path Name
+  ctx.textAlign = 'left';
+  ctx.textBaseline = 'alphabetic';
+  ctx.fillStyle = theme.primary;
+  ctx.font = `bold 54px ${CARD_FONT}`;
+  ctx.fillText(result.path.nameEn, 185, 115);
+
+  // Thai Path Name
+  ctx.fillStyle = '#1E293B';
+  ctx.font = `700 38px ${CARD_FONT}`;
+  ctx.fillText(result.path.nameTh, 185, 165);
+
+  // Header Tagline Quote (under titles)
+  ctx.fillStyle = '#475569';
+  ctx.font = `600 25px ${CARD_FONT}`;
+  const taglines = wrapThaiText(ctx, result.path.tagline, 760);
+  taglines.slice(0, 2).forEach((tl, i) => {
+    ctx.fillText(tl, 65, 230 + i * 36);
+  });
+  ctx.restore();
+
+  // 5. Top Right Badge: NSMU OPEN HOUSE 2026
+  ctx.save();
+  const badgeW = 270;
+  const badgeH = 175;
+  const badgeX = targetWidth - badgeW - 55;
+  const badgeY = 50;
+
+  // Badge Container
+  ctx.shadowColor = 'rgba(0, 0, 0, 0.08)';
+  ctx.shadowBlur = 18;
+  ctx.shadowOffsetY = 8;
+  ctx.fillStyle = 'rgba(255, 255, 255, 0.95)';
+  roundRect(ctx, badgeX, badgeY, badgeW, badgeH, 26);
+  ctx.fill();
+
+  ctx.shadowColor = 'transparent';
+  ctx.strokeStyle = theme.border;
+  ctx.lineWidth = 3;
+  ctx.stroke();
+
+  // Inner stitched dashes
+  ctx.strokeStyle = '#CBD5E1';
+  ctx.lineWidth = 1.5;
+  ctx.setLineDash([6, 4]);
+  roundRect(ctx, badgeX + 8, badgeY + 8, badgeW - 16, badgeH - 16, 20);
+  ctx.stroke();
+  ctx.setLineDash([]); // reset dash
+
+  // Badge Content
+  ctx.textAlign = 'center';
+  ctx.textBaseline = 'middle';
+  
+  // Top green mini heart
+  ctx.font = `24px ${CARD_FONT}`;
+  ctx.fillText('💚', badgeX + badgeW / 2, badgeY + 32);
+
+  // NSMU
+  ctx.fillStyle = '#065F46';
+  ctx.font = `900 44px ${CARD_FONT}`;
+  ctx.fillText('NSMU', badgeX + badgeW / 2, badgeY + 72);
+
+  // OPEN HOUSE
+  ctx.fillStyle = '#0284C7';
+  ctx.font = `800 22px ${CARD_FONT}`;
+  ctx.fillText('OPEN HOUSE', badgeX + badgeW / 2, badgeY + 112);
+
+  // ✦ 2026 ✦
+  ctx.fillStyle = '#D97706';
+  ctx.font = `800 22px ${CARD_FONT}`;
+  ctx.fillText('✦ 2026 ✦', badgeX + badgeW / 2, badgeY + 145);
+  ctx.restore();
+
+  // 6. Left 4 Frosted Glass Content Boxes
+  const boxX = 55;
+  const boxW = 560;
+  const startY = 300;
+  const boxGap = 20;
+  const boxH = 205;
+
+  const boxesData = [
+    {
+      category: 'Your Superpower',
+      icon: '💖',
+      title: result.superpower,
+      desc: getSuperpowerDesc(result),
+      iconBg: '#FFF1F2',
+      iconBorder: '#FDA4AF',
+    },
+    {
+      category: 'Your AI Skill',
+      icon: '💻',
+      title: result.aiSkill,
+      desc: getAiSkillDesc(result),
+      iconBg: '#EFF6FF',
+      iconBorder: '#93C5FD',
+    },
+    {
+      category: 'Mood & Tone',
+      icon: '☁️',
+      title: (PATH_MOOD_TONE_DATA[result.pathId]?.th) || 'อบอุ่น • ใจเย็น • ใส่ใจ',
+      subtitle: (PATH_MOOD_TONE_DATA[result.pathId]?.en) || 'Warm • Gentle • Respect',
+      emojis: (PATH_MOOD_TONE_DATA[result.pathId]?.emojis) || '💚 • 🌿 • 💛 • 🤲',
+      iconBg: '#FEF3C7',
+      iconBorder: '#FCD34D',
+      isMoodTone: true,
+    },
+    {
+      category: 'Your Impact',
+      icon: '🤲',
+      title: '',
+      desc: result.profileImpact,
+      iconBg: '#F0FDF4',
+      iconBorder: '#86EFAC',
+    },
+  ];
+
+  boxesData.forEach((box, idx) => {
+    const curY = startY + idx * (boxH + boxGap);
+    
+    ctx.save();
+    // Glass Box Background
+    ctx.shadowColor = 'rgba(0, 43, 127, 0.08)';
+    ctx.shadowBlur = 16;
+    ctx.shadowOffsetY = 6;
+    ctx.fillStyle = 'rgba(255, 255, 255, 0.90)';
+    roundRect(ctx, boxX, curY, boxW, boxH, 26);
+    ctx.fill();
+
+    ctx.shadowColor = 'transparent';
+    ctx.strokeStyle = 'rgba(255, 255, 255, 0.95)';
+    ctx.lineWidth = 2;
+    ctx.stroke();
+
+    // Left Circle Icon
+    const iconCenterX = boxX + 60;
+    const iconCenterY = curY + boxH / 2;
+    ctx.fillStyle = box.iconBg;
+    ctx.beginPath();
+    ctx.arc(iconCenterX, iconCenterY, 36, 0, Math.PI * 2);
+    ctx.fill();
+
+    ctx.strokeStyle = box.iconBorder;
+    ctx.lineWidth = 2.5;
+    ctx.stroke();
+
+    ctx.font = `34px ${CARD_FONT}`;
+    ctx.textAlign = 'center';
+    ctx.textBaseline = 'middle';
+    ctx.fillText(box.icon, iconCenterX, iconCenterY + 2);
+
+    // Right Content Area
+    const textLeft = boxX + 115;
+    const textMaxW = boxW - 135;
+
+    ctx.textAlign = 'left';
+    ctx.textBaseline = 'alphabetic';
+
+    // Category Label
+    ctx.fillStyle = '#64748B';
+    ctx.font = `700 24px ${CARD_FONT}`;
+    ctx.fillText(box.category, textLeft, curY + 44);
+
+    if (box.isMoodTone) {
+      // Emojis row
+      ctx.font = `22px ${CARD_FONT}`;
+      ctx.fillText(box.emojis || '', textLeft, curY + 85);
+
+      // Thai mood words
+      ctx.fillStyle = '#1E293B';
+      ctx.font = `bold 28px ${CARD_FONT}`;
+      ctx.fillText(box.title, textLeft, curY + 128);
+
+      // English mood words
+      ctx.fillStyle = '#64748B';
+      ctx.font = `600 22px ${CARD_FONT}`;
+      ctx.fillText(box.subtitle || '', textLeft, curY + 168);
+    } else if (box.category === 'Your Impact') {
+      // Impact description lines
+      ctx.fillStyle = '#334155';
+      ctx.font = `600 25px ${CARD_FONT}`;
+      const impLines = wrapThaiText(ctx, box.desc || '', textMaxW);
+      impLines.slice(0, 3).forEach((line, lineIdx) => {
+        ctx.fillText(line, textLeft, curY + 90 + lineIdx * 38);
+      });
+    } else {
+      // Title
+      ctx.fillStyle = '#0F172A';
+      ctx.font = `bold 34px ${CARD_FONT}`;
+      ctx.fillText(box.title, textLeft, curY + 86);
+
+      // Description
+      ctx.fillStyle = '#334155';
+      ctx.font = `600 24px ${CARD_FONT}`;
+      const descLines = wrapThaiText(ctx, box.desc || '', textMaxW);
+      descLines.slice(0, 2).forEach((line, lineIdx) => {
+        ctx.fillText(line, textLeft, curY + 128 + lineIdx * 36);
+      });
+    }
+
+    ctx.restore();
+  });
+
+  // 7. Handwriting Motto Signature (Below Box 4)
+  const motto = PATH_MOTTO[result.pathId] || 'Aging with Care, Living with Dignity 💕';
+  ctx.save();
+  ctx.font = `italic bold 36px ${CARD_FONT}`;
+  ctx.fillStyle = theme.primary;
+  ctx.fillText(motto, 75, 1260);
+  ctx.restore();
+
+  // 8. Bottom Branding Pill Bar
+  ctx.save();
+  const barX = 55;
+  const barY = targetHeight - 110;
+  const barW = targetWidth - 110;
+  const barH = 75;
+
+  ctx.shadowColor = 'rgba(0, 43, 127, 0.10)';
+  ctx.shadowBlur = 18;
+  ctx.shadowOffsetY = 6;
+  ctx.fillStyle = 'rgba(255, 255, 255, 0.94)';
+  roundRect(ctx, barX, barY, barW, barH, 38);
+  ctx.fill();
+
+  ctx.shadowColor = 'transparent';
+  ctx.strokeStyle = 'rgba(255, 255, 255, 0.95)';
+  ctx.lineWidth = 2;
+  ctx.stroke();
+
+  // Mahidol building / shield icon
+  ctx.font = `34px ${CARD_FONT}`;
+  ctx.textAlign = 'center';
+  ctx.textBaseline = 'middle';
+  ctx.fillText('🏛️', barX + 50, barY + barH / 2);
+
+  // University Branding Text
+  ctx.textAlign = 'left';
+  ctx.fillStyle = '#002B7F';
+  ctx.font = `800 24px ${CARD_FONT}`;
+  ctx.fillText('A FUTURE NURSE MEMORY FROM', barX + 95, barY + barH / 2 - 2);
+
+  ctx.fillStyle = '#059669';
+  ctx.font = `900 26px ${CARD_FONT}`;
+  ctx.fillText('FACULTY OF NURSING, MAHIDOL UNIVERSITY 💚', barX + 510, barY + barH / 2 - 2);
+  ctx.restore();
+
+  return true;
+}
+
 export async function renderFutureNurseCard(
   result: ResultPayload,
   customCanvas?: HTMLCanvasElement
 ): Promise<string> {
   const canvas = customCanvas || document.createElement('canvas');
-  const width = 1080;
-  const height = 1920;
+  const width = 1364;
+  const height = 2048;
   canvas.width = width;
   canvas.height = height;
 
@@ -275,13 +630,29 @@ export async function renderFutureNurseCard(
   ctx.imageSmoothingEnabled = true;
   ctx.imageSmoothingQuality = 'high';
 
-  // 1. Check if official high-res Card Template exists
   const genderKey = result.characterType === 'female_student' ? 'female' : 'male';
+
+  // 1. Check if modular layered Scene + Character exists (Highest quality studio render)
+  const sceneUrl = getCardSceneUrl(result.pathId);
+  const characterUrl = getCardCharacterUrl(result.pathId, genderKey);
+
+  if (sceneUrl && characterUrl && !isPlaceholder(sceneUrl) && !isPlaceholder(characterUrl)) {
+    try {
+      const rendered = await renderLayeredCard(ctx, result, sceneUrl, characterUrl);
+      if (rendered) {
+        return canvas.toDataURL('image/png', 0.95);
+      }
+    } catch (err) {
+      console.warn('[cardRenderer] Layered render failed, trying template fallback:', err);
+    }
+  }
+
+  // 2. Check if official high-res Card Template exists
   const templateUrl = getCardTemplateUrl(result.pathId, genderKey);
 
   if (templateUrl) {
     try {
-      await renderTemplateCard(ctx, result, templateUrl, width, height);
+      await renderTemplateCard(ctx, result, templateUrl, 1080, 1920);
       return canvas.toDataURL('image/png', 0.95);
     } catch (err) {
       console.warn('[cardRenderer] Template render failed, falling back to procedural:', err);
