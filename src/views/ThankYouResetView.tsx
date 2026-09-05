@@ -289,15 +289,17 @@ export const ThankYouResetView: React.FC<ThankYouResetViewProps> = ({
             className="relative z-10 w-full h-full cursor-pointer select-none flex items-end justify-center transition-transform active:scale-[0.99]"
             title="แตะที่ตัวพี่พยาบาลเพื่อรับกำลังใจ"
           >
-            {/* Mascot Image — perfectly grounded flush to bottom border */}
-            <img
-              src={ASSETS.finish.duoNurses}
-              alt="Faculty of Nursing Mahidol Duo Mascot"
-              className={`h-full max-h-full w-auto max-w-[90%] sm:max-w-[82%] object-contain object-bottom filter drop-shadow-2xl translate-y-[2px] ${
-                isBouncing ? 'animate-mascot-bounce' : 'animate-float-subtle'
-              }`}
-              draggable={false}
-            />
+            {/* Mascot Image — perfectly grounded with bottom cut-off clipped cleanly by card frame */}
+            <div className="w-full h-full flex items-end justify-center overflow-hidden">
+              <img
+                src={ASSETS.finish.duoNurses}
+                alt="Faculty of Nursing Mahidol Duo Mascot"
+                className={`h-[114%] max-h-[114%] w-auto max-w-[96%] sm:max-w-[88%] object-contain object-bottom filter drop-shadow-2xl translate-y-[7%] ${
+                  isBouncing ? 'animate-mascot-bounce' : 'animate-float-subtle'
+                }`}
+                draggable={false}
+              />
+            </div>
 
             {/* Speech Bubble Above Nurses */}
             {showSpeechBubble && quoteIndex !== null && (
