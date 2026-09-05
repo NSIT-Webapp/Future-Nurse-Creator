@@ -36,6 +36,8 @@ export default defineConfig({
         ]
       },
       workbox: {
+        // Supplied high-resolution card masters are about 3.5 MB each.
+        maximumFileSizeToCacheInBytes: 4 * 1024 * 1024,
         globPatterns: ['**/*.{js,css,html,ico,png,svg,json}'],
         globIgnores: ['assets/reveal/full/**/*']
       }

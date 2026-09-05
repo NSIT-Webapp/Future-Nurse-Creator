@@ -1,0 +1,56 @@
+<!doctype html>
+<html lang="th">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>ตรวจการ์ด · Future Nurse</title>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/lazywasabi/thai-web-fonts@7/fonts/LINE%20Seed%20Sans%20TH/LINE%20Seed%20Sans%20TH.css">
+  <style>
+    *{box-sizing:border-box}body{margin:0;background:#e9edf2;color:#182e48;font-family:'LINE Seed Sans TH',sans-serif}header{background:#fff;padding:20px 24px;border-bottom:1px solid #ced7e0}h1{font-size:22px;margin:0 0 6px}p{margin:0;font-size:14px}form{display:flex;flex-wrap:wrap;gap:14px;align-items:end;margin-top:18px}label{display:grid;gap:5px;font-size:13px;font-weight:700}select,button,a{font:inherit}select{min-height:44px;padding:8px 30px 8px 12px;background:#fff;color:inherit;border:1px solid #a9b9c8;border-radius:8px}button,a{min-height:44px;padding:10px 16px;border-radius:8px;border:1px solid #b4c2ce;background:white;color:inherit;cursor:pointer}a{background:#183d69;color:white;text-decoration:none}a[aria-disabled=true]{pointer-events:none;opacity:.4}:focus-visible{outline:3px solid #e33970;outline-offset:3px}.note{padding:12px 24px;display:flex;flex-wrap:wrap;justify-content:space-between;gap:8px}main{padding:0 16px 32px;text-align:center}img{display:block;width:100%;max-width:860px;height:auto;margin:0 auto;box-shadow:0 12px 36px #182e481a}img.fit{width:auto;max-width:100%;max-height:calc(100dvh - 235px)}[hidden]{display:none!important}@media(max-width:600px){header{padding:16px}form{gap:10px}label{flex:1 1 140px}select{width:100%}.note{padding:12px 16px}img.fit{max-height:none;width:100%}}
+  </style>
+</head>
+<body>
+<header>
+  <h1>ตรวจการ์ด Future Nurse</h1>
+  <p>ภาพฐาน 15 แบบ · เลือกเส้นทาง ตัวละคร และกลุ่มผลลัพธ์เพื่อดูข้อความที่ใช้จริง</p>
+  <form onsubmit="return false">
+    <label>เส้นทาง<select id="path"></select></label>
+    <label>ตัวละคร<select id="look"><option value="female_student">ผู้หญิง</option><option value="male_student">ผู้ชาย</option></select></label>
+    <label>กลุ่มผลลัพธ์<select id="family"><option value="HUMAN_CONNECTION">การเชื่อมโยงผู้คน</option><option value="CLINICAL_AWARENESS">การสังเกตและตัดสินใจ</option><option value="FUTURE_COLLABORATION">การสร้างสรรค์และร่วมมือ</option></select></label>
+    <button id="size" type="button">ดูเต็มใบ</button>
+    <button id="base" type="button">ดูภาพฐาน</button>
+    <a id="download" aria-disabled="true">ดาวน์โหลด PNG</a>
+  </form>
+</header>
+<div class="note"><p id="status" role="status">กำลังสร้างการ์ด…</p><p id="detail"></p></div>
+<main><img id="card" alt="ตัวอย่างการ์ด" hidden></main>
+<script type="module">
+import {renderFutureNurseCard} from '/src/engine/cardRenderer.ts';
+import {CARD_MASTERS,getCardMaster} from '/src/engine/masterCardRenderer.ts';
+import {calculateResult} from '/src/engine/scoringEngine.ts';
+import paths from '/src/data/paths.json';
+import profiles from '/src/data/profiles.json';
+const path=document.querySelector('#path'),look=document.querySelector('#look'),family=document.querySelector('#family'),card=document.querySelector('#card'),status=document.querySelector('#status'),detail=document.querySelector('#detail'),download=document.querySelector('#download'),baseButton=document.querySelector('#base');
+for(const id of ['OA','PED','MH','ER','MAT','COMM','INT','TECH'])path.add(new Option(paths.paths[id].nameTh,id));
+const seed=calculateResult({q1:'A',q2:'A',q3:'A',q4:'A',q5:'A'},'female_student');
+let revision=0,currentUrl='',masterUrl='',showBase=false;
+async function render(){
+ const request=++revision;showBase=false;baseButton.textContent='ดูภาพฐาน';
+ if(path.value==='MAT'){look.value='female_student';look.disabled=true}else look.disabled=false;
+ const profile=profiles[path.value][family.value];
+ const result={...seed,pathId:path.value,path:paths.paths[path.value],characterType:look.value,strengthFamily:family.value,superpower:profile.superpower,aiSkill:profile.aiSkill,profileImpact:profile.impact};
+ status.textContent='กำลังสร้างการ์ด…';card.hidden=true;download.setAttribute('aria-disabled','true');download.removeAttribute('href');
+ detail.textContent=path.value==='MAT'?'Maternal มีเฉพาะภาพผู้หญิง':`${profile.superpower} · ${profile.aiSkill}`;
+ try{
+ const url=await renderFutureNurseCard(result);if(request!==revision)return;
+ currentUrl=url;masterUrl=getCardMaster(result).url;card.src=url;card.alt=`${result.path.nameEn} — ${look.selectedOptions[0].text} — ${profile.superpower}`;card.hidden=false;
+ download.href=url;download.download=`Future-Nurse-${path.value}-${look.value}-${family.value}.png`;download.setAttribute('aria-disabled','false');status.textContent='แสดงข้อความตามผลลัพธ์ · เลื่อนลงเพื่อดูรายละเอียดครบทั้งใบ';
+ }catch(e){if(request===revision)status.textContent='สร้างการ์ดไม่สำเร็จ: '+e.message;}
+}
+for(const select of [path,look,family])select.addEventListener('change',render);
+document.querySelector('#size').onclick=e=>{card.classList.toggle('fit');e.target.textContent=card.classList.contains('fit')?'ขยายอ่านข้อความ':'ดูเต็มใบ'};
+baseButton.onclick=()=>{if(!currentUrl)return;showBase=!showBase;card.src=showBase?masterUrl:currentUrl;baseButton.textContent=showBase?'ดูข้อความรายคน':'ดูภาพฐาน';status.textContent=showBase?'ภาพฐานต้นฉบับ — ยังไม่มีข้อความรายคน':'แสดงข้อความตามผลลัพธ์'};
+render();
+</script>
+</body>
+</html>

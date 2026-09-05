@@ -1,4 +1,5 @@
 import { ResultPayload, StrengthFamily } from '../types';
+import { getCardMaster, renderFinishedMaster } from './masterCardRenderer';
 import { getCardCharacterUrl, getCardTemplateUrl, getCardSceneUrl, isPlaceholder } from '../assets/registry';
 
 const FAMILY_EMOJI: Record<StrengthFamily, string> = {
@@ -586,6 +587,14 @@ export async function renderFutureNurseCard(
 
   const ctx = canvas.getContext('2d');
   if (!ctx) throw new Error('Canvas 2D context not available');
+
+  // Supplied finished artwork takes precedence over scene/character composition.
+  if (getCardMaster(result)) {
+    return renderFinishedMaster(ctx, result, {
+      superpower: getSuperpowerDesc(result),
+      aiSkill: getAiSkillDesc(result),
+    });
+  }
 
   // Enable high quality rendering
   ctx.imageSmoothingEnabled = true;

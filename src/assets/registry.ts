@@ -164,14 +164,14 @@ export const ASSETS = {
   // ── Reveal screen artwork (8 Nursing Paths × 2 Looks = 16 outcomes) ─────────
   reveal: {
     background: '/assets/reveal/background.png',
-    PED:  { female: '/assets/reveal/full/PED_female.png',  male: '/assets/reveal/full/PED_male.png' },
-    MH:   { female: '/assets/reveal/full/MH_female.png',   male: '/assets/reveal/full/MH_male.png' },
-    ER:   { female: '/assets/reveal/full/ER_female.png',   male: '/assets/reveal/full/ER_male.png' },
-    OA:   { female: '/assets/reveal/full/OA_female.png',   male: '/assets/reveal/full/OA_male.png' },
-    MAT:  { female: '/assets/reveal/full/MAT_female.png',  male: '/assets/reveal/full/COMM_male.png' },
-    COMM: { female: '/assets/reveal/full/COMM_female.png', male: '/assets/reveal/full/COMM_male.png' },
-    INT:  { female: '/assets/reveal/full/INT_female.png',  male: '/assets/reveal/full/INT_male.png' },
-    TECH: { female: '/assets/reveal/full/TECH_female.png', male: '/assets/reveal/full/TECH_male.png' },
+    PED:  { female: '/characters/PED_female.png',  male: '/characters/PED_male.png'  },
+    MH:   { female: '/characters/MH_female.png',   male: '/characters/MH_male.png'   },
+    ER:   { female: '/characters/ER_female.png',   male: '/characters/ER_male.png'   },
+    OA:   { female: '/characters/OA_female.png',   male: '/characters/OA_male.png'   },
+    MAT:  { female: '/characters/MAT_female.png',  male: '/characters/COMM_male.png' },
+    COMM: { female: '/characters/COMM_female.png', male: '/characters/COMM_male.png' },
+    INT:  { female: '/characters/INT_female.png',  male: '/characters/INT_male.png'  },
+    TECH: { female: '/characters/TECH_female.png', male: '/characters/TECH_male.png' },
   },
 
   // ── Icons / decorative ───────────────────────────────────────────────────────
