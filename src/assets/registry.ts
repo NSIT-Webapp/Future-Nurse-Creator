@@ -66,7 +66,8 @@ export const ASSETS = {
   // ── Finish screen assets ────────────────────────────────────────────────────
   finish: {
     hero: '/assets/finish/finish-hero.jpg',
-    duoNurses: '/assets/finish/duo-nurses.jpg',
+    campusBg: '/assets/finish/campus-bg.jpg',
+    duoNurses: '/assets/finish/duo-nurses.png',
   },
 
   // ── Choose Future Look screen ────────────────────────────────────────────────

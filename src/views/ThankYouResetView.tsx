@@ -13,6 +13,7 @@ import {
   Camera,
 } from 'lucide-react';
 import { ResultPayload } from '../types';
+import { ASSETS } from '../assets/registry';
 import { SoundControl } from '../components/SoundControl';
 
 interface ThankYouResetViewProps {
@@ -268,21 +269,33 @@ export const ThankYouResetView: React.FC<ThankYouResetViewProps> = ({
           </p>
         </div>
 
-        {/* ── Hero Visual: Duo Nurses + Interactive Tap + Hashtags ──────────── */}
-        <div className="relative w-full rounded-2xl sm:rounded-3xl overflow-hidden shadow-lg border-2 border-white/80 bg-white/40 backdrop-blur-sm flex items-center justify-center min-h-[160px] xs:min-h-[200px] sm:min-h-[240px] md:min-h-[270px]">
-          {/* Hero Image Container */}
+        {/* ── Hero Visual: Separated Campus BG + Transparent Duo Nurses + Interactive Tap + Hashtags ──── */}
+        <div className="relative w-full rounded-2xl sm:rounded-3xl overflow-hidden shadow-xl border-2 border-white/90 bg-sky-100 flex items-end justify-center min-h-[200px] xs:min-h-[230px] sm:min-h-[260px] md:min-h-[300px] max-h-[350px] aspect-[4/3] xs:aspect-[16/11] sm:aspect-[16/10]">
+          {/* Layer 1: Campus Background Image */}
+          <img
+            src={ASSETS.finish.campusBg}
+            alt="Mahidol Campus Background"
+            className="absolute inset-0 w-full h-full object-cover object-center"
+            draggable={false}
+          />
+
+          {/* Layer 1.5: Soft ambient gradient overlay */}
+          <div className="absolute inset-0 bg-gradient-to-t from-black/15 via-transparent to-sky-400/10 pointer-events-none" />
+
+          {/* Layer 2: Transparent Duo Nurses (Foreground Mascot) */}
           <div
             onClick={handleMascotTap}
             onTouchStart={handleMascotTap}
-            className={`w-full h-full relative cursor-pointer select-none transition-transform active:scale-[0.99] flex items-center justify-center ${
-              isBouncing ? 'animate-mascot-bounce' : ''
-            }`}
+            className="relative z-10 w-full h-full cursor-pointer select-none flex items-end justify-center transition-transform active:scale-[0.99] pb-0"
             title="แตะที่ตัวพี่พยาบาลเพื่อรับกำลังใจ"
           >
+            {/* Mascot Image */}
             <img
-              src="/assets/finish/duo-nurses.jpg"
+              src={ASSETS.finish.duoNurses}
               alt="Faculty of Nursing Mahidol Duo Mascot"
-              className="w-full h-auto max-h-[280px] sm:max-h-[320px] object-cover object-center"
+              className={`h-[93%] sm:h-[96%] w-auto max-w-full object-contain filter drop-shadow-2xl ${
+                isBouncing ? 'animate-mascot-bounce' : 'animate-float-subtle'
+              }`}
               draggable={false}
             />
 
@@ -318,7 +331,7 @@ export const ThankYouResetView: React.FC<ThankYouResetViewProps> = ({
               </div>
             ))}
 
-            {/* Floating Hashtag Card (Bottom-Right overlay) */}
+            {/* Layer 3: Floating Hashtag Card (Bottom-Right overlay) */}
             <div
               onClick={(e) => e.stopPropagation()}
               className="absolute bottom-2 right-2 sm:bottom-3 sm:right-3 z-20 bg-white/90 backdrop-blur-md rounded-xl p-2.5 sm:p-3 shadow-md border border-sky-100 max-w-[160px] xs:max-w-[190px] sm:max-w-[230px] text-left"
