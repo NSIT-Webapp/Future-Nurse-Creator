@@ -425,6 +425,165 @@ export function playStartLaunchSfx(): void {
   } catch (_e) {}
 }
 
+/**
+ * 5. เสียงติ๊กเรดาร์สแกน (Soft Radar Ping / Gentle Crystal Tick)
+ * สไตล์: เสียงติ๊กนุ่มๆ ใสๆ เบาสบายหู ตามจังหวะเรดาร์หมุนผ่านแต่ละการ์ด
+ * โทน: โน้ตในสเกล G Major Pentatonic ระดับเสียงเบามาก (Vol ~0.04) ไม่รบกวนเพลงคลอ
+ */
+export function playRadarTickSfx(stepIndex: number = 0): void {
+  if (isMuted) return;
+  try {
+    const ctx = getSfxContext();
+    if (!ctx) return;
+
+    const scale = [
+      987.77,  // B5
+      1174.66, // D6
+      1318.51, // E6
+      1567.98, // G6
+      1760.00, // A6
+      1975.53, // B6
+      2349.32, // D7
+      2637.02, // E7
+    ];
+    const freq = scale[stepIndex % scale.length] || 1567.98;
+    const now = ctx.currentTime;
+
+    const osc = ctx.createOscillator();
+    const gain = ctx.createGain();
+
+    osc.type = 'sine';
+    osc.frequency.setValueAtTime(freq, now);
+
+    // Ultra-soft and short gentle blip
+    gain.gain.setValueAtTime(0.0001, now);
+    gain.gain.linearRampToValueAtTime(0.045, now + 0.004);
+    gain.gain.exponentialRampToValueAtTime(0.0001, now + 0.07);
+
+    osc.connect(gain);
+    gain.connect(ctx.destination);
+
+    osc.start(now);
+    osc.stop(now + 0.07);
+  } catch (_e) {}
+}
+
+/**
+ * 6. เสียงพลิกการ์ด 3D เผยสายอาชีพ (Card Flip "ฟิ้ว-วิ้ง!" / Unlock Chime)
+ * สไตล์: เสียงหมุนไพ่ฟิ้วเบาๆ + กระดิ่งแก้วเฉลยการ์ด (D6 -> G6 -> B6)
+ * ให้ความรู้สึก: ตื่นเต้นเหมือนเปิดได้การ์ดใบใหม่ในเกมกาชา
+ */
+export function playCardFlipSfx(): void {
+  if (isMuted) return;
+  try {
+    const ctx = getSfxContext();
+    if (!ctx) return;
+
+    const now = ctx.currentTime;
+
+    // A. Soft Upward Card Swish (เสียงลมหมุนไพ่)
+    const sweepOsc = ctx.createOscillator();
+    const sweepGain = ctx.createGain();
+    sweepOsc.type = 'sine';
+    sweepOsc.frequency.setValueAtTime(320, now);
+    sweepOsc.frequency.exponentialRampToValueAtTime(1400, now + 0.12);
+
+    sweepGain.gain.setValueAtTime(0.0001, now);
+    sweepGain.gain.linearRampToValueAtTime(0.08, now + 0.02);
+    sweepGain.gain.exponentialRampToValueAtTime(0.0001, now + 0.14);
+
+    sweepOsc.connect(sweepGain);
+    sweepGain.connect(ctx.destination);
+    sweepOsc.start(now);
+    sweepOsc.stop(now + 0.14);
+
+    // B. Crystal Unlock Chime Triad (D6 -> G6 -> B6)
+    const chimeNotes = [
+      { offset: 0.03, freq: 1174.66, dur: 0.22, vol: 0.12 }, // D6
+      { offset: 0.07, freq: 1567.98, dur: 0.26, vol: 0.15 }, // G6
+      { offset: 0.11, freq: 1975.53, dur: 0.38, vol: 0.18 }, // B6 (Sparkle peak!)
+    ];
+
+    chimeNotes.forEach(({ offset, freq, dur, vol }) => {
+      const noteTime = now + offset;
+      const osc = ctx.createOscillator();
+      const gain = ctx.createGain();
+
+      osc.type = 'sine';
+      osc.frequency.setValueAtTime(freq, noteTime);
+
+      gain.gain.setValueAtTime(0.0001, noteTime);
+      gain.gain.linearRampToValueAtTime(vol, noteTime + 0.004);
+      gain.gain.exponentialRampToValueAtTime(0.0001, noteTime + dur);
+
+      osc.connect(gain);
+      gain.connect(ctx.destination);
+      osc.start(noteTime);
+      osc.stop(noteTime + dur);
+    });
+  } catch (_e) {}
+}
+
+/**
+ * 7. เสียงประมวลผลเสร็จสิ้น 100% (Victory Swell & Sparkle Fanfare)
+ * สไตล์: ฮาร์ปแก้วไล่เสียงขึ้นอย่างสง่างาม + เสียงระฆังฉลองชัยชนะก่อนพลุ Confetti แตก
+ * ให้ความรู้สึก: ค้นพบตัวตนที่แท้จริงแล้ว!
+ */
+export function playAnalysisCompleteSfx(): void {
+  if (isMuted) return;
+  try {
+    const ctx = getSfxContext();
+    if (!ctx) return;
+
+    const now = ctx.currentTime;
+
+    // A. Ascending Victory Harp Arpeggio: G4 -> D5 -> G5 -> B5 -> D6 -> G6
+    const harpNotes = [
+      { offset: 0.00, freq: 392.00, dur: 0.35, vol: 0.18 }, // G4
+      { offset: 0.06, freq: 587.33, dur: 0.38, vol: 0.20 }, // D5
+      { offset: 0.12, freq: 783.99, dur: 0.42, vol: 0.23 }, // G5
+      { offset: 0.18, freq: 987.77, dur: 0.48, vol: 0.25 }, // B5
+      { offset: 0.24, freq: 1174.66, dur: 0.55, vol: 0.28 }, // D6
+      { offset: 0.30, freq: 1567.98, dur: 0.85, vol: 0.34 }, // G6 (Brilliant Peak)
+    ];
+
+    harpNotes.forEach(({ offset, freq, dur, vol }) => {
+      const noteTime = now + offset;
+      const osc = ctx.createOscillator();
+      const gain = ctx.createGain();
+
+      osc.type = 'sine';
+      osc.frequency.setValueAtTime(freq, noteTime);
+
+      gain.gain.setValueAtTime(0.0001, noteTime);
+      gain.gain.linearRampToValueAtTime(vol, noteTime + 0.006);
+      gain.gain.exponentialRampToValueAtTime(0.0001, noteTime + dur);
+
+      osc.connect(gain);
+      gain.connect(ctx.destination);
+      osc.start(noteTime);
+      osc.stop(noteTime + dur);
+    });
+
+    // B. Shimmering High Sparkle Overtones
+    const peakTime = now + 0.32;
+    const sparkleOsc = ctx.createOscillator();
+    const sparkleGain = ctx.createGain();
+    sparkleOsc.type = 'triangle';
+    sparkleOsc.frequency.setValueAtTime(2093.00, peakTime); // C7
+    sparkleOsc.frequency.exponentialRampToValueAtTime(3135.96, peakTime + 0.5); // G7
+
+    sparkleGain.gain.setValueAtTime(0.0001, peakTime);
+    sparkleGain.gain.linearRampToValueAtTime(0.18, peakTime + 0.01);
+    sparkleGain.gain.exponentialRampToValueAtTime(0.0001, peakTime + 0.65);
+
+    sparkleOsc.connect(sparkleGain);
+    sparkleGain.connect(ctx.destination);
+    sparkleOsc.start(peakTime);
+    sparkleOsc.stop(peakTime + 0.65);
+  } catch (_e) {}
+}
+
 export const audioManager = {
   getAudioMuted,
   isAudioPlaying,
@@ -444,4 +603,7 @@ export const audioManager = {
   playNextSfx,
   playBackSfx,
   playStartLaunchSfx,
+  playRadarTickSfx,
+  playCardFlipSfx,
+  playAnalysisCompleteSfx,
 };

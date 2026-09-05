@@ -5,6 +5,11 @@ import confetti from 'canvas-confetti';
 import { CharacterType } from '../types';
 import { ASSETS, getProcessingBadges, ProcessingBadgeItem } from '../assets/registry';
 import { SoundControl } from '../components/SoundControl';
+import {
+  playRadarTickSfx,
+  playCardFlipSfx,
+  playAnalysisCompleteSfx,
+} from '../engine/audioManager';
 
 interface AnalysisViewProps {
   onComplete: () => void;
@@ -95,7 +100,11 @@ export const AnalysisView: React.FC<AnalysisViewProps> = ({
   // Clockwise orbit scanning cycle every 350ms
   useEffect(() => {
     const scanInterval = setInterval(() => {
-      setActiveScanIdx((prev) => (prev + 1) % scanSequence.length);
+      setActiveScanIdx((prev) => {
+        const next = (prev + 1) % scanSequence.length;
+        playRadarTickSfx(next);
+        return next;
+      });
     }, 350);
 
     return () => clearInterval(scanInterval);
@@ -107,6 +116,7 @@ export const AnalysisView: React.FC<AnalysisViewProps> = ({
     if (!id || revealedRef.current.has(id)) return;
     revealedRef.current.add(id); // mark immediately via ref to prevent duplicate triggers
     setFlipId(id);               // start flip animation
+    playCardFlipSfx();           // 🎵 Play card unlock & flip chime
     const t = setTimeout(() => {
       // After 480ms the flip is complete: permanently reveal the card
       setRevealedSet((prev) => { const s = new Set(prev); s.add(id); return s; });
@@ -127,6 +137,7 @@ export const AnalysisView: React.FC<AnalysisViewProps> = ({
 
       if (elapsed >= totalDurationMs) {
         clearInterval(interval);
+        playAnalysisCompleteSfx(); // 🎵 Play victorious fanfare!
         try {
           confetti({
             particleCount: 120,
