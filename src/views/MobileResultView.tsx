@@ -264,7 +264,7 @@ export const MobileResultView: React.FC<MobileResultViewProps> = ({ result, onPl
               ? 'transform 0.08s ease-out'
               : 'transform 0.5s cubic-bezier(0.2, 0.8, 0.2, 1)',
           }}
-          className="relative w-full max-w-[280px] rounded-3xl overflow-hidden shadow-2xl border-2 border-white/80 bg-slate-100 flex items-center justify-center select-none cursor-pointer"
+          className="relative w-full max-w-[280px] sm:max-w-[320px] max-h-[min(480px,50dvh)] rounded-3xl overflow-hidden shadow-2xl border-2 border-white/80 bg-slate-100 flex items-center justify-center select-none cursor-pointer"
           title="แตะเพื่อหมุนดูมิติการ์ด"
         >
           {/* Holographic light glare overlay */}
@@ -281,7 +281,7 @@ export const MobileResultView: React.FC<MobileResultViewProps> = ({ result, onPl
             <img
               src={cardDataUrl}
               alt="Future Nurse Card"
-              className="w-full h-full object-contain animate-fade-in select-none pointer-events-none"
+              className="w-full h-full object-contain animate-fade-in select-none pointer-events-none card-crisp"
             />
           ) : (
             <div className="flex flex-col items-center gap-2 p-6 text-center">

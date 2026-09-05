@@ -134,123 +134,125 @@ async function renderTemplateCard(
     descColor: '#334155',
   };
 
-  const isNarrow = targetWidth <= 1150; // 576 width (PED female, COMM, TECH)
   const isPedFemale = result.pathId === 'PED' && result.characterType === 'female_student';
 
   if (isPedFemale) {
-    // ── Case 1: PED Female Template (print directly into the cleaned dashed boxes) ──
+    // ── Case 1: PED Female Template (print directly into the clean dashed boxes) ──
     ctx.save();
-    // Superpower Title
-    ctx.fillStyle = theme.primary;
-    ctx.font = `bold 26px ${CARD_FONT}`;
     ctx.textAlign = 'left';
+
+    // 1. Superpower Title (in the pill)
+    ctx.fillStyle = theme.primary;
+    ctx.font = `bold 34px ${CARD_FONT}`;
     ctx.textBaseline = 'middle';
-    ctx.fillText(result.superpower, 204, 695);
+    ctx.fillText(result.superpower, 98 * scale, 369 * scale);
 
     // Superpower Thai Description (inside dashed box)
-    ctx.fillStyle = theme.descColor;
-    ctx.font = `600 22px ${CARD_FONT}`;
+    ctx.fillStyle = '#334155';
+    ctx.font = `600 28px ${CARD_FONT}`;
     ctx.textBaseline = 'top';
-    const sLines = wrapThaiText(ctx, getSuperpowerDesc(result), 410);
-    const startSY = 750 + Math.max(0, (120 - sLines.length * 30) / 2);
-    sLines.forEach((line, i) => {
-      ctx.fillText(line, 88, startSY + i * 32);
+    const sLines = wrapThaiText(ctx, getSuperpowerDesc(result), 216 * scale);
+    const startSY = 442 * scale;
+    sLines.slice(0, 3).forEach((line, i) => {
+      ctx.fillText(line, 44 * scale, startSY + i * 38);
     });
 
-    // AI Skill Title
+    // 2. AI Skill Title (in the pill)
     ctx.fillStyle = theme.primary;
-    ctx.font = `bold 26px ${CARD_FONT}`;
+    ctx.font = `bold 34px ${CARD_FONT}`;
     ctx.textBaseline = 'middle';
-    ctx.fillText(result.aiSkill, 204, 1045);
+    ctx.fillText(result.aiSkill, 98 * scale, 563 * scale);
 
     // AI Skill Thai Description (inside dashed box)
-    ctx.fillStyle = theme.descColor;
-    ctx.font = `600 22px ${CARD_FONT}`;
+    ctx.fillStyle = '#334155';
+    ctx.font = `600 28px ${CARD_FONT}`;
     ctx.textBaseline = 'top';
-    const aiLines = wrapThaiText(ctx, getAiSkillDesc(result), 410);
-    const startAiY = 1095 + Math.max(0, (120 - aiLines.length * 30) / 2);
-    aiLines.forEach((line, i) => {
-      ctx.fillText(line, 88, startAiY + i * 32);
+    const aiLines = wrapThaiText(ctx, getAiSkillDesc(result), 216 * scale);
+    const startAiY = 636 * scale;
+    aiLines.slice(0, 3).forEach((line, i) => {
+      ctx.fillText(line, 44 * scale, startAiY + i * 38);
     });
 
-    // Mood & Tone: UNTOUCHED!
+    // 3. Mood & Tone: UNTOUCHED on image!
 
-    // Impact Title
+    // 4. Impact Title (in the pill)
     ctx.fillStyle = theme.primary;
-    ctx.font = `bold 26px ${CARD_FONT}`;
+    ctx.font = `bold 32px ${CARD_FONT}`;
     ctx.textBaseline = 'middle';
-    ctx.fillText(result.path.badge || 'Child Care Champion', 204, 1550);
+    ctx.fillText(result.path.badge || 'Child Care Champion', 98 * scale, 852 * scale);
 
     // Impact Thai Description (inside dashed box)
-    ctx.fillStyle = theme.descColor;
-    ctx.font = `600 21px ${CARD_FONT}`;
+    ctx.fillStyle = '#334155';
+    ctx.font = `600 26px ${CARD_FONT}`;
     ctx.textBaseline = 'top';
-    const impLines = wrapThaiText(ctx, result.profileImpact, 410);
-    const startImpY = 1600 + Math.max(0, (90 - impLines.length * 28) / 2);
-    impLines.forEach((line, i) => {
-      ctx.fillText(line, 88, startImpY + i * 30);
+    const impLines = wrapThaiText(ctx, result.profileImpact, 195 * scale);
+    const startImpY = 878 * scale;
+    impLines.slice(0, 2).forEach((line, i) => {
+      ctx.fillText(line, 65 * scale, startImpY + i * 36);
     });
     ctx.restore();
   } else {
-    // ── Case 2: All Other Cards (print directly into the cleaned boxes on the image) ──
-    const textX = isNarrow ? 200 : 230;
-    const maxW = isNarrow ? 310 : 415;
+    // ── Case 2: All Other Cards (print directly into the clean boxes on the image) ──
+    const isW576 = sourceWidth <= 600;
+    const isW819 = sourceWidth >= 750;
 
-    // Y offsets per path to align precisely with each card's pre-designed box
-    const Y_MAP: Record<string, { spTitle: number; spDesc: number; aiTitle: number; aiDesc: number; impDesc: number }> = {
-      COMM: { spTitle: 775, spDesc: 812, aiTitle: 1025, aiDesc: 1062, impDesc: 1525 },
-      TECH: { spTitle: 712, spDesc: 752, aiTitle: 994,  aiDesc: 1032, impDesc: 1525 },
-      ER:   { spTitle: 718, spDesc: 758, aiTitle: 1012, aiDesc: 1052, impDesc: 1550 },
-      MH:   { spTitle: 788, spDesc: 828, aiTitle: 1072, aiDesc: 1112, impDesc: 1625 },
-      OA:   { spTitle: 732, spDesc: 772, aiTitle: 1002, aiDesc: 1042, impDesc: 1535 },
-      MAT:  { spTitle: 742, spDesc: 782, aiTitle: 992,  aiDesc: 1032, impDesc: 1525 },
-      INT:  { spTitle: 712, spDesc: 752, aiTitle: 1012, aiDesc: 1052, impDesc: 1565 },
-      PED:  { spTitle: 668, spDesc: 708, aiTitle: 982,  aiDesc: 1022, impDesc: 1595 },
-    };
+    const textX = (isW819 ? 136 : isW576 ? 94 : 104) * scale;
+    const maxW = (isW819 ? 226 : isW576 ? 168 : 226) * scale;
 
-    const yConfig = Y_MAP[result.pathId] || {
-      spTitle: 730, spDesc: 770, aiTitle: 1010, aiDesc: 1050, impDesc: 1540
-    };
+    const titleFontSize = isW576 ? 'bold 34px' : 'bold 36px';
+    const descFontSize = isW576 ? '500 28px' : '500 29px';
+    const descLineH = isW576 ? 38 : 40;
+
+    const spTitleY = (isW819 ? 412 : isW576 ? 412 : 398) * scale;
+    const spDescY = (isW819 ? 440 : isW576 ? 440 : 428) * scale;
+
+    const aiTitleY = (isW819 ? 558 : isW576 ? 565 : 552) * scale;
+    const aiDescY = (isW819 ? 586 : isW576 ? 593 : 582) * scale;
+
+    const impDescY = (isW819 ? 798 : isW576 ? 798 : 792) * scale;
 
     ctx.save();
-    // 1. Superpower
-    ctx.fillStyle = theme.primary;
-    ctx.font = `bold 24px ${CARD_FONT}`;
     ctx.textAlign = 'left';
-    ctx.textBaseline = 'middle';
-    ctx.fillText(result.superpower, textX, yConfig.spTitle);
 
-    ctx.fillStyle = theme.descColor;
-    ctx.font = `600 19px ${CARD_FONT}`;
+    // 1. Superpower Title
+    ctx.fillStyle = '#1E293B';
+    ctx.font = `${titleFontSize} ${CARD_FONT}`;
+    ctx.textBaseline = 'middle';
+    ctx.fillText(result.superpower, textX, spTitleY);
+
+    // Superpower Thai Description
+    ctx.fillStyle = '#334155';
+    ctx.font = `${descFontSize} ${CARD_FONT}`;
     ctx.textBaseline = 'top';
     const sLines = wrapThaiText(ctx, getSuperpowerDesc(result), maxW);
-    sLines.slice(0, 4).forEach((line, i) => {
-      ctx.fillText(line, textX, yConfig.spDesc + i * 27);
+    sLines.slice(0, 3).forEach((line, i) => {
+      ctx.fillText(line, textX, spDescY + i * descLineH);
     });
 
-    // 2. AI Skill
-    ctx.fillStyle = theme.primary;
-    ctx.font = `bold 24px ${CARD_FONT}`;
+    // 2. AI Skill Title
+    ctx.fillStyle = '#1E293B';
+    ctx.font = `${titleFontSize} ${CARD_FONT}`;
     ctx.textBaseline = 'middle';
-    ctx.fillText(result.aiSkill, textX, yConfig.aiTitle);
+    ctx.fillText(result.aiSkill, textX, aiTitleY);
 
-    ctx.fillStyle = theme.descColor;
-    ctx.font = `600 19px ${CARD_FONT}`;
+    // AI Skill Thai Description
+    ctx.fillStyle = '#334155';
+    ctx.font = `${descFontSize} ${CARD_FONT}`;
     ctx.textBaseline = 'top';
     const aiLines = wrapThaiText(ctx, getAiSkillDesc(result), maxW);
-    aiLines.slice(0, 4).forEach((line, i) => {
-      ctx.fillText(line, textX, yConfig.aiDesc + i * 27);
+    aiLines.slice(0, 3).forEach((line, i) => {
+      ctx.fillText(line, textX, aiDescY + i * descLineH);
     });
 
-    // 3. Mood & Tone: UNTOUCHED!
+    // 3. Mood & Tone: UNTOUCHED on image!
 
-    // 4. Impact
-    ctx.fillStyle = theme.descColor;
-    ctx.font = `600 19px ${CARD_FONT}`;
+    // 4. Impact Thai Description
+    ctx.fillStyle = '#334155';
+    ctx.font = `${descFontSize} ${CARD_FONT}`;
     ctx.textBaseline = 'top';
     const impLines = wrapThaiText(ctx, result.profileImpact, maxW);
-    impLines.slice(0, 4).forEach((line, i) => {
-      ctx.fillText(line, textX, yConfig.impDesc + i * 27);
+    impLines.slice(0, 3).forEach((line, i) => {
+      ctx.fillText(line, textX, impDescY + i * descLineH);
     });
     ctx.restore();
   }

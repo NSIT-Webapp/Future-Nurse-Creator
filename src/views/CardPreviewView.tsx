@@ -234,9 +234,9 @@ export const CardPreviewView: React.FC<CardPreviewViewProps> = ({
               }}
             />
 
-            {/* Single Solid Card Frame (No 3D flip card, no bleeding back face) */}
+            {/* Single Solid Card Frame (No dark box, beautiful drop-shadow) */}
             <div
-              className="relative h-full max-h-[460px] sm:max-h-[520px] md:max-h-[560px] max-w-full select-none rounded-2xl sm:rounded-3xl shadow-xl overflow-hidden border-2 border-white/90 bg-slate-900 flex items-center justify-center transition-transform duration-200"
+              className="relative h-full max-h-[min(520px,50dvh)] sm:max-h-[min(560px,54dvh)] md:max-h-[600px] max-w-[min(92vw,360px)] sm:max-w-[400px] select-none rounded-[22px] sm:rounded-[28px] drop-shadow-[0_16px_36px_rgba(0,43,127,0.18)] overflow-hidden flex items-center justify-center transition-transform duration-200"
               style={{
                 aspectRatio: cardAspect,
                 transform: tilt.active
@@ -247,16 +247,16 @@ export const CardPreviewView: React.FC<CardPreviewViewProps> = ({
               onPointerLeave={handlePointerLeave}
             >
               {generating ? (
-                <div className="flex flex-col items-center gap-2.5 p-6 text-center">
+                <div className="flex flex-col items-center gap-2.5 p-6 text-center bg-white/70 backdrop-blur-md rounded-2xl">
                   <Loader2 className="w-8 h-8 text-[#FF3366] animate-spin" />
-                  <p className="text-xs font-bold text-slate-300">กำลังเตรียมการ์ดของคุณ...</p>
+                  <p className="text-xs font-bold text-slate-500">กำลังเตรียมการ์ดของคุณ...</p>
                 </div>
               ) : cardDataUrl ? (
                 <>
                   <img
                     src={cardDataUrl}
                     alt={`Future Nurse Card — ${result.path.nameEn}`}
-                    className="w-full h-full object-contain select-none"
+                    className="w-full h-full object-contain select-none card-crisp"
                     draggable={false}
                   />
 

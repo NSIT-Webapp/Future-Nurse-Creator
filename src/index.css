@@ -47,6 +47,15 @@
   }
 }
 
+/* ── Crisp Card Rendering on Retina, iPad & Mobile Displays ─────────────── */
+.card-crisp {
+  image-rendering: -webkit-optimize-contrast;
+  image-rendering: crisp-edges;
+  transform: translateZ(0);
+  backface-visibility: hidden;
+  will-change: transform;
+}
+
 /* Custom animations */
 @keyframes fadeIn {
   from { opacity: 0; transform: translateY(6px); }

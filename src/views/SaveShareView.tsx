@@ -206,7 +206,7 @@ export const SaveShareView: React.FC<SaveShareViewProps> = ({
               <img
                 src={cardDataUrl}
                 alt="Future Nurse Card"
-                className="w-full h-full object-contain select-none pointer-events-none"
+                className="w-full h-full object-contain select-none pointer-events-none card-crisp"
               />
             ) : (
               <div className="flex flex-col items-center gap-2 p-4 text-center">
