@@ -3,7 +3,7 @@ import { ChevronLeft, ChevronRight, Sparkles, Heart, Zap } from 'lucide-react';
 import confetti from 'canvas-confetti';
 
 import { ResultPayload } from '../types';
-import { ASSETS, getRevealStickers } from '../assets/registry';
+import { ASSETS, getRevealStickers, getRevealArtworkUrl } from '../assets/registry';
 import { SoundControl } from '../components/SoundControl';
 import pathsData from '../data/paths.json';
 
@@ -39,10 +39,8 @@ export const RevealView: React.FC<RevealViewProps> = ({ result, onNext, onBack }
   const pathId = result.pathId;
   const pathInfo = (pathsData.paths as Record<string, any>)[pathId] || result.path;
 
-  // Male / Female character asset lookup
-  const characterImgUrl = isFemale
-    ? (ASSETS.characters as any)[pathId]?.female || `/characters/${pathId}_female.png`
-    : (ASSETS.characters as any)[pathId]?.male || `/characters/${pathId}_male.png`;
+  // Dedicated Reveal Character Artwork (distinct from Card Preview)
+  const characterImgUrl = getRevealArtworkUrl(pathId, result.characterType);
 
   const stickers = getRevealStickers(pathId);
   const stepperSteps = [1, 2, 3, 4, 5, 6, 7, 8];
