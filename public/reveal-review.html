@@ -1,0 +1,136 @@
+<!doctype html>
+<html lang="th">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>ตรวจสัดส่วนหน้า Reveal · Future Nurse</title>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/lazywasabi/thai-web-fonts@7/fonts/LINE%20Seed%20Sans%20TH/LINE%20Seed%20Sans%20TH.css">
+  <script src="https://cdn.tailwindcss.com"></script>
+  <style>
+    body {
+      font-family: 'LINE Seed Sans TH', sans-serif;
+      background: #0f172a;
+      color: #f8fafc;
+      margin: 0;
+      padding: 0;
+    }
+    .phone-frame {
+      width: 100%;
+      max-width: 420px;
+      height: 860px;
+      border-radius: 40px;
+      box-shadow: 0 25px 60px -15px rgba(0, 0, 0, 0.7), 0 0 0 10px #1e293b, 0 0 0 12px #334155;
+      overflow: hidden;
+      position: relative;
+      background: #021a44;
+    }
+    .tablet-frame {
+      width: 100%;
+      max-width: 768px;
+      height: 1024px;
+      border-radius: 32px;
+      box-shadow: 0 25px 60px -15px rgba(0, 0, 0, 0.7), 0 0 0 10px #1e293b;
+      overflow: hidden;
+      position: relative;
+      background: #021a44;
+    }
+    iframe {
+      width: 100%;
+      height: 100%;
+      border: none;
+    }
+  </style>
+</head>
+<body class="min-h-screen flex flex-col items-center p-4 sm:p-6">
+  
+  <!-- Header Controls -->
+  <header class="w-full max-w-5xl mb-6 bg-slate-800/90 backdrop-blur-md p-4 sm:p-5 rounded-2xl border border-slate-700 shadow-xl flex flex-wrap items-center justify-between gap-4">
+    <div>
+      <h1 class="text-xl sm:text-2xl font-black text-white flex items-center gap-2">
+        <span>✨ ตรวจสัดส่วนหน้า Reveal</span>
+        <span class="text-xs px-2.5 py-0.5 rounded-full bg-rose-500 text-white font-bold">16 รูปแบบ</span>
+      </h1>
+      <p class="text-xs sm:text-sm text-slate-300 mt-0.5">เลือกสาขาและเพศเพื่อตรวจสอบสัดส่วน การจัดวางตัวละคร และวงกลมเรืองแสง</p>
+    </div>
+
+    <div class="flex flex-wrap items-center gap-3">
+      <!-- Path Selector -->
+      <label class="flex flex-col text-xs font-bold text-slate-300">
+        สาขา
+        <select id="selPath" class="mt-1 bg-slate-900 text-white border border-slate-600 rounded-lg px-3 py-2 text-sm font-semibold focus:outline-none focus:ring-2 focus:ring-rose-500">
+          <option value="TECH">TECH - เทคโนโลยีและ AI</option>
+          <option value="COMM">COMM - ชุมชน</option>
+          <option value="INT">INT - นานาชาติ</option>
+          <option value="MAT">MAT - แม่และเด็ก</option>
+          <option value="PED">PED - เด็ก</option>
+          <option value="ER">ER - ฉุกเฉิน</option>
+          <option value="MH">MH - จิตเวช</option>
+          <option value="OA">OA - ผู้สูงอายุ</option>
+        </select>
+      </label>
+
+      <!-- Gender Selector -->
+      <label class="flex flex-col text-xs font-bold text-slate-300">
+        ตัวละคร
+        <select id="selGender" class="mt-1 bg-slate-900 text-white border border-slate-600 rounded-lg px-3 py-2 text-sm font-semibold focus:outline-none focus:ring-2 focus:ring-rose-500">
+          <option value="female_student">พยาบาลหญิง</option>
+          <option value="male_student">พยาบาลชาย</option>
+        </select>
+      </label>
+
+      <!-- Device Frame Switcher -->
+      <label class="flex flex-col text-xs font-bold text-slate-300">
+        ขนาดหน้าจอ
+        <select id="selDevice" class="mt-1 bg-slate-900 text-white border border-slate-600 rounded-lg px-3 py-2 text-sm font-semibold focus:outline-none focus:ring-2 focus:ring-rose-500">
+          <option value="phone">มือถือ (iPhone 390x844)</option>
+          <option value="tablet">แท็บเล็ต (iPad 768x1024)</option>
+          <option value="full">เต็มจอ (Full Viewport)</option>
+        </select>
+      </label>
+    </div>
+  </header>
+
+  <!-- Viewer Stage -->
+  <main id="stageContainer" class="w-full flex justify-center items-center pb-12">
+    <div id="deviceFrame" class="phone-frame transition-all duration-300">
+      <iframe id="previewIframe" src="/?step=6&path=TECH&look=female_student"></iframe>
+    </div>
+  </main>
+
+  <script>
+    const selPath = document.getElementById('selPath');
+    const selGender = document.getElementById('selGender');
+    const selDevice = document.getElementById('selDevice');
+    const iframe = document.getElementById('previewIframe');
+    const deviceFrame = document.getElementById('deviceFrame');
+
+    function updatePreview() {
+      const path = selPath.value;
+      let gender = selGender.value;
+      if (path === 'MAT' && gender === 'male_student') {
+        selGender.value = 'female_student';
+        gender = 'female_student';
+      }
+      iframe.src = `/?step=6&path=${path}&look=${gender}&t=${Date.now()}`;
+    }
+
+    function updateDevice() {
+      const dev = selDevice.value;
+      deviceFrame.className = '';
+      if (dev === 'phone') {
+        deviceFrame.className = 'phone-frame transition-all duration-300';
+      } else if (dev === 'tablet') {
+        deviceFrame.className = 'tablet-frame transition-all duration-300';
+      } else {
+        deviceFrame.className = 'w-full h-[90vh] rounded-xl border border-slate-700 overflow-hidden';
+      }
+    }
+
+    selPath.addEventListener('change', updatePreview);
+    selGender.addEventListener('change', updatePreview);
+    selDevice.addEventListener('change', updateDevice);
+
+    updatePreview();
+  </script>
+</body>
+</html>

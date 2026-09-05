@@ -12,7 +12,9 @@ import { CardPreviewView } from './views/CardPreviewView';
 import { SaveShareView } from './views/SaveShareView';
 import { ThankYouResetView } from './views/ThankYouResetView';
 import { MobileResultView } from './views/MobileResultView';
-import { CharacterType, QuizAnswers, ResultPayload } from './types';
+import pathsData from './data/paths.json';
+import profilesData from './data/profiles.json';
+import { PathId, CharacterType, QuizAnswers, ResultPayload } from './types';
 import { preloadProcessingAssets } from './assets/registry';
 import { calculateResult } from './engine/scoringEngine';
 import { decodeResultState } from './engine/stateCompressor';
@@ -49,9 +51,37 @@ export function App() {
 
   const isDebugMode = useDebugMode();
 
-  // ── QR hand-off: decode #result= URL hash & Preload processing assets ────
+  // ── QR hand-off / Debug query params & Preload assets ────
   useEffect(() => {
     preloadProcessingAssets();
+    
+    // Check URL query parameters for direct testing (e.g. ?step=6&path=TECH&look=female_student)
+    const params = new URLSearchParams(window.location.search);
+    const stepParam = params.get('step');
+    const pathParam = (params.get('path') || '').toUpperCase() as PathId;
+    const lookParam = params.get('look') as CharacterType | null;
+
+    if (stepParam === '6' || (pathParam && ['PED','MH','ER','OA','MAT','COMM','INT','TECH'].includes(pathParam))) {
+      const pId: PathId = ['PED','MH','ER','OA','MAT','COMM','INT','TECH'].includes(pathParam) ? pathParam : 'TECH';
+      const lType: CharacterType = lookParam === 'male_student' && pId !== 'MAT' ? 'male_student' : 'female_student';
+      const mock = calculateResult({ q1: 'A', q2: 'A', q3: 'A', q4: 'A', q5: 'A' }, lType);
+      const profile = (profilesData as Record<string, any>)[pId]?.['HUMAN_CONNECTION'] || {};
+      const pathInfo = (pathsData.paths as Record<string, any>)[pId] || mock.path;
+      
+      setResult({
+        ...mock,
+        pathId: pId,
+        path: pathInfo,
+        characterType: lType,
+        superpower: profile.superpower || mock.superpower,
+        aiSkill: profile.aiSkill || mock.aiSkill,
+        profileImpact: profile.impact || mock.profileImpact,
+      });
+      setCharacterType(lType);
+      setScreen('reveal');
+      return;
+    }
+
     const handleHash = () => {
       const hash = window.location.hash;
       if (hash.startsWith('#result=')) {
