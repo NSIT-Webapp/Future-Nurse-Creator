@@ -84,15 +84,15 @@ function wrapThaiText(ctx: CanvasRenderingContext2D, text: string, maxWidth: num
   return lines;
 }
 
-const PATH_THEME: Record<string, { primary: string; lightBg: string; border: string; descColor: string }> = {
-  PED:  { primary: '#C2185B', lightBg: '#FFF5F7', border: '#F472B6', descColor: '#3F3939' },
-  MH:   { primary: '#7C3AED', lightBg: '#FAF5FF', border: '#C084FC', descColor: '#3F3939' },
-  ER:   { primary: '#DC2626', lightBg: '#FFF5F5', border: '#F87171', descColor: '#3F3939' },
-  OA:   { primary: '#D97706', lightBg: '#FFFBEB', border: '#FBBF24', descColor: '#3F3939' },
-  MAT:  { primary: '#E11D48', lightBg: '#FFF1F2', border: '#FDA4AF', descColor: '#3F3939' },
-  COMM: { primary: '#059669', lightBg: '#F0FDF4', border: '#34D399', descColor: '#3F3939' },
-  INT:  { primary: '#0284C7', lightBg: '#F0F9FF', border: '#38BDF8', descColor: '#3F3939' },
-  TECH: { primary: '#4F46E5', lightBg: '#EEF2FF', border: '#818CF8', descColor: '#3F3939' },
+const PATH_THEME: Record<string, { primary: string; lightBg: string; border: string; descColor: string; darkPrimary: string }> = {
+  PED:  { primary: '#E11D48', lightBg: '#FFF1F2', border: '#FDA4AF', descColor: '#3F3939', darkPrimary: '#881337' },
+  MH:   { primary: '#7C3AED', lightBg: '#FAF5FF', border: '#C084FC', descColor: '#3F3939', darkPrimary: '#4C1D95' },
+  ER:   { primary: '#DC2626', lightBg: '#FFF5F5', border: '#F87171', descColor: '#3F3939', darkPrimary: '#7F1D1D' },
+  OA:   { primary: '#D97706', lightBg: '#FFFBEB', border: '#FBBF24', descColor: '#3F3939', darkPrimary: '#78350F' },
+  MAT:  { primary: '#F43F5E', lightBg: '#FFF1F2', border: '#FDA4AF', descColor: '#3F3939', darkPrimary: '#9F1239' },
+  COMM: { primary: '#059669', lightBg: '#F0FDF4', border: '#34D399', descColor: '#3F3939', darkPrimary: '#064E3B' },
+  INT:  { primary: '#0284C7', lightBg: '#F0F9FF', border: '#38BDF8', descColor: '#3F3939', darkPrimary: '#0C4A6E' },
+  TECH: { primary: '#4F46E5', lightBg: '#EEF2FF', border: '#818CF8', descColor: '#3F3939', darkPrimary: '#312E81' },
 };
 
 async function renderTemplateCard(
@@ -336,6 +336,7 @@ async function renderLayeredCard(
 
   const theme = PATH_THEME[result.pathId] || {
     primary: result.path.color || '#065F46',
+    darkPrimary: '#064E3B',
     lightBg: '#F0FDF4',
     border: '#34D399',
     descColor: '#334155',
@@ -384,57 +385,17 @@ async function renderLayeredCard(
   });
   ctx.restore();
 
-  // 5. Top Right Badge: NSMU OPEN HOUSE 2026
-  ctx.save();
-  const badgeW = 270;
-  const badgeH = 175;
-  const badgeX = targetWidth - badgeW - 55;
-  const badgeY = 50;
-
-  // Badge Container
-  ctx.shadowColor = 'rgba(0, 0, 0, 0.08)';
-  ctx.shadowBlur = 18;
-  ctx.shadowOffsetY = 8;
-  ctx.fillStyle = 'rgba(255, 255, 255, 0.95)';
-  roundRect(ctx, badgeX, badgeY, badgeW, badgeH, 26);
-  ctx.fill();
-
-  ctx.shadowColor = 'transparent';
-  ctx.strokeStyle = theme.border;
-  ctx.lineWidth = 3;
-  ctx.stroke();
-
-  // Inner stitched dashes
-  ctx.strokeStyle = '#CBD5E1';
-  ctx.lineWidth = 1.5;
-  ctx.setLineDash([6, 4]);
-  roundRect(ctx, badgeX + 8, badgeY + 8, badgeW - 16, badgeH - 16, 20);
-  ctx.stroke();
-  ctx.setLineDash([]); // reset dash
-
-  // Badge Content
-  ctx.textAlign = 'center';
-  ctx.textBaseline = 'middle';
-  
-  // Top green mini heart
-  ctx.font = `24px ${CARD_FONT}`;
-  ctx.fillText('💚', badgeX + badgeW / 2, badgeY + 32);
-
-  // NSMU
-  ctx.fillStyle = '#065F46';
-  ctx.font = `900 44px ${CARD_FONT}`;
-  ctx.fillText('NSMU', badgeX + badgeW / 2, badgeY + 72);
-
-  // OPEN HOUSE
-  ctx.fillStyle = '#0284C7';
-  ctx.font = `800 22px ${CARD_FONT}`;
-  ctx.fillText('OPEN HOUSE', badgeX + badgeW / 2, badgeY + 112);
-
-  // ✦ 2026 ✦
-  ctx.fillStyle = '#D97706';
-  ctx.font = `800 22px ${CARD_FONT}`;
-  ctx.fillText('✦ 2026 ✦', badgeX + badgeW / 2, badgeY + 145);
-  ctx.restore();
+  // 5. Top Right Badge: NSMU OPEN HOUSE 2026 (Themed Sticker Badge)
+  const badgeW = 290;
+  const badgeH = 225;
+  const badgeX = targetWidth - badgeW - 60;
+  const badgeY = 55;
+  drawNsmuBadge(ctx, badgeX, badgeY, badgeW, badgeH, {
+    primary: theme.primary,
+    darkPrimary: theme.darkPrimary || theme.primary,
+    border: theme.border,
+    lightBg: theme.lightBg,
+  });
 
   // 6. Left 4 Frosted Glass Content Boxes
   const boxX = 55;
@@ -709,9 +670,16 @@ export async function renderFutureNurseCard(
 
   // 3. Header Section (Y: 70 - 240)
   // Top-Right: NSMU OPEN HOUSE 2026 Badge
-  const badgeX = width - 80;
-  const badgeY = 80;
-  drawBadge(ctx, badgeX, badgeY, 'NSMU OPEN HOUSE 2026');
+  const pBadgeW = 270;
+  const pBadgeH = 210;
+  const pBadgeX = width - pBadgeW - 60;
+  const pBadgeY = 65;
+  const pBadgeTheme = PATH_THEME[result.pathId] || {
+    primary: pathColor,
+    darkPrimary: '#0F172A',
+    border: pathColor,
+  };
+  drawNsmuBadge(ctx, pBadgeX, pBadgeY, pBadgeW, pBadgeH, pBadgeTheme);
 
   // Top-Left: Path Identity & Emoji
   ctx.save();
@@ -931,35 +899,215 @@ function drawCornerAccents(
   ctx.stroke();
 }
 
-function drawBadge(ctx: CanvasRenderingContext2D, rightX: number, topY: number, text: string) {
+interface BadgeTheme {
+  primary: string;
+  darkPrimary: string;
+  border: string;
+  lightBg?: string;
+}
+
+function drawCuteHeart(
+  ctx: CanvasRenderingContext2D,
+  cx: number,
+  cy: number,
+  w: number,
+  h: number
+) {
+  const hw = w / 2;
+  const hh = h / 2;
+  ctx.beginPath();
+  ctx.moveTo(cx, cy + hh);
+  ctx.bezierCurveTo(
+    cx - hw * 0.45, cy + hh * 0.75,
+    cx - hw, cy + hh * 0.1,
+    cx - hw, cy - hh * 0.35
+  );
+  ctx.bezierCurveTo(
+    cx - hw, cy - hh * 0.95,
+    cx - hw * 0.15, cy - hh * 0.95,
+    cx, cy - hh * 0.45
+  );
+  ctx.bezierCurveTo(
+    cx + hw * 0.15, cy - hh * 0.95,
+    cx + hw, cy - hh * 0.95,
+    cx + hw, cy - hh * 0.35
+  );
+  ctx.bezierCurveTo(
+    cx + hw, cy + hh * 0.1,
+    cx + hw * 0.45, cy + hh * 0.75,
+    cx, cy + hh
+  );
+  ctx.closePath();
+}
+
+function drawMedicalCross(
+  ctx: CanvasRenderingContext2D,
+  cx: number,
+  cy: number,
+  size: number,
+  thick: number,
+  color: string
+) {
   ctx.save();
-  ctx.font = `700 18px ${CARD_FONT}`;
-  const textWidth = ctx.measureText(text).width;
-  const paddingX = 20;
-  const badgeW = textWidth + paddingX * 2;
-  const badgeH = 44;
-  const badgeX = rightX - badgeW;
-
-  // Badge background
-  const badgeGrad = ctx.createLinearGradient(badgeX, topY, badgeX + badgeW, topY + badgeH);
-  badgeGrad.addColorStop(0, '#B45309');
-  badgeGrad.addColorStop(0.5, '#F5A623');
-  badgeGrad.addColorStop(1, '#D97706');
-  ctx.fillStyle = badgeGrad;
-  roundRect(ctx, badgeX, topY, badgeW, badgeH, 22);
-  ctx.fill();
-
-  ctx.strokeStyle = '#FFFFFF';
-  ctx.lineWidth = 1.5;
+  ctx.strokeStyle = color;
+  ctx.lineWidth = thick;
+  ctx.lineCap = 'round';
+  const arm = size / 2;
+  ctx.beginPath();
+  ctx.moveTo(cx - arm, cy);
+  ctx.lineTo(cx + arm, cy);
   ctx.stroke();
 
-  // Badge text
-  ctx.fillStyle = '#0F172A';
-  ctx.textAlign = 'center';
-  ctx.textBaseline = 'middle';
-  ctx.fillText(text, badgeX + badgeW / 2, topY + badgeH / 2 + 1);
+  ctx.beginPath();
+  ctx.moveTo(cx, cy - arm);
+  ctx.lineTo(cx, cy + arm);
+  ctx.stroke();
   ctx.restore();
 }
+
+function drawNsmuBadge(
+  ctx: CanvasRenderingContext2D,
+  badgeX: number,
+  badgeY: number,
+  badgeW: number = 290,
+  badgeH: number = 225,
+  theme: BadgeTheme
+) {
+  ctx.save();
+  const centerX = badgeX + badgeW / 2;
+  const radius = 30;
+
+  // 1. Badge Drop Shadow & White Card Container
+  ctx.save();
+  ctx.shadowColor = 'rgba(0, 0, 0, 0.12)';
+  ctx.shadowBlur = 18;
+  ctx.shadowOffsetY = 6;
+  ctx.fillStyle = '#FFFFFF';
+  roundRect(ctx, badgeX, badgeY, badgeW, badgeH, radius);
+  ctx.fill();
+  ctx.restore();
+
+  // 2. Outer Solid Border
+  ctx.save();
+  ctx.strokeStyle = theme.primary;
+  ctx.lineWidth = 4;
+  roundRect(ctx, badgeX, badgeY, badgeW, badgeH, radius);
+  ctx.stroke();
+  ctx.restore();
+
+  // 3. Top Heart Tab sitting on the top border
+  const heartW = 46;
+  const heartH = 42;
+  const heartY = badgeY - 5;
+  ctx.save();
+  drawCuteHeart(ctx, centerX, heartY, heartW, heartH);
+  ctx.strokeStyle = '#FFFFFF';
+  ctx.lineWidth = 6;
+  ctx.stroke();
+  ctx.fillStyle = theme.primary;
+  ctx.fill();
+  ctx.restore();
+
+  // 4. Inner Dashed Border
+  ctx.save();
+  ctx.strokeStyle = theme.primary;
+  ctx.lineWidth = 2.4;
+  ctx.setLineDash([9, 5]);
+  roundRect(ctx, badgeX + 11, badgeY + 11, badgeW - 22, badgeH - 22, radius - 8);
+  ctx.stroke();
+  ctx.restore();
+
+  // 5. Typography: NSMU
+  ctx.save();
+  ctx.textAlign = 'center';
+  ctx.textBaseline = 'middle';
+  ctx.fillStyle = theme.darkPrimary;
+  ctx.font = `900 52px ${CARD_FONT}`;
+  ctx.fillText('NSMU', centerX, badgeY + 68);
+
+  // 6. Typography: OPEN HOUSE
+  ctx.fillStyle = theme.primary;
+  ctx.font = `800 24px ${CARD_FONT}`;
+  ctx.fillText('OPEN HOUSE', centerX, badgeY + 112);
+  ctx.restore();
+
+  // 7. Ribbon Banner with 2026 & Crosses
+  const ribbonY = badgeY + 168;
+  const bannerW = 146;
+  const bannerH = 42;
+  const halfW = bannerW / 2;
+  const halfH = bannerH / 2;
+
+  ctx.save();
+  // Fold triangles
+  ctx.fillStyle = theme.darkPrimary;
+  ctx.beginPath();
+  ctx.moveTo(centerX - halfW + 6, ribbonY + halfH);
+  ctx.lineTo(centerX - halfW - 12, ribbonY + halfH - 8);
+  ctx.lineTo(centerX - halfW - 12, ribbonY + halfH + 10);
+  ctx.closePath();
+  ctx.fill();
+
+  ctx.beginPath();
+  ctx.moveTo(centerX + halfW - 6, ribbonY + halfH);
+  ctx.lineTo(centerX + halfW + 12, ribbonY + halfH - 8);
+  ctx.lineTo(centerX + halfW + 12, ribbonY + halfH + 10);
+  ctx.closePath();
+  ctx.fill();
+
+  // Left Ribbon Tail
+  const tailW = 28;
+  const tailH = 34;
+  const tailY = ribbonY + 6;
+  ctx.fillStyle = theme.primary;
+  ctx.beginPath();
+  ctx.moveTo(centerX - halfW + 2, tailY - tailH / 2);
+  ctx.lineTo(centerX - halfW - tailW, tailY - tailH / 2 + 4);
+  ctx.lineTo(centerX - halfW - tailW + 10, tailY + 4);
+  ctx.lineTo(centerX - halfW - tailW, tailY + tailH / 2 + 4);
+  ctx.lineTo(centerX - halfW + 2, tailY + tailH / 2 - 2);
+  ctx.closePath();
+  ctx.fill();
+
+  // Right Ribbon Tail
+  ctx.beginPath();
+  ctx.moveTo(centerX + halfW - 2, tailY - tailH / 2);
+  ctx.lineTo(centerX + halfW + tailW, tailY - tailH / 2 + 4);
+  ctx.lineTo(centerX + halfW + tailW - 10, tailY + 4);
+  ctx.lineTo(centerX + halfW + tailW, tailY + tailH / 2 + 4);
+  ctx.lineTo(centerX + halfW - 2, tailY + tailH / 2 - 2);
+  ctx.closePath();
+  ctx.fill();
+
+  // Center Banner Body
+  ctx.beginPath();
+  const botInset = 8;
+  ctx.moveTo(centerX - halfW, ribbonY - halfH);
+  ctx.lineTo(centerX + halfW, ribbonY - halfH);
+  ctx.lineTo(centerX + halfW - botInset, ribbonY + halfH);
+  ctx.lineTo(centerX - halfW + botInset, ribbonY + halfH);
+  ctx.closePath();
+  ctx.fill();
+
+  // White 2026 text
+  ctx.textAlign = 'center';
+  ctx.textBaseline = 'middle';
+  ctx.fillStyle = '#FFFFFF';
+  ctx.font = `900 25px ${CARD_FONT}`;
+  ctx.fillText('2026', centerX, ribbonY + 1);
+
+  // Crosses (+)
+  const crossSize = 18;
+  const crossThick = 4.5;
+  const crossOffset = halfW + tailW + 18;
+  drawMedicalCross(ctx, centerX - crossOffset, ribbonY + 2, crossSize, crossThick, theme.primary);
+  drawMedicalCross(ctx, centerX + crossOffset, ribbonY + 2, crossSize, crossThick, theme.primary);
+
+  ctx.restore();
+
+  ctx.restore();
+}
+
 
 
 function drawSectionBox(
