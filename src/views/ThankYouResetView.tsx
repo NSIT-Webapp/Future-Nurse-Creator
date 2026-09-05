@@ -294,7 +294,7 @@ export const ThankYouResetView: React.FC<ThankYouResetViewProps> = ({
               <img
                 src={ASSETS.finish.duoNurses}
                 alt="Faculty of Nursing Mahidol Duo Mascot"
-                className={`h-[114%] max-h-[114%] w-auto max-w-[96%] sm:max-w-[88%] object-contain object-bottom filter drop-shadow-2xl translate-y-[7%] ${
+                className={`h-[125%] max-h-[125%] w-auto max-w-[98%] sm:max-w-[92%] object-contain object-bottom filter drop-shadow-2xl translate-y-[14%] ${
                   isBouncing ? 'animate-mascot-bounce' : 'animate-float-subtle'
                 }`}
                 draggable={false}
@@ -303,7 +303,7 @@ export const ThankYouResetView: React.FC<ThankYouResetViewProps> = ({
 
             {/* Speech Bubble Above Nurses */}
             {showSpeechBubble && quoteIndex !== null && (
-              <div className="absolute top-2 sm:top-4 left-1/2 -translate-x-1/2 z-30 px-4 sm:px-5 py-2 sm:py-2.5 rounded-2xl bg-white/95 text-slate-800 text-base sm:text-lg font-bold shadow-xl border-2 border-sky-200 animate-scale-up text-center max-w-[85%] sm:max-w-[320px]">
+              <div className="absolute top-2 sm:top-3 left-1/2 -translate-x-1/2 z-40 px-4 sm:px-5 py-2 sm:py-2.5 rounded-2xl bg-white/95 text-slate-800 text-sm sm:text-base font-bold shadow-xl border-2 border-sky-200 animate-scale-up text-center max-w-[85%] sm:max-w-[340px]">
                 <span>{ENCOURAGING_QUOTES[quoteIndex]}</span>
                 {/* Bubble Tail */}
                 <div className="absolute -bottom-2 left-1/2 -translate-x-1/2 w-0 h-0 border-x-[6px] border-x-transparent border-t-[8px] border-t-white/95 filter drop-shadow-sm" />
